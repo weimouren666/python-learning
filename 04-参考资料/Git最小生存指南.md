@@ -109,3 +109,9 @@ GitHub（云端，不会忘、跨设备可见）
 **这个 token 能做到什么、不能做什么**：能读写这一个仓库的文件、能提交；**不能**删仓库、改设置、碰其他仓库、访问你的账号信息。泄露的最大损失就是这一个学习仓库的内容（本来就是公开仓库）。
 
 **首次云端提交实操记录（2026-11-17）**：token 配置完成后，AI 老师用 GitHub Git Data API 做了一次**原子提交**——先把 52 个文件并发建成 blob，再建一棵新树整体替换旧树，最后移动 `main` 指针。提交 `99742de7`，旧目录（`day01_basics/` `study/` `week1_variables/` `lessons/`）一次性清空，新结构（5 大类 + 按周次子目录）全量上线。核验结果：仓库 52 文件 = 本地 52 文件，零缺失零多余，抽样内容哈希一致。以后每节课沿用同一流程增量提交。
+
+**Token 存放位置（2026-11-17 学生选择保留 token 换自动推送）**：token 存在沙箱私有目录 `/root/.codebuddy/credentials/github_push_token.env`，权限 `600`（仅属主可读写），**不在 `/workspace/` 下，不随仓库推送、GitHub 上绝不会出现 token 内容**。每节课 AI 从该文件读取后自动 commit+push，学生本地只需 `git pull`。
+
+- **有效期**：token 90 天自动过期（约 2027-02-15），到期后推送报 401，AI 会提示学生重新生成一把同样权限的 token 发来，更新该文件即可。
+- **撤销**：学生随时可在 GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens 里 Revoke。**注意：一旦 Revoke，沙箱里存的那份同时作废**，需换新 token 才能恢复自动推送。
+- **安全边界**：token 仍以明文存在于对话记录中（学生当初在聊天里发的），故不要整段外传对话；沙箱文件本身权限已锁、且不在会上传的目录里。
