@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5周新知课：字典与集合（2026-11-10）</title>
+<style>
+  :root { --main:#1a5fb4; --bg:#f8f9fb; }
+  * { box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; color:#24292f; background:var(--bg); max-width:860px; margin:0 auto; padding:24px 18px 60px; }
+  header { border-left:6px solid var(--main); padding:12px 18px; background:#fff; border-radius:8px; margin-bottom:28px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  header h1 { font-size:22px; margin:0 0 6px; color:var(--main); }
+  header .meta { font-size:13px; color:#57606a; }
+  h2 { font-size:19px; color:var(--main); border-bottom:2px solid #d0d7de; padding-bottom:6px; margin-top:36px; }
+  code { background:#eff1f3; padding:2px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:14px; color:#cf222e; }
+  pre { background:#0d1117; color:#e6edf3; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:13.5px; line-height:1.6; }
+  pre code { background:none; color:inherit; padding:0; }
+  .comment { color:#8b949e; }
+  table { border-collapse:collapse; width:100%; background:#fff; margin:14px 0; font-size:14px; }
+  th,td { border:1px solid #d0d7de; padding:8px 12px; text-align:left; }
+  th { background:var(--main); color:#fff; }
+  tr:nth-child(even) { background:#f6f8fa; }
+  .warn { background:#fff8c5; border-left:4px solid #d4a72c; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .hw { background:#eaf3ff; border-left:4px solid var(--main); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0; }
+  .hw .t { color:var(--main); }
+  details { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:10px 14px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; color:var(--main); }
+  footer { margin-top:40px; font-size:12px; color:#8b949e; text-align:center; border-top:1px solid #d0d7de; padding-top:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>第 5 周新知课：字典与集合</h1>
+  <div class="meta">2026-11-10（周二）20:15–21:00 · 主对话授课 · 讲义已归档 lessons/11</div>
+  <div class="meta">开场先补账：shizhan4 最终版（判断进内层+判重）验收 → 第 4 周盖章收官</div>
+</header>
+
+<h2>〇、为什么需要字典——你上周末的痛，它全治</h2>
+<p>shizhan4 里你要找"谁的均分最高"，被迫维护 <code>names</code> 和 <code>averages</code> 两个平行列表，靠下标对齐，还要 <code>.index()</code> 反查——累不累？</p>
+<p><b>字典：直接用名字当"下标"。</b></p>
+<table>
+  <tr><th>平行列表方案（上周）</th><th>字典方案（本周）</th></tr>
+  <tr><td><code>names[i]</code> + <code>averages[i]</code> 对齐</td><td><code>d["张伟"]</code> 直接出 85.33</td></tr>
+  <tr><td><code>averages.index(max(...))</code> 反查</td><td>遍历 <code>d.items()</code> 比大小即可</td></tr>
+</table>
+<p>类比：列表是<b>带编号的储物柜</b>（只认编号），字典是<b>手机通讯录</b>——存的时候标好"张伟"，取的时候报名字。</p>
+
+<h2>一、字典四件事：建、查、改、增</h2>
+<pre><code>stu = {"name": "魏常泽", "age": 18, "major": "大数据"}
+stu["name"]        # '魏常泽'          <span class="comment">查：方括号里放 key</span>
+stu["age"] = 19    #                   <span class="comment">改：覆盖</span>
+stu["city"] = "石家庄"  #             <span class="comment">增：key 不存在就新建</span>
+len(stu)           # 4                 <span class="comment">几对键值</span></code></pre>
+<div class="warn"><b>坑 1</b>：查不存在的 key 直接 <code>KeyError</code>。安全取法：<code>stu.get("phone", "没填")</code> —— 没有就返回你给的默认值，不炸。</div>
+<div class="warn"><b>坑 2</b>：key 和 value 是两个东西——<code>"age"</code> 是钥匙（通常是字符串），<code>19</code> 是盒子里的值。取值永远 <code>d[key]</code>，不是 <code>d[value]</code>。</div>
+
+<h2>二、遍历：.items() 一次给一对</h2>
+<pre><code>for k, v in stu.items():
+    print(k, ":", v)          <span class="comment">name : 魏常泽 / age : 19 / ...</span></code></pre>
+<p>和 <code>enumerate</code> 的解包一个手感——两个变量接一对。只要钥匙：<code>for k in stu:</code>；只要值：<code>for v in stu.values():</code></p>
+<p><code>in</code> 判断的是<b>钥匙</b>在不在：<code>"age" in stu</code> → True。</p>
+
+<h2>三、集合 set：天生的去重机</h2>
+<pre><code>nums = [1, 2, 2, 3, 3, 3]
+unique = set(nums)     # {1, 2, 3}      <span class="comment">自动去重，无顺序</span>
+"a" in unique          # 快速判断成员</code></pre>
+<p>上周 shizhan4 的 <code>if name not in failed</code> 判重，本质就是在手动模拟集合的本职工作。集合三大用途：<b>去重、成员判断、算交集并集</b>（<code>a &amp; b</code>、<code>a | b</code>，后面项目见）。</p>
+
+<h2>四、课堂练习</h2>
+<div class="hw">
+  <b class="t">练习 1 · 个人字典</b>：建一个自己的字典（姓名/年龄/专业/家乡），改年龄 +1，新增一个 hobby，遍历输出全部。故意取一个不存在的 key 感受 KeyError，再用 .get() 修好。<br>
+  <b class="t">练习 2 · 用字典重做 shizhan4 最高分</b>：建 <code>avg = {}</code>，外层循环里 <code>avg[name] = average</code>；循环后遍历 items() 找最大——对比你上周的双列表方案，哪个清爽？<br>
+  <b class="t">练习 3 · 选做 · 词频统计</b>：<code>s = "abracadabra"</code>，用字典统计每个字母出现次数（核心三行：有则 +1，无则 =1）——这是 pandas value_counts() 的雏形。
+</div>
+
+<h2>五、作业与预告</h2>
+<ul>
+  <li>练习 1、2 必做，周四巩固课批改；shizhan4 最终版今天先交</li>
+  <li><b>周四 11-12 巩固课</b>：批改 + 字典错题复盘 + shizhan4 案子结案</li>
+  <li><b>周日 11-15 实战课</b>：第 5 周项目「词频统计器」——字典+集合+字符串全家桶</li>
+</ul>
+
+<footer>石家庄学院 · Python 学习档案 · lessons/11 · 由课程 AI 生成于 2026-11-10</footer>
+</body>
+</html>

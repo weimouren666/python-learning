@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5周实战课：词频统计器（2026-11-15）</title>
+<style>
+  :root { --main:#1a5fb4; --bg:#f8f9fb; }
+  * { box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; color:#24292f; background:var(--bg); max-width:860px; margin:0 auto; padding:24px 18px 60px; }
+  header { border-left:6px solid var(--main); padding:12px 18px; background:#fff; border-radius:8px; margin-bottom:28px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  header h1 { font-size:22px; margin:0 0 6px; color:var(--main); }
+  header .meta { font-size:13px; color:#57606a; }
+  h2 { font-size:19px; color:var(--main); border-bottom:2px solid #d0d7de; padding-bottom:6px; margin-top:36px; }
+  h3 { font-size:16px; margin-top:26px; }
+  code { background:#eff1f3; padding:2px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:14px; color:#cf222e; }
+  pre { background:#0d1117; color:#e6edf3; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:13.5px; line-height:1.6; }
+  pre code { background:none; color:inherit; padding:0; }
+  .comment { color:#8b949e; }
+  table { border-collapse:collapse; width:100%; background:#fff; margin:14px 0; font-size:14px; }
+  th,td { border:1px solid #d0d7de; padding:8px 12px; text-align:left; }
+  th { background:var(--main); color:#fff; }
+  tr:nth-child(even) { background:#f6f8fa; }
+  .warn { background:#fff8c5; border-left:4px solid #d4a72c; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .hw { background:#eaf3ff; border-left:4px solid var(--main); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0; }
+  .hw .t { color:var(--main); }
+  details { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:10px 14px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; color:var(--main); }
+  footer { margin-top:40px; font-size:12px; color:#8b949e; text-align:center; border-top:1px solid #d0d7de; padding-top:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>第 5 周实战课：词频统计器</h1>
+  <div class="meta">2026-11-15（周日）晚自习时段 · 学生 19:51 提前到场 · 讲义归档 lessons/13</div>
+  <div class="meta">本课把 <b>字符串 + 字典 + 集合 + 循环</b> 全家桶串起来 —— 也是 pandas <code>value_counts()</code> 的手写原型</div>
+</header>
+
+<h2>〇、开场 3 分钟：收周末的账</h2>
+<p>11-12 快问快答那 6/8 里有两题是疲劳分，按约定重答（<b>值 + 类型写全</b>），不重新讲：</p>
+<table>
+  <tr><th>#</th><th>题目</th><th>答案</th></tr>
+  <tr><td>Q3</td><td><code>stu["height"]</code> 会怎样？安全取（没有就返回"没填"）怎么写？</td><td><code>KeyError</code>；<code>stu.get("height", "没填")</code> —— <b>圆括号</b>，get 是方法</td></tr>
+  <tr><td>Q5</td><td><code>"hobby" in stu</code> 的结果和类型？</td><td><b>True，bool</b> —— 字典的 in 只认 key</td></tr>
+  <tr><td>Q8</td><td>第 4 轮 name 与第 1 轮相同，<code>avg[name] = average</code> 后字典几对？</td><td><b>3 对</b> —— key 已存在 = 覆盖，len 不变，绝不新增</td></tr>
+</table>
+<div class="hw"><b class="t">周末自主任务清单（对答案用）</b>：① 重答 8 题（尤其上面三题）② 存好 <code>shizhan4_zidian.py</code> 最终版 ③ 预习词频统计器四行版 ④ 选做 <code>count.get(ch,0)+1</code> 跑一遍。没做完不影响今天，现场跟着敲就行。</div>
+
+<h2>一、今天要解决什么</h2>
+<p>给一段文本，统计<b>每个字符出现了几次</b>：</p>
+<pre><code>s = "abracadabra"
+目标 → {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}</code></pre>
+<p>这件事看着新，其实是你 11-12 刚写的 <code>avg[name] = average</code> 换皮：那时候是「一个人 → 一个平均分」，今天是「一个字母 → 一个次数」。<b>字典的所有用法都是同一个动作：按名字记一个数。</b></p>
+
+<h2>二、起手三问（先答，答案就是骨架）</h2>
+<table>
+  <tr><th>问题</th><th>今天的答案</th></tr>
+  <tr><td>结果存哪？</td><td><code>count = {}</code>（字典收集器，不是列表）</td></tr>
+  <tr><td>循环谁？</td><td><code>for ch in s</code> —— 对字符串 for = <b>逐字符</b>遍历（第 4 周讲过，11-12 被 <code>part[1]</code> 咬过一次）</td></tr>
+  <tr><td>每轮干什么？</td><td>这个字母见过 → 次数 +1；没见过 → 立户 =1</td></tr>
+</table>
+
+<h2>三、基础版：四行逻辑（先写这个）</h2>
+<pre><code>s = "abracadabra"
+count = {}
+
+for ch in s:
+    if ch in count:                 <span class="comment"># 字典的 in 判 key —— 11-12 刚焊死</span>
+        count[ch] = count[ch] + 1   <span class="comment"># 见过：+1</span>
+    else:
+        count[ch] = 1               <span class="comment"># 没见过：立户</span>
+
+print(count)</code></pre>
+<p><b>为什么必须有 else？</b> 因为 <code>count[ch] = count[ch] + 1</code> 的右边要<b>先读</b> <code>count[ch]</code>——第一次遇到 a 时字典里根本没这把钥匙，读都读不到，直接 <code>KeyError</code>。else 就是替它把户头开出来。</p>
+
+<h2>四、进阶版：一行搞定（今天的重点）</h2>
+<p>11-12 快问快答 Q3 栽在 <code>get</code> 上——今天它立刻派上用场：</p>
+<pre><code>for ch in s:
+    count[ch] = count.get(ch, 0) + 1</code></pre>
+<p>从里往外读：<code>count.get(ch, 0)</code> → 「这个字母记过几次？没记过就当 0」→ <code>+ 1</code> → <code>count[ch] =</code> 存回去。<b>「函数只算、= 才存」这句话在这儿又出现了</b>：get 只负责把旧值算出来，真正写回字典的是等号。</p>
+<div class="warn"><b>对照记牢</b>：<code>count.get(ch, 0)</code> 用<b>圆括号</b>（请方法干活）；<code>count[ch]</code> 用<b>方括号</b>（按钥匙取值/赋值）。11-12 Q3 的 <code>stu.get["height","没填"]</code> 就是把这两个弄反了，报 <code>TypeError: ... object is not subscriptable</code>。</div>
+<p>顺带：<code>count[ch] += 1</code> 是 <code>count[ch] = count[ch] + 1</code> 的简写，你 B 卷补做时已经用过 <code>total += i</code>。</p>
+
+<h2>五、三个升级（逐个加，别一次全上）</h2>
+
+<h3>升级 1 · 打擂台找出现最多的字母</h3>
+<p>11-12 练习 2 的套路原样搬过来：</p>
+<pre><code>best_ch, best_n = "", 0
+for ch, n in count.items():      <span class="comment"># items() 发卡片，两变量接一对</span>
+    if n &gt; best_n:
+        best_n = n
+        best_ch = ch
+print(f"出现最多：{best_ch}，{best_n} 次")</code></pre>
+
+<h3>升级 2 · 集合看「出现过哪些」</h3>
+<pre><code>print(set(s))          <span class="comment"># {'a','b','r','c','d'} —— 去重、无序</span>
+print(len(set(s)))     <span class="comment"># 5 —— 不同字母的个数</span></code></pre>
+<p>集合不能下标、不保顺序，它的本职就三样：<b>去重、成员判断、交并集</b>。你 11-8 手写的 <code>if name not in failed</code> 判重，就是在手工模拟它。</p>
+
+<h3>升级 3 · 按次数从高到低输出（选做）</h3>
+<pre><code>for ch, n in sorted(count.items(), key=lambda x: x[1], reverse=True):
+    print(f"{ch}: {n}")</code></pre>
+<p><code>lambda</code> 现在<b>只要求照抄、不要求理解</b>，第 6 周函数课正式讲。它的意思是「排序时看每一对的第 2 项（次数）」。写不出就用基础版 + 手工看，一样对。</p>
+
+<h2>六、完整参考代码</h2>
+<pre><code>s = "abracadabra"
+count = {}
+
+for ch in s:
+    count[ch] = count.get(ch, 0) + 1
+
+for ch, n in count.items():
+    print(f"{ch}: {n}")
+
+best_ch, best_n = "", 0
+for ch, n in count.items():
+    if n &gt; best_n:
+        best_n, best_ch = n, ch
+print(f"出现最多：{best_ch}，{best_n} 次")
+print(f"不同字母：{len(set(s))} 个 → {set(s)}")</code></pre>
+<details>
+  <summary>展开看正确输出（先自己跑，再对）</summary>
+  <pre><code>a: 5
+b: 2
+r: 2
+c: 1
+d: 1
+出现最多：a，5 次
+不同字母：5 个 → {'a', 'b', 'r', 'c', 'd'}</code></pre>
+  <p>注意 <code>count.items()</code> 的打印顺序按<b>首次出现</b>排列（a→b→r→c→d），集合那行顺序随机，都正常。</p>
+</details>
+
+<h2>七、四个必躲的坑（都是你踩过的）</h2>
+<table>
+  <tr><th>坑</th><th>症状</th><th>挡法</th></tr>
+  <tr><td><code>count.get[ch, 0]</code> 方括号</td><td>TypeError: not subscriptable</td><td>get 是方法 → 圆括号</td></tr>
+  <tr><td>忘写 else 又没用 get</td><td>KeyError（第一次遇到新字母）</td><td>二选一：四行版带 else，或一行版带 get</td></tr>
+  <tr><td><code>for ch in count</code> 以为拿到次数</td><td>拿到的是 key（字母）</td><td>要值用 <code>count.items()</code> 或 <code>count[ch]</code></td></tr>
+  <tr><td>打印循环缩进进 for</td><td>输出越印越多</td><td>「print 全体要数据先齐」→ 住循环<b>外</b></td></tr>
+</table>
+
+<h2>八、课后作业（周二 11-17 新知课开场批改）</h2>
+<div class="hw">
+  <b class="t">必做 · 单词版词频统计（wf.py）</b>
+  <p><code>text = "python is great and data is great and python is fun"</code></p>
+  <ol>
+    <li><code>text.split()</code> 切成单词列表（<b>不传参数</b>=按任意空白切）——第 4 周 split 的老朋友</li>
+    <li>用 <code>count.get(w, 0) + 1</code> 统计每个单词出现几次</li>
+    <li>打擂台找出出现最多的单词</li>
+    <li>输出不同单词个数（<code>len(set(words))</code>）</li>
+  </ol>
+  <p>预期：共 11 个词 —— <code>python:2</code>、<code>is:3</code>、<code>great:2</code>、<code>and:2</code>、<code>data:1</code>、<code>fun:1</code>，共 <b>6 个不同单词</b>，出现最多的是 <code>is</code>（3 次）。<br><span style="color:#cf222e">📌 勘误（11-17 修订）：初版误写为「四词各 2 次」，实际 <code>is</code> 出现 3 次，已实测更正。</span></p>
+  <b class="t">选做 · 中文字符版</b>
+  <p><code>s = "石家庄学院大数据专业"</code>，统计每个汉字出现几次（中文没有空格，逐字符遍历照样能用）。</p>
+</div>
+
+<h2>九、下节课与待办</h2>
+<ul>
+  <li><b>周二 11-17 20:15 新知课</b>：第 6 周「函数与递归」——今天照抄的 <code>lambda</code>、11-5 剧透过的「括号内 <code>name=value</code> 是关键字参数」都会在这里正式讲</li>
+  <li><b>阶段测验 2</b>（第 4—5 周）安排在第 6 周末，复习材料 = lessons/08—13 的快问快答与练习</li>
+  <li><b>📌 下课提醒（学生 11-15 嘱托）</b>：GitHub 仓库三样 —— 仓库地址 / 默认分支名 / 目录约定；另可选发 <code>git remote -v</code> 输出。<b>token 一律不接收。</b>拿到后打包第 2—5 周档案 zip 并补进 README</li>
+</ul>
+
+<footer>第 5 周实战课 · 2026-11-15 · 下一课：11-17（周二）20:15 新知课「函数与递归」</footer>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3周 · 新知课（重上·深化版）：列表与元组 II</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--green:#0f7b4f;--green-soft:#e9f7f0;
+    --amber:#b45309;--amber-soft:#fff7ed;--red:#c0392b;--red-soft:#fdecea;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;padding:30px 18px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.8}
+  .wrap{max-width:860px;margin:0 auto}
+  header{background:linear-gradient(135deg,#14346e,#2f6feb);color:#fff;border-radius:14px;padding:24px 28px}
+  header h1{margin:0 0 6px;font-size:23px}
+  header p{margin:0;opacity:.9;font-size:13.5px}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .meta span{background:rgba(255,255,255,.16);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  h2{font-size:19px;margin:34px 0 12px;padding-left:11px;border-left:4px solid var(--blue)}
+  h3{font-size:16px;margin:20px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0}
+  .goal{background:var(--blue-soft);border:1px solid #cfe0ff;border-radius:12px;padding:15px 20px;margin:16px 0}
+  .pit{background:var(--amber-soft);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .key{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  pre{background:#1e2229;color:#e6e8eb;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-size:13px;line-height:1.7;font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre .c{color:#8b95a1}
+  pre .k{color:#7ec4ff}
+  pre .s{color:#a5e19a}
+  pre .n{color:#ffcb6b}
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--blue);font-size:14.5px}
+  details[open] summary{margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:#eef1f5}
+  .hw{background:#fff8e6;border:1px solid #f0dcbc;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .hw b.t{color:var(--amber)}
+  ul,ol{padding-left:22px;margin:10px 0}li{margin:6px 0}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>第 3 周 · 新知课（重上·深化版）：列表与元组 II</h1>
+  <p>石家庄学院 · 数据科学与大数据技术 · Python 一对一课</p>
+  <div class="meta"><span>日期：2026-10-27</span><span>课型：新知课重上（复习 + 深化）</span><span>阶段：语法地基</span></div>
+</header>
+
+<div class="goal">
+  <b>本课目标</b> —— 上完这节课，你应该能够：
+  <ul>
+    <li>通过 8 道<b>快问快答</b>自检 10-20 所学的列表基础，查漏补缺</li>
+    <li>掌握 <b>enumerate</b>：一行同时拿到编号和值，替代 <code>range(len())</code></li>
+    <li>认识<b>列表推导式</b>：一行生成一个新列表（先会看懂、会抄，熟练不着急）</li>
+    <li>用新题练习：排序 + 编号 + 推导式组合拳</li>
+  </ul>
+</div>
+
+<h2>一、快问快答（先自己答，再点开对答案）</h2>
+<div class="card">
+  <p>已知 <code>scores = [88, 92, 76, 59, 100]</code>，口头回答，别敲代码：</p>
+  <ol>
+    <li><code>scores[2]</code> 是多少？</li>
+    <li>怎么取最后一个元素？</li>
+    <li><code>scores[1:3]</code> 是哪几个？</li>
+    <li>往末尾加一个 95，怎么写？</li>
+    <li>想知道列表里有几个元素，用什么？</li>
+    <li>想从高到低排序、又不想改原列表，怎么写？</li>
+    <li>元组和列表最核心的区别是什么？</li>
+    <li><code>85 in scores</code> 返回的结果是什么类型？</li>
+  </ol>
+  <details><summary>👉 点开对答案</summary>
+  <ol>
+    <li><b>76</b>（下标 2 = 第 3 个元素，下标从 0 开始）</li>
+    <li><code>scores[-1]</code>（负索引，-1 = 最后一个）</li>
+    <li><b>[92, 76]</b>（含头不含尾：下标 1、2，不含 3）</li>
+    <li><code>scores.append(95)</code> —— 千万别写 <code>scores = scores.append(95)</code>，append 返回 None，列表会没</li>
+    <li><code>len(scores)</code> → 5</li>
+    <li><code>sorted(scores, reverse=True)</code>（返回新列表，原件不动）</li>
+    <li>元组<b>不可变</b>（创建后不能增删改），列表可变；元组用圆括号</li>
+    <li><b>bool</b>（True / False，可以直接配 if 用）</li>
+  </ol>
+  <p>全对 → 基础过关，直接进入深化；错 1-2 个 → 回顾 <code>lessons/04</code> 对应小节再继续。</p>
+  </details>
+</div>
+
+<h2>二、深化 1：enumerate —— 编号和值，一把抓</h2>
+<div class="card">
+  <p><b>上次的问题：</b>想知道"第几个元素是什么"，要写 <code>range(len(scores))</code>，还得小心 <code>i+1</code>：</p>
+<pre><span class="k">for</span> i <span class="k">in</span> range(len(<span class="k">scores</span>)):
+    print(f<span class="s">"第{i+1}个同学：{scores[i]}分"</span>)   <span class="c"># 编号从0，人称从1，容易晕</span></pre>
+  <p><b>升级版：</b><code>enumerate</code> 每次直接给你一对「编号, 值」：</p>
+<pre><span class="k">for</span> i, s <span class="k">in</span> enumerate(<span class="k">scores</span>, start=1):
+    print(f<span class="s">"第{i}个同学：{s}分"</span>)</pre>
+  <p><b>三个要点：</b></p>
+  <ol>
+    <li><code>enumerate(scores)</code> 会在遍历时自动数数，每次交给你「编号 + 元素」一对；</li>
+    <li><code>for i, s in ...</code> 用两个变量同时接 —— 这叫<b>解包</b>，先会照着用，第 6 周讲函数多返回值时你还会见到它；</li>
+    <li><code>start=1</code> 让编号直接从 1 开始，不用再 <code>i+1</code>，少一个出错点。</li>
+  </ol>
+  <div class="key"><b>怎么选：</b>只要值 → <code>for s in scores</code>；要编号+值 → <code>enumerate</code>。<code>range(len())</code> 能用但啰嗦，见到要认识，自己写优先 enumerate。</div>
+</div>
+
+<h2>三、深化 2：列表推导式 —— 一行生成一个列表</h2>
+<div class="card">
+  <p><b>老需求：</b>把每个成绩都 +5。你已经会的写法：</p>
+<pre><span class="k">new</span> = []
+<span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span>:
+    <span class="k">new</span>.append(s + 5)
+<span class="k">print</span>(<span class="k">new</span>)    <span class="c"># [93, 97, 81, 64, 105]</span></pre>
+  <p><b>推导式：同样的意思，一行：</b></p>
+<pre><span class="k">new</span> = [s + 5 <span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span>]</pre>
+  <p><b>读法（从左往右翻译）：</b>"对 scores 里的<b>每个 s</b>，生成 <b>s + 5</b>，收集成新列表"。方括号说明结果是列表，<code>for</code> 前面是"每个元素变成什么"，<code>for</code> 后面是"从哪遍历"。</p>
+  <p><b>再多看两个：</b></p>
+<pre>[s * 2 <span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span>]              <span class="c"># 每个翻倍</span>
+[len(name) <span class="k">for</span> name <span class="k">in</span> names]         <span class="c"># 每个名字的长度</span></pre>
+  <p><b>还能带条件（只要部分元素）：</b></p>
+<pre>[s <span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span> <span class="k">if</span> s &gt;= 60]        <span class="c"># 只收及格的：[88, 92, 76, 100]</span></pre>
+  <div class="pit"><b>定位与要求：</b>现阶段只要求<b>能看懂、敢抄</b>（讲义和参考代码里出现时不慌），自己从零写留到第 7 周后再要求熟练。它本质就是把"建空列表 + for + append"三行压成一行 —— 循环基本功不牢时，老老实实写三行版，一样对。</div>
+</div>
+
+<h2>四、课堂练习（全部新题）</h2>
+<div class="card">
+  <h3 style="margin-top:0">练习 1：颁奖名单（enumerate 组合拳）</h3>
+  <p>已知 <code>scores = [88, 92, 76, 59, 100]</code>，输出（从高到低、带名次）：</p>
+<pre>第1名：100分
+第2名：92分
+第3名：88分
+第4名：76分
+第5名：59分</pre>
+  <details><summary>👉 点开看参考答案</summary>
+<pre><span class="k">scores</span> = [88, 92, 76, 59, 100]
+ranked = sorted(<span class="k">scores</span>, reverse=<span class="k">True</span>)     <span class="c"># 先从高到低</span>
+<span class="k">for</span> i, s <span class="k">in</span> enumerate(ranked, start=1):   <span class="c"># 再发编号</span>
+    print(f<span class="s">"第{i}名：{s}分"</span>)</pre>
+    <p>解析：<b>先排序、再编号</b>，两步各司其职。容易错点：直接对原列表 enumerate（没排序）；或者忘了 <code>start=1</code> 又不 <code>i+1</code>，名次从 0 开始。</p>
+  </details>
+  <h3>练习 2：推导式三连</h3>
+  <p>用列表推导式各写一行：</p>
+  <ol>
+    <li>生成每个成绩减 10 分的新列表</li>
+    <li>生成所有不及格（&lt;60）成绩的新列表</li>
+    <li>选做：生成标签列表 <code>['及格', '及格', '及格', '不及格', '及格']</code></li>
+  </ol>
+  <details><summary>👉 点开看参考答案</summary>
+<pre>[s - 10 <span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span>]                  <span class="c"># 1</span>
+[s <span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span> <span class="k">if</span> s &lt; 60]             <span class="c"># 2 → [59]</span>
+[<span class="s">"及格"</span> <span class="k">if</span> s &gt;= 60 <span class="k">else</span> <span class="s">"不及格"</span> <span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span>]   <span class="c"># 3 选做</span></pre>
+    <p>解析：第 3 题"if...else"写在 for <b>前面</b>（每个元素变成什么），而第 2 题的"if 过滤"写在 for <b>后面</b>（筛选哪些进列表）—— 位置不同、职责不同，这是推导式最容易混的地方，现在见过即可，不要求记住。</p>
+  </details>
+</div>
+
+<h2>五、作业提醒</h2>
+<div class="hw">
+  <b class="t">chengji.py（10-20 布置，周四 10-29 巩固课批改）</b>
+  <p>输入 5 门课成绩存列表 → 平均分（round 两位）/ 最高分 / 最低分 / 从高到低排序输出。今晚学完 enumerate 后，可以顺手加一行带名次的输出 —— 加分项。</p>
+</div>
+
+<h2>六、下节课预告</h2>
+<div class="key">
+  <b>周四 10-29 20:15 巩固课：</b>批改 chengji.py + 列表错题复盘 + 答疑。<br>
+  <b>周日 11-1 10:00 实战课：</b>「学生成绩统计小工具」完整版 + 阶段测验 1 预备。<br>
+  <b>可以先想的：</b>一个列表存 40 个人的成绩，那 5 门课 × 40 人怎么存？——提示：列表里面还能再装列表。
+</div>
+
+<footer>第 3 周新知课（重上·深化版）讲义 · 生成于 2026-10-27 20:45 · 石家庄学院 Python 学习计划 &nbsp;|&nbsp; 温馨提示：讲义里的代码请至少亲手敲一遍</footer>
+
+</div>
+</body>
+</html>

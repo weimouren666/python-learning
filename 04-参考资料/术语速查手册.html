@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python 与大数据术语速查手册 · 大一版</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--amber:#b45309;--amber-soft:#fff7ed;
+    --green:#0f7b4f;--green-soft:#e9f7f0;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.75}
+  .top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 18px}
+  .top h1{margin:0 0 8px;font-size:18px}
+  .search{width:100%;max-width:520px;padding:8px 13px;border:1px solid var(--line);
+    border-radius:9px;font-size:14px;font-family:inherit;outline:none}
+  .search:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,111,235,.13)}
+  .nav{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;white-space:nowrap}
+  .nav a{font-size:12.5px;text-decoration:none;color:var(--blue);background:var(--blue-soft);
+    border-radius:6px;padding:3px 9px;flex-shrink:0}
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 18px 60px}
+  h2{font-size:18px;margin:34px 0 12px;padding-left:11px;border-left:4px solid var(--blue)}
+  h2 .cnt{font-size:12.5px;color:var(--sub);font-weight:400;margin-left:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:11px}
+  .term{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+  .term.hide{display:none}
+  .t-head{margin-bottom:5px}
+  .cn{font-size:15.5px;font-weight:700}
+  .en{font-size:11.5px;color:var(--blue);background:var(--blue-soft);border-radius:5px;
+    padding:1px 7px;margin-left:7px;font-family:"SF Mono",Menlo,monospace}
+  .t-body{font-size:14px;color:#333b45}
+  .t-eg{font-size:12.5px;color:var(--sub);margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+  .t-eg b{color:var(--sub);font-weight:600}
+  code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:12.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  .top10{background:var(--amber-soft);border:1px solid #f3d9ae;border-radius:12px;padding:18px 20px;margin:22px 0}
+  .top10 h2{border:none;padding:0;margin:0 0 10px;font-size:17px}
+  .ten{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+  .ten div{background:#fff;border:1px solid #f0dcbc;border-radius:8px;padding:8px 11px;font-size:13.5px}
+  .ten b{display:block;color:var(--amber);font-size:13px;margin-bottom:2px}
+  .note{background:var(--green-soft);border-left:4px solid var(--green);padding:13px 17px;
+    border-radius:0 8px 8px 0;margin:18px 0;font-size:14.5px}
+  .empty{text-align:center;color:var(--sub);padding:40px 0;display:none}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);
+    font-size:12.5px;text-align:center}
+  .idx{font-size:13px;color:var(--sub);margin:6px 0 0}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>Python 与大数据 · 术语速查手册</h1>
+  <input class="search" id="q" placeholder="🔍 输入名词搜索，如：变量、groupby、冗余、接口…">
+  <div class="nav">
+    <a href="#s0">① 先记这10个</a>
+    <a href="#s1">② 编程基础</a>
+    <a href="#s2">③ 容器类型</a>
+    <a href="#s3">④ 函数与工程</a>
+    <a href="#s4">⑤ 报错与调试</a>
+    <a href="#s5">⑥ 面向对象</a>
+    <a href="#s6">⑦ pandas 核心</a>
+    <a href="#s7">⑧ 数据处理五步</a>
+    <a href="#s8">⑨ 统计与机器学习</a>
+    <a href="#s9">⑩ 大数据概念</a>
+    <a href="#s10">⑪ 工具与环境</a>
+    <a href="#s12">⑫ 课程与考试</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<div class="top10" id="s0">
+  <h2>如果只记 10 个名词，记这些</h2>
+  <div class="ten">
+    <div><b>变量 variable</b>给一个值起个名字，方便反复用</div>
+    <div><b>数据类型 type</b>值的种类：数字/文字/真假</div>
+    <div><b>列表 list</b>一排有序的值，<code>[1,2,3]</code></div>
+    <div><b>字典 dict</b>一堆"名字→值"的对应，<code>{"a":1}</code></div>
+    <div><b>函数 function</b>一段可反复调用的代码块</div>
+    <div><b>库 library</b>别人写好的现成代码，直接调用</div>
+    <div><b>数据结构 data structure</b>组织数据的固定方式</div>
+    <div><b>DataFrame</b>pandas 里的"整张表"，这章的主角</div>
+    <div><b>算法 algorithm</b>解决问题的固定步骤</div>
+    <div><b>API</b>库对外开放的"按钮"，你调它，它干活</div>
+  </div>
+  <div class="idx">这 10 个是地基。其余所有名词，基本都是它们的组合或衍生。</div>
+</div>
+
+<h2 id="s1">① 编程基础 <span class="cnt">13 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">编程</span><span class="en">programming</span></div>
+    <div class="t-body">把解决问题的思路翻译成计算机能执行的指令序列。写代码的本质是"把话说得足够精确"。</div>
+    <div class="t-eg"><b>例：</b>"把成绩单里不及格的挑出来" → 人会说，你得写成精确的步骤。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">程序</span><span class="en">program</span></div>
+    <div class="t-body">一段能跑起来的代码。程序 = 数据 + 处理数据的指令。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">代码</span><span class="en">code</span></div>
+    <div class="t-body">指令的具体文本。写在文件里的代码叫"脚本"，能让它处理不同输入才是"程序"。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">解释器</span><span class="en">interpreter</span></div>
+    <div class="t-body">把你的代码一句句翻译成机器能执行的动作。Python 自带解释器，所以不需要先"编译"。</div>
+    <div class="t-eg"><b>类比：</b>翻译官。Java 需要编译器（一次翻译成 .class），Python 用解释器（边翻译边执行）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">变量</span><span class="en">variable</span></div>
+    <div class="t-body">给一个值起个名字，之后用名字代替它。名字可以随便起，但要用有意义的英文名。</div>
+    <div class="t-eg"><b>例：</b><code>score = 88</code> 之后写 <code>print(score)</code>，不用每次重新写 88。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据类型</span><span class="en">data type</span></div>
+    <div class="t-body">值的种类。Python 主要四种：<code>int</code> 整数、<code>float</code> 小数、<code>str</code> 文字、<code>bool</code> 真假（True/False）。</div>
+    <div class="t-eg"><b>关键：</b>计算机不区分"数字"和"文字"，<code>5</code> 和 <code>"5"</code> 对它来说是两个完全不同的东西。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">类型转换</span><span class="en">type casting</span></div>
+    <div class="t-body">在几种类型之间来回换。<code>int("88")</code>、<code>str(88)</code>、<code>float("3.5")</code>。</div>
+    <div class="t-eg"><b>为什么重要：</b><code>input()</code> 拿到的永远是文字，所以"输入数字后做运算"必须先转换，否则会报错或算出怪结果。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">运算符</span><span class="en">operator</span></div>
+    <div class="t-body">做运算的符号。三个新手必混淆的：<code>/</code> 真除法（<code>5/2=2.5</code>）、<code>//</code> 整除（<code>5//2=2</code>）、<code>%</code> 取余（<code>5%2=1</code>）。<code>**</code> 是幂（<code>2**3=8</code>）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">注释</span><span class="en">comment</span></div>
+    <div class="t-body">写给人看的说明，Python 里用 <code>#</code> 开头，程序不执行它。</div>
+    <div class="t-eg"><b>为什么重要：</b>三个月后看自己的代码会完全看不懂。写注释是给自己未来写信。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">缩进</span><span class="en">indentation</span></div>
+    <div class="t-body">Python 用缩进（Tab 或 4 个空格）表示"这行属于上面那行"。这是它最鲜明的特点，也是最常见的报错来源。</div>
+    <div class="t-eg"><b>注意：</b>同一个代码块里缩进必须一致，用 Tab 和空格混用会报 <code>IndentationError</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">布尔值</span><span class="en">boolean</span></div>
+    <div class="t-body">只有两个值：<code>True</code> 和 <code>False</code>，表示"是/否"。由比较运算产生：<code>88 &gt;= 90</code> → <code>False</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">真值判断</span><span class="en">truthiness</span></div>
+    <div class="t-body">Python 里，空字符串、0、空列表都被当作 <code>False</code>，其余当 <code>True</code>。写判断时很好用。</div>
+    <div class="t-eg"><b>例：</b><code>if name:</code> 意思是"如果名字不是空的"。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">逻辑运算符</span><span class="en">and / or / not</span></div>
+    <div class="t-body">把多个条件组合起来。<code>and</code> 全真才真，<code>or</code> 有一个真就真，<code>not</code> 取反。</div></div>
+</div>
+
+<h2 id="s2">② 容器类型 <span class="cnt">11 个 —— Python 的灵魂</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">列表</span><span class="en">list</span></div>
+    <div class="t-body">一排<b>有序、可修改</b>的值，用方括号。<code>[88, 92, 75]</code>。</div>
+    <div class="t-eg"><b>类比：</b>一张可以随时涂改的清单。<b>在 pandas 里，一列就是一条列表。</b></div></div>
+  <div class="term"><div class="t-head"><span class="cn">元组</span><span class="en">tuple</span></div>
+    <div class="t-body">和列表几乎一样，但<b>创建后不能修改</b>，用小括号 <code>(1, 2)</code>。</div>
+    <div class="t-eg"><b>用在哪：</b>表示"一组不该被改动的值"，比如坐标、日期。多返回值也用元组返回。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">字典</span><span class="en">dict</span></div>
+    <div class="t-body">一堆"名字 → 值"的对应关系，用大括号。<code>{"姓名": "张三", "高数": 88}</code>。</div>
+    <div class="t-eg"><b>类比：</b>通讯录 —— 查名字得到电话。<b>在 pandas 里，列名就是字典的键。</b>JSON 数据格式本质就是字典 + 列表。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">集合</span><span class="en">set</span></div>
+    <div class="t-body"><b>不重复、无顺序</b>的一堆值，用 <code>{}</code>（空的时候要写 <code>set()</code>）。最大用途：<b>去重</b>和<b>求交集/并集</b>。</div>
+    <div class="t-eg"><b>例：</b>找出两篇文章的共同用词：<code>set(词1) &amp; set(词2)</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">索引</span><span class="en">index</span></div>
+    <div class="t-body">元素在容器里的位置编号，<b>从 0 开始数</b>。<code>[88,92,75]</code> 里 88 的索引是 0，92 是 1。</div>
+    <div class="t-eg"><b>坑：</b>长度为 3 的列表，最大索引是 2。写 <code>lst[3]</code> 会报 <code>IndexError</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">切片</span><span class="en">slicing</span></div>
+    <div class="t-body">取出一段：<code>lst[start:stop:step]</code>，<b>含头不含尾</b>（stop 取不到）。<code>lst[1:3]</code> 取索引 1、2。</div>
+    <div class="t-eg"><b>坑：</b><code>lst[:2]</code> 前两个，<code>lst[2:]</code> 从第 2 个到末尾，<code>lst[::2]</code> 每隔一个取一个。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">可变 vs 不可变</span><span class="en">mutable / immutable</span></div>
+    <div class="t-body">列表和字典能改，数字、文字、元组不能改。改不了的东西更安全，函数传参时尤其重要。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">嵌套</span><span class="en">nesting</span></div>
+    <div class="t-body">容器里装容器。<code>{"班级": {"张三": [88, 90]}}</code>。pandas 的行列结构本质就是二维嵌套。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">遍历</span><span class="en">iterate / loop</span></div>
+    <div class="t-body">把容器里的元素一个一个取出来处理。<code>for x in 列表:</code></div></div>
+  <div class="term"><div class="t-head"><span class="cn">列表推导式</span><span class="en">list comprehension</span></div>
+    <div class="t-body">用一行代码写出"循环 + 收集结果"，Python 的标志性写法。<code>[x*2 for x in lst if x&gt;60]</code></div>
+    <div class="t-eg"><b>为什么重要：</b>pandas 的很多筛选写法就是它变体，看着眼熟就容易懂。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">None</span><span class="en">None</span></div>
+    <div class="t-body">表示"这里什么都没有"，和 <code>0</code>、空字符串不一样。<code>None</code> 是"没有值"，<code>0</code> 是"值就是零"。</div></div>
+</div>
+
+<h2 id="s3">③ 函数与工程 <span class="cnt">12 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">函数</span><span class="en">function</span></div>
+    <div class="t-body">一段取名字、可反复调用的代码块。<code>def</code> 定义，调用时执行。</div>
+    <div class="t-eg"><b>为什么重要：</b>从"一堆顺序代码"到"能拆分成模块"，这是编程思维的分水岭。代码超过一屏就该拆函数。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">参数</span><span class="en">parameter</span></div>
+    <div class="t-body">调用函数时传进去的数据。<b>位置参数</b>按顺序对应，<b>关键字参数</b>按名字对应，<b>默认参数</b>可以不给。</div>
+    <div class="t-eg"><b>可读性：</b>能用关键字参数就别用位置参数 —— <code>plot(x, label="高数")</code> 比 <code>plot(x, "高数")</code> 强得多。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">返回值</span><span class="en">return</span></div>
+    <div class="t-body">函数"吐出来"的结果。<code>return</code> 之后的代码不执行。没有 <code>return</code> 的函数默认返回 <code>None</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">作用域</span><span class="en">scope</span></div>
+    <div class="t-body">变量在哪一段代码里有效。函数内部定义的变量，出了函数就没了。</div>
+    <div class="t-eg"><b>坑：</b>函数里想改外面的全局变量要用 <code>global</code> 声明，但多数时候更好的做法是<b>用参数传进去、用 return 带出来</b>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">递归</span><span class="en">recursion</span></div>
+    <div class="t-body">函数自己调用自己。必须有一个"终点条件"否则会无限循环。</div>
+    <div class="t-eg"><b>类比：</b>俄罗斯套娃 —— 每个套娃里有个更小的套娃，最后一个里面是空的。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">模块</span><span class="en">module</span></div>
+    <div class="t-body">一个 <code>.py</code> 文件。<code>import</code> 进来就能用别人写的函数。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">包</span><span class="en">package</span></div>
+    <div class="t-body">一堆模块的目录，用 <code>from 包 import 模块</code> 引入。pandas、numpy 都是包。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">库 / 框架</span><span class="en">library / framework</span></div>
+    <div class="t-body">别人写好的现成代码。<b>库</b>：你调用它（pandas、numpy）。<b>框架</b>：它规定好结构，你往里填代码（Web 框架）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">API</span><span class="en">API</span></div>
+    <div class="t-body">一个库对外开放的"按钮清单"。你不需要知道它内部怎么实现，只要知道"调哪个函数能得到什么"。</div>
+    <div class="t-eg"><b>类比：</b>餐厅菜单。菜单上写清"鱼香肉丝 38 元"，你不用进厨房。函数就是菜单上的菜名 + 参数。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">第三方库</span><span class="en">3rd-party library</span></div>
+    <div class="t-body">别人发布在网上、你用 <code>pip install</code> 装的库：pandas、numpy、matplotlib、requests。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">虚拟环境</span><span class="en">virtual environment</span></div>
+    <div class="t-body">一个项目独立的 Python 环境，让不同项目可以用不同版本的库而不打架。Anaconda 自带 conda 环境。</div>
+    <div class="t-eg"><b>现在：</b>知道有这个概念就行，实践中用 Anaconda 默认环境就够了。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">文档字符串</span><span class="en">docstring</span></div>
+    <div class="t-body">写在函数开头、三引号包起来的功能说明。<code>help(函数)</code> 或鼠标悬停就能看到。</div></div>
+</div>
+
+<h2 id="s4">④ 报错与调试 <span class="cnt">9 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">报错 / 异常</span><span class="en">exception</span></div>
+    <div class="t-body">程序运行时出错。Python 会告诉你<b>哪一行</b>、<b>什么类型</b>的错误。</div>
+    <div class="t-eg"><b>重要观念：</b>报错不是坏事，是程序在跟你说话。学会读报错是核心能力。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">Traceback</span><span class="en">traceback</span></div>
+    <div class="t-body">报错时打印的那一长串信息，告诉你错误从哪来、经过哪几行、在哪一行炸了。</div>
+    <div class="t-eg"><b>读法：</b>先看<b>最后一行</b>（真正的错误原因），再看倒数第二行（出错的代码位置）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">SyntaxError</span><span class="en">语法错误</span></div>
+    <div class="t-body">代码本身写法不对，Python 还没开始执行就发现了：漏冒号、括号不配对、缩进错。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">NameError</span><span class="en">变量未定义</span></div>
+    <div class="t-body">用了没定义过的名字。常见于<b>拼写错误</b>或<b>大小写错</b>（<code>Score</code> 和 <code>score</code> 是两个变量）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">TypeError</span><span class="en">类型错误</span></div>
+    <div class="t-body">类型不匹配，比如数字和文字相加。<code>"88" + 8</code> 就报这个。数据清洗阶段最常见的错误。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">ValueError</span><span class="en">值错误</span></div>
+    <div class="t-body">类型对但值不合理。<code>int("abc")</code>、数组形状不匹配时会报这个。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">IndexError</span><span class="en">索引越界</span></div>
+    <div class="t-body">访问了不存在的位置，比如访问第 10 个元素但列表只有 5 个。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">KeyError</span><span class="en">键不存在</span></div>
+    <div class="t-body">访问字典里没有的键。<code>df["不存在的列"]</code> 就会这样。数据处理时经常用它来试探有哪些列。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">调试</span><span class="en">debug</span></div>
+    <div class="t-body">找出 bug 的过程。手段：打印中间结果、<code>print(type(x))</code> 看类型、断点单步执行。</div>
+    <div class="t-eg"><b>新手技巧：</b>不确定哪里错了，就在那行前面加一行 <code>print("到这里了", 变量)</code>，看它有没有执行到。</div></div>
+</div>
+
+<h2 id="s5">⑤ 面向对象 <span class="cnt">7 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">类</span><span class="en">class</span></div>
+    <div class="t-body">一类东西的"设计图"。规定这类东西有哪些属性、能做什么。</div>
+    <div class="t-eg"><b>类比：</b>图纸。「学生」这个类规定了：有姓名、有学号、能考试。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">对象 / 实例</span><span class="en">object / instance</span></div>
+    <div class="t-body">按图纸造出来的具体东西。张三是一个<b>对象</b>，「学生」是<b>类</b>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">属性</span><span class="en">attribute</span></div>
+    <div class="t-body">对象身上的数据。张三的姓名、高数都是属性。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">方法</span><span class="en">method</span></div>
+    <div class="t-body">对象能做的事。张三能"计算总分"，这就是一个方法 —— 写在类里面的函数。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">self</span><span class="en">self</span></div>
+    <div class="t-body">方法里代表"调用这个方法的那个对象自己"的参数。<b>第 9 周会卡住你半天的就是它。</b></div>
+    <div class="t-eg"><b>类比：</b>"我今天很高兴"里的"我"。<code>self.姓名</code> 就是"我.姓名"。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">继承</span><span class="en">inheritance</span></div>
+    <div class="t-body">新类直接获得已有类的属性和方法。省代码，也表达"本质上是同一种东西"。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">魔法方法</span><span class="en">dunder / magic method</span></div>
+    <div class="t-body">名字前后各有两个下划线的方法，让类支持 Python 内置操作。<code>__init__</code> 管"创建时该做什么"，<code>__str__</code> 管"打印成什么样子"。</div></div>
+</div>
+
+<h2 id="s6">⑥ pandas 核心名词 <span class="cnt">18 个 —— 教材第 11—12 周的主角</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">DataFrame</span><span class="en">dataframe</span></div>
+    <div class="t-body">pandas 里的一张二维表，有行索引、有列名。<b>整本书的绝对主角。</b></div>
+    <div class="t-eg"><b>类比：</b>Excel 里的一张工作表，但可以存几百万行。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">Series</span><span class="en">series</span></div>
+    <div class="t-body">一列数据，带索引。<code>df["高数"]</code> 取出来就是一个 Series。DataFrame = 多个 Series 拼起来。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">index / 索引</span><span class="en">index</span></div>
+    <div class="t-body">行标签。默认是 0,1,2,3… 也可以改成学号、日期等有意义的东西。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">columns / 列名</span><span class="en">columns</span></div>
+    <div class="t-body">每一列的名字。<code>df.columns</code> 就能看到所有列名 —— 拿到陌生数据的第一步就是看它。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">NaN</span><span class="en">Not a Number</span></div>
+    <div class="t-body">pandas 里表示"缺失值"的特殊值，<code>isnull()</code> 专门找它。注意 <code>NaN != NaN</code>，所以不能直接比较判断。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">shape</span><span class="en">shape</span></div>
+    <div class="t-body">表的尺寸，返回 <code>(行数, 列数)</code>。<code>df.shape</code> → <code>(8, 9)</code> 表示 8 行 9 列。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">loc</span><span class="en">loc</span></div>
+    <div class="t-body">按<b>标签</b>取数据。行用索引名、列用列名：<code>df.loc[0, "高数"]</code>。</div>
+    <div class="t-eg"><b>记忆法：</b>loc = <b>l</b>abel（标签）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">iloc</span><span class="en">iloc</span></div>
+    <div class="t-body">按<b>位置</b>取数据，只认整数序号：<code>df.iloc[0, 3]</code> 表示第 1 行第 4 列。</div>
+    <div class="t-eg"><b>记忆法：</b>iloc = <b>i</b>nteger（整数位置）。<b>loc vs iloc 是必考的坑。</b></div></div>
+  <div class="term"><div class="t-head"><span class="cn">布尔索引</span><span class="en">boolean indexing</span></div>
+    <div class="t-body">用一个"真/假"的序列筛出符合条件的行，这是 pandas 筛选的核心机制。</div>
+    <div class="t-eg"><b>例：</b><code>df[df["高数"] &gt;= 90]</code> —— 先算出每行"是否 ≥90"，再挑出为真的行。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">groupby</span><span class="en">group by</span></div>
+    <div class="t-body">按某列分组，分别做统计。pandas 的命根子，相当于 SQL 的 <code>GROUP BY</code>。</div>
+    <div class="t-eg"><b>例：</b><code>df.groupby("专业")["高数"].mean()</code> = 每个专业的平均高数。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">聚合函数</span><span class="en">aggregation</span></div>
+    <div class="t-body">把一堆值压成一个值：<code>sum</code> <code>mean</code> <code>count</code> <code>max</code> <code>min</code> <code>std</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">merge / 合并</span><span class="en">merge / join</span></div>
+    <div class="t-body">把两张表按共同的列拼起来，相当于 SQL 的 <code>JOIN</code>。<code>how="left"</code> 表示以左表为准、右侧缺的补空。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">透视表</span><span class="en">pivot table</span></div>
+    <div class="t-body">Excel 里那个"拖字段自动汇总"的工具，pandas 里是 <code>pivot_table()</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">apply</span><span class="en">apply</span></div>
+    <div class="t-body">对每一行/每一列套用你自己写的函数。功能最强但也最慢，能用别的写法就别用它。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">astype</span><span class="en">astype</span></div>
+    <div class="t-body">转换数据类型。<code>df["学号"].astype(str)</code>、<code>.astype(int)</code>。数据清洗必用。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">describe</span><span class="en">describe</span></div>
+    <div class="t-body">一行代码输出所有数值列的统计摘要：个数、均值、标准差、最小、四分位、最大。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">缺失值处理</span><span class="en">missing value</span></div>
+    <div class="t-body">三种常见做法：<b>删掉</b>（<code>dropna</code>）、<b>填值</b>（<code>fillna</code>）、<b>保留</b>并在计算时忽略。<b>选哪种取决于业务，没有标准答案。</b></div></div>
+</div>
+
+<h2 id="s7">⑦ 教材第 3 章：数据处理五步 <span class="cnt">17 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">数据采集</span><span class="en">data collection</span></div>
+    <div class="t-body">把数据从各种来源弄到手：文件、数据库、网页、传感器。pandas 里是 <code>read_csv</code>、<code>read_excel</code>、<code>read_sql</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据质量</span><span class="en">data quality</span></div>
+    <div class="t-body">数据"好不好用"的综合判断：准不准、全不全、干不干净、及时不及时。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">残缺数据</span><span class="en">incomplete data</span></div>
+    <div class="t-body">该有的值没有 —— 某个人没填年龄、某条记录缺字段。对应 pandas 的 <code>NaN</code>。</div>
+    <div class="t-eg"><b>处理：</b><code>fillna(中位数)</code>、<code>dropna()</code>、按业务规则推断填补。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">噪声数据</span><span class="en">noisy data</span></div>
+    <div class="t-body">值本身不合理或错误 —— 年龄填了 250、身高 3000。真实世界常见，且<b>不能靠平均值发现</b>。</div>
+    <div class="t-eg"><b>处理：</b>设合理范围过滤（<code>df[df["年龄"] &lt; 100]</code>）或视为缺失处理。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">冗余数据</span><span class="en">redundant data</span></div>
+    <div class="t-body">重复的、不提供额外信息的记录 —— 同一个人被登记了两次。</div>
+    <div class="t-eg"><b>处理：</b><code>df.duplicated()</code> 找出来，<code>df.drop_duplicates()</code> 删掉。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">脏数据</span><span class="en">dirty data</span></div>
+    <div class="t-body">格式不统一 —— 专业写成 <code>"大数据 "</code>（尾部有空格）、<code>"大数据"</code>、<code>"大 数据"</code>，本质是同一个意思却被当成三组。</div>
+    <div class="t-eg"><b>处理：</b><code>df["专业"].str.strip()</code> 去空格、统一大小写/简繁。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据清洗</span><span class="en">cleaning</span></div>
+    <div class="t-body">处理残缺、噪声、冗余，让数据"能用"。<b>这是所有数据工作中最花时间的一步</b>，也是第 11 周的核心。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据变换</span><span class="en">transformation</span></div>
+    <div class="t-body">把数据改成便于分析的形式：转换类型、重新分档、标准化、算新指标。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">属性类型变换</span><span class="en">type transform</span></div>
+    <div class="t-body">改变数据的类型：文字"88"转成数字 <code>88</code>，日期字符串转成日期类型。<code>astype()</code> 干这个。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">属性值变换</span><span class="en">value transform</span></div>
+    <div class="t-body">值本身变了但类型没变：把分数 88 变成等级"良好"、把 100 分制转成 5 分制。</div>
+    <div class="t-eg"><b>pandas：</b><code>pd.cut()</code> 分档、<code>np.where()</code> 条件替换、<code>apply()</code> 自定义。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">标准化</span><span class="en">standardization</span></div>
+    <div class="t-body">把不同量纲的指标拉到同一把尺子上，否则数值大的那个会"压"住小的。</div>
+    <div class="t-eg"><b>Z-Score：</b><code>(x - 均值) / 标准差</code>，结果均值为 0、标准差为 1。必须做均值和标准差各减各除那一遍。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据集成</span><span class="en">integration</span></div>
+    <div class="t-body">把分散在不同地方的数据合成一张表。<code>merge</code>（按共同列）、<code>concat</code>（上下/左右拼接）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">模式匹配</span><span class="en">schema matching</span></div>
+    <div class="t-body">合并时确认两张表的结构对得上：字段名一致吗、类型一致吗、主键有重复吗。</div>
+    <div class="t-eg"><b>实际坑：</b>两边都有"学号"，但一边是 <code>int</code> 一边是 <code>str</code>，merge 会静默匹配失败得到一堆 <code>NaN</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据值冲突</span><span class="en">conflict</span></div>
+    <div class="t-body">同一个实体在不同来源里值不一样 —— 这个人在这张表是"大数据"，在那张表是"数据科学"。</div>
+    <div class="t-eg"><b>处理：</b>定一个"可信来源"优先，或按规则裁决。这是<b>业务问题，不是技术问题</b>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据归约</span><span class="en">reduction</span></div>
+    <div class="t-body">把数据变小以便分析 —— 删掉不用的列，或把多行压成一行汇总。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">维归约</span><span class="en">dimensionality reduction</span></div>
+    <div class="t-body"><b>减少"列"的个数</b>，去掉与分析无关的属性。<code>drop(columns=[...])</code>。目的是去掉噪声。</div>
+    <div class="t-eg"><b>注意：</b>严格意义上的"降维"是指 PCA 这类数学方法；教材这里只是泛指"减列"。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数值归约</span><span class="en">numeric reduction</span></div>
+    <div class="t-body"><b>减少"行"的个数</b>，或把多行压成汇总值：<code>groupby().mean()</code>。目的是看清规律。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">ETL</span><span class="en">Extract-Transform-Load</span></div>
+    <div class="t-body">抽取 → 变换 → 加载，数据进数据仓库的标准流程。<b>对应教材的"采集 → 变换 → 集成"。</b>几乎所有数据平台都在讲这个词。</div></div>
+</div>
+
+<h2 id="s8">⑧ 统计与机器学习基础 <span class="cnt">17 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">描述统计</span><span class="en">descriptive statistics</span></div>
+    <div class="t-body">把一批数据总结成几个数字。均值、中位数、标准差、分位数 —— pandas 的 <code>describe()</code> 就是它。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">均值</span><span class="en">mean</span></div>
+    <div class="t-body">所有数加起来除以个数。<b>会被极端值拉偏</b> —— 一百个人月薪 5000，一个人 50 万，均值就失真了。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">中位数</span><span class="en">median</span></div>
+    <div class="t-body">排序后位于中间那个数。<b>比均值稳健</b>，不受极端值影响。收入类数据必看中位数。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">众数</span><span class="en">mode</span></div>
+    <div class="t-body">出现次数最多的值。"买什么手机"这种问题的答案。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">标准差 / 方差</span><span class="en">std / variance</span></div>
+    <div class="t-body">衡量数据有多分散。标准差大 = 参差不齐，方差 = 标准差²。教材 1.2 节说数据的<b>有效性</b>时就靠它。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">分位数 / 四分位</span><span class="en">quantile</span></div>
+    <div class="t-body">把数据按大小切成四份：P25、中位数 P50、P75。<code>describe()</code> 输出的 25%/50%/75% 就是它们。</div>
+    <div class="t-eg"><b>用途：</b>判断分布偏不偏、有没有长尾。成绩、收入、房价数据几乎都右偏（少数特别高）。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">离群值</span><span class="en">outlier</span></div>
+    <div class="t-body">明显偏离整体的极端值。<code>describe()</code> 里 mean 和 std 差距大、或 max 远高于 75%，往往就有离群值。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">分类</span><span class="en">classification</span></div>
+    <div class="t-body">预测"属于哪一类"：垃圾邮件/正常邮件、疾病/健康。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">回归</span><span class="en">regression</span></div>
+    <div class="t-body">预测"是多少"：明天的气温、下个月的销售额。教材 4.2 节的多元线性回归属于这类。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">聚类</span><span class="en">clustering</span></div>
+    <div class="t-body"><b>没有标准答案</b>的情况下，把相似的数据分堆。教材 4.4.1 节的 K-Means 属于这类。</div>
+    <div class="t-eg"><b>和分类的区别很关键：</b>分类是"有标签的学习"（已知答案是猫还是狗），聚类是"自己发现结构"。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">簇 / 簇心</span><span class="en">cluster / centroid</span></div>
+    <div class="t-body">分出来的一堆叫"簇"，每簇的代表点叫"簇心"。K-Means 里 K 就是簇的数量。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">簇内平方和</span><span class="en">inertia / within-cluster SSE</span></div>
+    <div class="t-body">每个点到所属簇心的距离平方和。<b>越小说明分得越紧、越好。</b>多次运行时用它挑最优结果。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">局部最优</span><span class="en">local optimum</span></div>
+    <div class="t-body">算法停在了"附近最好的解"，但全局还有更好的解。</div>
+    <div class="t-eg"><b>我的踩坑实录：</b>K-Means 第一版示例只跑出 52.5% 准确率，就是掉进了局部最优。<b>解决办法：多次随机初始化，取簇内平方和最小的那次。</b>算法也有运气成分。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">随机种子</span><span class="en">random seed</span></div>
+    <div class="t-body">让随机数可复现。<code>np.random.seed(42)</code> 之后每次运行结果都一样 —— 调试和写报告时必须加。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">混淆矩阵</span><span class="en">confusion matrix</span></div>
+    <div class="t-body">表格形式对比"真实类别"和"算法预测"。对角线是分对的，其余是分错的。</div>
+    <div class="t-eg"><b>在我的 K-Means 例子里：</b>运动型 34 对 6 错，学术型 29 对 11 错 —— 一眼看出哪两类容易混。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">准确率</span><span class="en">accuracy</span></div>
+    <div class="t-body">分对的比例 = 分对数 / 总数。我的 K-Means 例子是 85.0%。</div>
+    <div class="t-eg"><b>注意：</b>准确率高不代表模型好。数据极不平衡时（全对是 1%），猜全部猜对也有 100% 准确率。</div></div>
+</div>
+
+<h2 id="s9">⑨ 大数据核心概念 <span class="cnt">14 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">大数据</span><span class="en">big data</span></div>
+    <div class="t-body">不是"很大的数据"，而是<b>用一台机器装不下、必须靠多台机器协作</b>处理的数据。这个定义比"大"更准确。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">4V 特征</span><span class="en">Volume/Value/Variety/Velocity</span></div>
+    <div class="t-body">教材 1.2 节的经典框架：<b>Volume</b> 量大、<b>Velocity</b> 速度快（每秒都在产生）、<b>Variety</b> 类型多（文字图片音频）、<b>Veracity</b> 真实性存疑（脏数据）。</div>
+    <div class="t-eg"><b>顺序记忆法：</b>「多快杂真」，对应 体量 / 速度 / 多样 / 真实性。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">分布式</span><span class="en">distributed</span></div>
+    <div class="t-body">把任务和数据拆开，分给多台机器一起干，最后汇总结果。这是"大数据"的核心手段。</div>
+    <div class="t-eg"><b>类比：</b>一个人搬100箱货太慢，叫10个人一起搬 —— 就是分布式。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">并行计算</span><span class="en">parallel computing</span></div>
+    <div class="t-body">多个任务在同一时刻同时算。对应你电脑的多核 CPU，也是超算的基础。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">虚拟化</span><span class="en">virtualization</span></div>
+    <div class="t-body">用软件模拟出多台"虚拟电脑"，让一台物理机跑多个系统。云端服务器全靠它。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">云计算</span><span class="en">cloud computing</span></div>
+    <div class="t-body">通过网络租用别人的算力和存储，用多少付多少，不用自己买机器。</div>
+    <div class="t-eg"><b>相关：</b>Google Colab 免费提供云端 Python 环境，环境坏了不用重装，笔记本也不怕丢。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">云存储</span><span class="en">cloud storage</span></div>
+    <div class="t-body">存在别人服务器上的存储（网盘、对象存储）。和云计算是配套的：算力租用 + 存储租用。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">超算</span><span class="en">supercomputing</span></div>
+    <div class="t-body">成千上万个 CPU 核心同时算的机器，用于气象预报、基因测序、人工智能训练。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">Hadoop / HDFS</span><span class="en">Hadoop / HDFS</span></div>
+    <div class="t-body">最经典的开源大数据框架。<b>HDFS</b> 是它的分布式文件系统 —— 专门存超大数据、把文件切成块分散在多台机器上。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">MapReduce</span><span class="en">map reduce</span></div>
+    <div class="t-body">Hadoop 的计算模型：<b>Map</b> 分头发任务 → <b>Reduce</b> 汇总结果。思想极其朴素，但适合海量数据。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">Spark</span><span class="en">spark</span></div>
+    <div class="t-body">比 Hadoop 快得多的新一代计算引擎，内存计算，用 Python 接口叫 PySpark。</div>
+    <div class="t-eg"><b>重要：</b>Spark 的 DataFrame 设计<b>几乎是照着 pandas 抄的</b>。你学 pandas 时遇到的坑和直觉，学 Spark 几乎原样复用。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据仓库</span><span class="en">data warehouse</span></div>
+    <div class="t-body">为"分析"专门设计的存储系统 —— 存的是清洗整理过的历史数据，结构规范，专供查报表和做分析。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据湖</span><span class="en">data lake</span></div>
+    <div class="t-body">什么都往里扔的原始数据仓库，格式不限。数据湖 vs 数据仓库是常见考点：<b>湖是原始的、杂乱的，仓是整理过的、规范的。</b></div></div>
+  <div class="term"><div class="t-head"><span class="cn">单机 vs 集群</span><span class="en">single machine vs cluster</span></div>
+    <div class="t-body"><b>pandas = 单机内存工具</b>。装得进内存它无所不能，装不进就得换成 Spark。<b>这就是 pandas 的能力边界，也是为什么大数据课程后面要学 Spark。</b></div></div>
+</div>
+
+<h2 id="s10">⑩ 工具与环境 <span class="cnt">13 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">Anaconda</span><span class="en">anaconda</span></div>
+    <div class="t-body">一个"全家桶"Python 发行版，自带 numpy、pandas、matplotlib、jupyter 等几百个科学计算库，还自带环境管理器。</div>
+    <div class="t-eg"><b>为什么推荐给你：</b>数据专业后面要用的库全都在里面，第 11 周开始不用再为装依赖烦恼。官网 anaconda.com。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">conda</span><span class="en">conda</span></div>
+    <div class="t-body">Anaconda 自带的环境/包管理器。<code>conda install xxx</code>。管"环境"和"库"两件事。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">pip</span><span class="en">pip</span></div>
+    <div class="t-body">Python 官方的包安装工具。<code>pip install xxx</code>。<b>pip 只管库，conda 还能管环境</b> —— 这是两者主要区别。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">Jupyter Notebook</span><span class="en">jupyter</span></div>
+    <div class="t-body">网页形式的交互式编程环境：代码分"格"写，一格一格跑，边跑边看结果和图表，还能加文字说明。</div>
+    <div class="t-eg"><b>为什么数据专业爱用它：</b>写探索性分析太方便 —— 一段代码跑出图，立刻看到，不用等整个程序跑完。写数据报告也是神器。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">VS Code</span><span class="en">vs code</span></div>
+    <div class="t-body">微软的免费代码编辑器，轻快、插件多。装个 Python 插件就能写 Python，还能一键运行和调试。</div>
+    <div class="t-eg"><b>建议：</b>写"项目型"代码用 VS Code，写"探索型"分析用 Jupyter Notebook。两个都装，各管各的。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">PyCharm</span><span class="en">pycharm</span></div>
+    <div class="t-body">JetBrains 出品，功能最全的 Python IDE。自动补全、调试、代码重构都很强。学生版免费。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">终端 / 命令行</span><span class="en">terminal / CLI</span></div>
+    <div class="t-body">用文字命令操作电脑。装库、切换环境、跑程序都要用。<code>python 文件名.py</code> 就是启动一个程序。</div>
+    <div class="t-eg"><b>门槛提示：</b>刚开始只用两条命令就够 —— <code>pip install xxx</code> 和 <code>python 文件名.py</code>。其余以后遇到再学。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">编码 / 乱码</span><span class="en">encoding</span></div>
+    <div class="t-body">计算机存文字只认 0 和 1，中文要编码成数字。编码对不上就显示成"锟斤拷"或问号 —— <b>中文编程第一大坑。</b></div>
+    <div class="t-eg"><b>解决方法：</b>读写文件永远加 <code>encoding="utf-8"</code>。Windows 上可能还需要 <code>utf-8-sig</code>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">CSV</span><span class="en">comma separated values</span></div>
+    <div class="t-body">逗号分隔的纯文本表格。优点：任何软件都能打开、体积小。缺点：不保存格式和数据类型。</div>
+    <div class="t-eg"><b>为什么 pandas 默认用 CSV：</b>它是"数据界的 txt"，最通用、交换最方便。<b>Excel 好看但封闭，CSV 丑但开放。</b></div></div>
+  <div class="term"><div class="t-head"><span class="cn">JSON</span><span class="en">json</span></div>
+    <div class="t-body">文本格式，结构是"名字: 值"嵌套。<b>本质就是 Python 的字典 + 列表</b>，所以 <code>json.load()</code> 读出来直接就是字典。</div>
+    <div class="t-eg"><b>用在哪：</b>爬虫抓到的网页数据、API 接口返回、配置文件 —— 几乎全是 JSON。学会它，爬虫就通了一半。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">爬虫</span><span class="en">web scraper</span></div>
+    <div class="t-body">写程序自动从网页上抓取数据。Python 最常用的工具是 <code>requests</code>（拿页面）+ <code>BeautifulSoup</code>（解析 HTML）。</div>
+    <div class="t-eg"><b>提醒：</b>抓数据前先看网站的使用条款，礼貌抓取、控制频率，别给人添麻烦。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">Git / GitHub</span><span class="en">git / github</span></div>
+    <div class="t-body"><b>Git</b> 是本地的版本管理工具（记录你每一次修改，可以随时回到任何历史版本）。<b>GitHub</b> 是把 git 仓库放到网上的平台，用来展示作品。</div>
+    <div class="t-eg"><b>为什么大一就该用：</b>代码写崩了能回退，作业不会丢，而且从第一周就开始积累"作品集"。找工作时是加分项。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据可视化</span><span class="en">data visualization</span></div>
+    <div class="t-body">把数据变成图。人眼处理图形比处理数字快几十倍 —— <b>分析的终点往往是画出一张让人秒懂的图。</b></div>
+    <div class="t-eg"><b>工具：</b>Matplotlib（精细控制）、Seaborn（快速出图）、Excel 图表（够用）。</div></div>
+</div>
+
+<h2 id="s12">⑫ 课程与考试相关 <span class="cnt">6 个</span></h2>
+<div class="grid">
+  <div class="term"><div class="t-head"><span class="cn">推荐教材</span><span class="en">recommended textbook</span></div>
+    <div class="t-body">由专业工作委员会（信息技术新工科产学研联盟「数据科学与大数据技术」工作委员会）认定的教材。<b>通常意味着它对齐了专业培养方案。</b></div></div>
+  <div class="term"><div class="t-head"><span class="cn">考纲轮廓</span><span class="en">exam syllabus outline</span></div>
+    <div class="t-body">考试范围的大致框架。一本"每章都有习题实践"的推荐教材，它的章节结构基本就是考纲轮廓 —— <b>这就是我让你重视它联动的原因。</b></div></div>
+  <div class="term"><div class="t-head"><span class="cn">实践题 / 实验</span><span class="en">exercise / lab</span></div>
+    <div class="t-body">教材每章的"习题与实践"里的动手部分。概念题背就行，实践题<b>强烈建议用 Python 重做一遍</b>。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">开源软件</span><span class="en">open source</span></div>
+    <div class="t-body">源代码公开、免费使用和修改的软件。Python、pandas、NumPy 全是开源软件。</div>
+    <div class="t-eg"><b>对比：</b>Tableau 是<b>商业软件</b>（付费或限功能），pandas 是<b>开源</b>。学校机房如果没装 Tableau，用 pandas 完全等价甚至更强。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">可复现</span><span class="en">reproducible</span></div>
+    <div class="t-body">同样的代码跑出同样的结果。靠<b>固定随机种子</b> + <b>把数据来源写清楚</b>实现。</div>
+    <div class="t-eg"><b>为什么重要：</b>写实验报告时，老师问"这个数是怎么来的"，你能一行代码重跑给他看 —— 这是专业素养的体现。</div></div>
+  <div class="term"><div class="t-head"><span class="cn">数据素养</span><span class="en">data literacy</span></div>
+    <div class="t-body">看到数据能问出好问题、判断数据可不可信、把结论说清楚。<b>比会不会写代码更值钱的能力。</b></div></div>
+</div>
+
+<div class="empty" id="empty">没有找到这个词。试试搜：变量、索引、groupby、冗余、聚类、编码…</div>
+
+<div class="note">
+  <b>最后一句：</b>这些名词不用背。它们的唯一作用是<b>让你能准确提问</b>。上课听不懂就下来查这个手册，作业卡住就报这个名词给我 —— 术语准确了，我给解释会快十倍。
+</div>
+
+<footer>石家庄学院 · 数据科学与大数据技术 · 术语速查手册 &nbsp;|&nbsp; 由 WorkBuddy 生成</footer>
+
+</div>
+
+<script>
+const q = document.getElementById('q');
+const terms = Array.from(document.querySelectorAll('.term'));
+const secs = Array.from(document.querySelectorAll('h2'));
+const empty = document.getElementById('empty');
+q.addEventListener('input', function () {
+  const v = this.value.trim().toLowerCase();
+  if (!v) {
+    terms.forEach(t => t.classList.remove('hide'));
+    secs.forEach(s => s.style.display = '');
+    empty.style.display = 'none';
+    document.querySelectorAll('.top10').forEach(e => e.style.display = '');
+    return;
+  }
+  let hit = 0;
+  terms.forEach(t => {
+    const ok = t.textContent.toLowerCase().includes(v);
+    t.classList.toggle('hide', !ok);
+    if (ok) hit++;
+  });
+  secs.forEach(s => {
+    let n = s.nextElementSibling, any = false;
+    while (n && n.tagName !== 'H2') {
+      if (n.classList.contains('term') && !n.classList.contains('hide')) any = true;
+      n = n.nextElementSibling;
+    }
+    s.style.display = any ? '' : 'none';
+  });
+  document.querySelectorAll('.top10').forEach(e => e.style.display = 'none');
+  empty.style.display = hit ? 'none' : 'block';
+});
+</script>
+</body>
+</html>

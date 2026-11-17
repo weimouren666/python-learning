@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第6周新知课：函数（一）def / 参数 / return（2026-11-17）</title>
+<style>
+  :root { --main:#1a5fb4; --bg:#f8f9fb; }
+  * { box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; color:#24292f; background:var(--bg); max-width:860px; margin:0 auto; padding:24px 18px 60px; }
+  header { border-left:6px solid var(--main); padding:12px 18px; background:#fff; border-radius:8px; margin-bottom:28px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  header h1 { font-size:22px; margin:0 0 6px; color:var(--main); }
+  header .meta { font-size:13px; color:#57606a; }
+  h2 { font-size:19px; color:var(--main); border-bottom:2px solid #d0d7de; padding-bottom:6px; margin-top:36px; }
+  h3 { font-size:16px; margin-top:26px; }
+  code { background:#eff1f3; padding:2px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:14px; color:#cf222e; }
+  pre { background:#0d1117; color:#e6edf3; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:13.5px; line-height:1.6; }
+  pre code { background:none; color:inherit; padding:0; }
+  .comment { color:#8b949e; }
+  table { border-collapse:collapse; width:100%; background:#fff; margin:14px 0; font-size:14px; }
+  th,td { border:1px solid #d0d7de; padding:8px 12px; text-align:left; }
+  th { background:var(--main); color:#fff; }
+  tr:nth-child(even) { background:#f6f8fa; }
+  .warn { background:#fff8c5; border-left:4px solid #d4a72c; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .hw { background:#eaf3ff; border-left:4px solid var(--main); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0; }
+  .hw .t { color:var(--main); }
+  .bad { background:#ffebe9; border-left:4px solid #cf222e; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .ok { background:#dafbe1; border-left:4px solid #1a7f37; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  details { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:10px 14px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; color:var(--main); }
+  footer { margin-top:40px; font-size:12px; color:#8b949e; text-align:center; border-top:1px solid #d0d7de; padding-top:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>第 6 周新知课：函数（一）· def / 参数 / return</h1>
+  <div class="meta">2026-11-17（周二）20:15—21:00 晚自习新知课 · 讲义归档 lessons/15</div>
+  <div class="meta">本课是<b>编程思维的分水岭</b>：从「一堆面条代码」到「能拆成一台台机器」。递归留到周四，今天只把函数本体钉死。</div>
+</header>
+
+<h2>〇、开场收账（3 分钟）</h2>
+<table>
+  <tr><th>#</th><th>事项</th><th>结论</th></tr>
+  <tr><td>1</td><td>周日布置的 <code>wf.py</code> 单词版词频</td><td>没交 —— 不补课、不批评，<b>顺延到周四 11-19 巩固课</b>，而且正好用今天的函数改写它（见第八节作业）。学生一贯节奏：白天有事就跳过，下次课现场从零敲</td></tr>
+  <tr><td>2</td><td>口头复核：<code>best_ch, best_n = "", 0</code> 能不能放循环内？为什么？</td><td>上节课<b>代码写对、话说反了</b>（答「能放且必须放」）。按教法约定，重要概念要让你<b>用自己的话复述一遍再放行</b>：擂主归零只做 1 次 → 循环外；每轮比较 N 次 → 循环内</td></tr>
+  <tr><td>3</td><td><b>📌 勘误（老师写错了）</b>：lessons/13 第八节、lessons/14 第五节的作业预期数字</td><td>原文写「great/and/python/is 各 2 次」<b>是错的</b>。实测 <code>text = "python is great and data is great and python is fun"</code> 共 11 个词：<code>python:2, is:3, great:2, and:2, data:1, fun:1</code>，<b><code>is</code> 出现 3 次，是最多的单词</b>，不同单词 6 个。已同步修正两份旧讲义。你若跑出 3 次，是你对、讲义错</td></tr>
+</table>
+<pre><code>text = "python is great and data is great and python is fun"
+words = text.split()          <span class="comment"># 11 个词</span>
+# python(1,9)=2  is(2,6,10)=3  great(3,7)=2  and(4,8)=2  data(5)=1  fun(11)=1</code></pre>
+
+<h2>一、为什么需要函数（从你自己的痛点说起）</h2>
+<p>11-8 阶段测验后你说过一句很关键的话：「<b>自己写小程序老是不知道怎么起手</b>」。再看 11-10 的 shizhan4：每个人都要算一次平均分，那段 <code>sum(part[1:])/len(...)</code> 你写了三遍；词频统计器想换一段文字，得把整段复制一份。</p>
+<p>三件事其实是同一个问题：<b>同一段逻辑被重复写、且没有名字</b>。函数就是给一段逻辑<b>起个名字、装进盒子</b>，以后要用只喊名字：</p>
+<pre><code>def average(scores):          <span class="comment"># 给「算平均分」这件事起名叫 average</span>
+    return round(sum(scores) / len(scores), 2)
+
+avg1 = average([88, 92, 76])  <span class="comment"># 张伟</span>
+avg2 = average([92, 95, 88])  <span class="comment"># 李娜 —— 同一台机器，投不同原料</span></code></pre>
+<div class="ok"><b>一句话</b>：函数 = <b>一台机器</b>。投原料（参数）→ 内部加工（函数体）→ 吐成品（return）。以后看到 <code>df.head()</code>、<code>value_counts()</code> 全是这个东西，pandas 就是一堆现成的机器。</div>
+
+<h2>二、第一个函数：def 四件套</h2>
+<pre><code>def greet(name):                    <span class="comment"># ① def 名字(参数):  ← 冒号别丢</span>
+    message = "你好，" + name       <span class="comment"># ② 函数体必须缩进 4 格</span>
+    return message                  <span class="comment"># ③ return 把结果递出来</span>
+
+result = greet("魏常泽")            <span class="comment"># ④ 调用：名字(原料)，用变量接住</span>
+print(result)                       <span class="comment"># 你好，魏常泽</span></code></pre>
+<table>
+  <tr><th>部件</th><th>作用</th><th>漏了会怎样</th></tr>
+  <tr><td><code>def 名(参数):</code></td><td>登记这台机器 / 写说明书</td><td>冒号丢了 → <code>SyntaxError</code>（你 11-3 被全角 <code>）</code> 咬过，同类）</td></tr>
+  <tr><td>缩进的函数体</td><td>机器内部的加工步骤</td><td>不缩进 = 不属于这台机器 → <code>IndentationError</code></td></tr>
+  <tr><td><code>return</code></td><td>把成品递出机器</td><td>不写 = 递出 <code>None</code>；写成 <code>print</code> = 只贴屏幕、递不出来</td></tr>
+  <tr><td>调用 <code>名(原料)</code></td><td>按启动键，机器才真的转</td><td>只 def 不调用 → <b>什么都不会发生</b>（最常见的新人错觉）</td></tr>
+</table>
+<div class="warn"><b>定义 ≠ 执行</b>：<code>def</code> 那几行只是「把机器造好摆着」，Python 读过去不会跑函数体。只有写出 <code>greet("魏常泽")</code> 这一行，机器才转一次。这和「循环体=剧本，每轮重演」是同一套心智：<b>写下来的只是说明书，喊名字才开演</b>。</div>
+
+<h2>三、return vs print：回收「函数只算、= 才存」</h2>
+<p>这句话你 10-09 栽在 <code>float(high)</code>、11-01 又栽在 <code>sorted(scores)</code> 没接返回值 —— 今天它终于有了正式名字：<b>return 就是「函数把算好的东西递出来」，调用处必须用 <code>=</code> 接住，否则白算。</b></p>
+<pre><code>def average(scores):
+    return round(sum(scores) / len(scores), 2)
+
+average([88, 92, 76])          <span class="comment"># ① 算了，没接住 → 屏幕上什么都没有</span>
+print(average([88, 92, 76]))   <span class="comment"># ② 直接把递出来的东西交给 print → 85.33</span>
+avg = average([88, 92, 76])    <span class="comment"># ③ 接进盒子（推荐）→ 后面还能接着用</span>
+print("平均分：", avg)          <span class="comment"># 平均分： 85.33</span></code></pre>
+<div class="bad"><b>把 print 当 return 用</b>是第二常见的坑：
+<pre><code>def average(scores):
+    print(round(sum(scores) / len(scores), 2))   <span class="comment"># 只贴屏幕，没递出来</span>
+avg = average([88, 92, 76])   <span class="comment"># 屏幕显示 85.33，但 avg 是 None</span>
+print(avg + 1)                <span class="comment"># TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</span></code></pre>
+判断标准：<b>结果后面还要用 → return；只想让人看一眼 → print</b>。</div>
+<p>顺序也记一下：<code>return</code> 一执行，函数当场结束，后面的行不再跑。所以它通常放函数体最后。</p>
+
+<h2>四、参数三种写法（回收 11-5 那个坑）</h2>
+<pre><code>def greet(name, punctuation="！"):      <span class="comment"># punctuation 有默认值 = 默认参数</span>
+    return "你好，" + name + punctuation
+
+greet("魏常泽")                        <span class="comment"># 位置参数 → 你好，魏常泽！</span>
+greet("魏常泽", "？")                  <span class="comment"># 两个位置参数 → 你好，魏常泽？</span>
+greet(name="魏常泽", punctuation="？")  <span class="comment"># 关键字参数 → 你好，魏常泽？</span>
+greet(punctuation="？", name="魏常泽")  <span class="comment"># 贴了标签就能换顺序 → 同上</span></code></pre>
+<table>
+  <tr><th>写法</th><th>长相</th><th>规矩</th></tr>
+  <tr><td>位置参数</td><td><code>greet("魏常泽")</code></td><td>按位置对号入座，顺序错了就串味</td></tr>
+  <tr><td>关键字参数</td><td><code>greet(name="魏常泽")</code></td><td><b>给参数贴标签</b>，可以换顺序；必须排在位置参数后面</td></tr>
+  <tr><td>默认参数</td><td><code>def greet(name, p="！")</code></td><td>不传就用默认值；<b>有默认值的参数必须写在最后</b>，否则 SyntaxError</td></tr>
+</table>
+<div class="warn"><b>11-5 那个报错，今天正式结案</b>：你写过 <code>print(s = "H" + s[1:])</code> → <code>TypeError: 's' is an invalid keyword argument for print()</code>。因为<b>括号里的 <code>name=value</code> 是「给参数贴标签」，不是「给变量赋值」</b>；<code>print</code> 没有一个叫 <code>s</code> 的参数，所以不认这个标签。<br>
+而 <code>print("a", end="")</code> 里的 <code>end=</code> 合法，是因为 print 真有这个参数（第 2 周讲 <code>end</code> 时你已经用过）。<b>赋值永远独占一行</b>：<code>s = "H" + s[1:]</code>，然后 <code>print(s)</code>。</div>
+<p>顺带认亲：<code>count.get(ch, 0)</code> 的第二个参数、<code>round(x, 2)</code> 的 2、<code>sorted(..., reverse=True)</code> 的 <code>reverse=</code> —— 全是同一家参数，以前只管照抄，现在知道它们叫什么了。</p>
+
+<h2>五、lambda 正式讲（兑现 11-15 的「照抄」欠账）</h2>
+<p>11-15 升级 3 你照抄过 <code>key=lambda x: x[1]</code>，当时约定「第 6 周函数课正式讲」。它其实就是<b>一台没名字、只有一行的小机器</b>：</p>
+<pre><code><span class="comment"># 普通写法：先造机器，再把机器交给 sorted</span>
+def take_second(x):
+    return x[1]
+
+sorted(count.items(), key=take_second, reverse=True)
+
+<span class="comment"># lambda 写法：懒得起名，就地写一台一次性的</span>
+sorted(count.items(), key=lambda x: x[1], reverse=True)</code></pre>
+<p>语法 <code>lambda 参数: 返回什么</code> —— 冒号左边是投进去的原料，右边是吐出来的成品，<b>连 return 都省了</b>（右边表达式的值自动就是返回值）。实测两种写法输出完全一致：<code>[('a', 5), ('b', 2), ('r', 2), ('c', 1), ('d', 1)]</code>。</p>
+<p><b>为什么 <code>key=</code> 后面能接一台机器？</b>因为 <code>sorted</code> 排序时要问「按什么排」，它把每一对 <code>('a', 5)</code> 喂给 <code>key</code> 那台机器，机器吐出 <code>5</code>，就按吐出来的数排。这是「函数也能当原料传给另一个函数」，<b>今天只要求看懂，不要求自己写</b>。</p>
+<div class="ok"><b>现在的要求</b>：能指着 <code>key=lambda x: x[1]</code> 说出「投一对、取第 2 项当排序依据」= 达标。自己发明 lambda 是第 8 周之后的事。</div>
+
+<h2>六、本讲完整参考代码</h2>
+<pre><code>def average(scores):
+    """返回平均分，保留两位。"""          <span class="comment"># 文档字符串：给机器贴说明书，周四细讲</span>
+    return round(sum(scores) / len(scores), 2)
+
+def greet(name, punctuation="！"):
+    return "你好，" + name + punctuation
+
+def most_frequent(count):
+    best_ch, best_n = "", 0               <span class="comment"># 擂主归零：1 次 → 循环外（11-15 刚焊死）</span>
+    for ch, n in count.items():
+        if n &gt; best_n:                    <span class="comment"># 逐个挑战：N 次 → 循环内</span>
+            best_ch, best_n = ch, n
+    return best_ch, best_n                <span class="comment"># 多返回值：逗号一隔，外面两变量接（周四细讲）</span>
+
+scores = [88, 92, 76]
+avg = average(scores)
+print("平均分：", avg)                    <span class="comment"># 85.33</span>
+print(greet("魏常泽"))                    <span class="comment"># 你好，魏常泽！</span>
+
+count = {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
+ch, n = most_frequent(count)
+print(f"出现最多：{ch}，{n} 次")           <span class="comment"># 出现最多：a，5 次</span></code></pre>
+
+<h2>七、现场练习（课堂上敲，别抄上面的）</h2>
+<div class="hw">
+  <b class="t">练习 A · 必做</b>：写 <code>def average(scores)</code>，用 <code>return</code> 返回 <code>round(sum(scores)/len(scores), 2)</code>；调用 <code>average([88, 92, 76])</code> 并用变量接住后打印，应得 <code>85.33</code>。
+  <p><b>练习 B · 口头（先想再答）</b>：把 <code>avg = average([88,92,76])</code> 改成单独一行 <code>average([88,92,76])</code>，屏幕上有输出吗？<code>avg</code> 这个变量还在吗？为什么？</p>
+  <p><b>练习 C · 变式</b>：把练习 A 的 <code>return</code> 换成 <code>print</code>，再 <code>avg = average(...)</code>，然后 <code>print(avg + 1)</code> —— 把报错原文抄给我，并说出 <code>avg</code> 里装的是什么。</p>
+</div>
+
+<h2>八、课后作业（周四 11-19 巩固课开场批改）</h2>
+<div class="hw">
+  <b class="t">必做 · wf.py 补交 + 函数版改写（一石二鸟）</b>
+  <p><code>text = "python is great and data is great and python is fun"</code>，拆成三台机器，主程序只留调用和打印：</p>
+  <ol>
+    <li><code>def count_words(text)</code> → 返回 <code>{单词: 次数}</code>（用 <code>count.get(w,0)+1</code>）</li>
+    <li><code>def most_frequent(count)</code> → 返回出现最多的单词和次数（打擂台，<b>擂主归零放循环外</b>）</li>
+    <li><code>def distinct(words)</code> → 返回不同单词个数 <code>len(set(words))</code></li>
+  </ol>
+  <p>正确结果（已勘误）：<code>python:2, is:3, great:2, and:2, data:1, fun:1</code>，最多 <code>is / 3 次</code>，不同单词 <code>6</code> 个。</p>
+  <b class="t">选做 · 给 average 加个默认参数</b>
+  <p><code>def average(scores, digits=2)</code>，<code>digits</code> 控制保留几位；分别用 <code>average([88,92,76])</code> 和 <code>average([88,92,76], 1)</code> 调一次，看输出差别。</p>
+</div>
+
+<h2>九、下节课与待办</h2>
+<ul>
+  <li><b>周四 11-19 20:15 巩固课</b>（50 min）：函数（二）—— 作用域 / 多返回值 / 文档字符串 / 可变参数经典坑；<b>递归</b>（阶乘、斐波那契）理解即可，不死磕</li>
+  <li><b>周日 11-22 实战课</b>：<b>阶段测验 2</b>（第 4—5 周，复习 lessons/08—14）+ 把前 5 周实战项目改写成「多函数版」—— 本周是<b>面条代码 → 拆函数</b>的真正分水岭</li>
+  <li><b>待办（不催）</b>：GitHub 仓库三样（地址 / 默认分支名 / 目录约定）随时给，拿到后打包第 2—5 周档案 zip 存资料库 + README 顶部补仓库链接。<b>token 一律不接收</b></li>
+  <li><b>勘误已落地</b>：lessons/13 第八节、lessons/14 第五节的作业预期数字已改为 <code>is:3</code></li>
+</ul>
+
+<footer>第 6 周新知课（一）· 2026-11-17 · 下一课：11-19（周四）20:15 巩固课「函数（二）与递归」</footer>
+</body>
+</html>

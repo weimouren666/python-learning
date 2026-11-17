@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5周巩固课：字典快问快答与词频统计预热（2026-11-12）</title>
+<style>
+  :root { --main:#1a5fb4; --bg:#f8f9fb; }
+  * { box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; color:#24292f; background:var(--bg); max-width:860px; margin:0 auto; padding:24px 18px 60px; }
+  header { border-left:6px solid var(--main); padding:12px 18px; background:#fff; border-radius:8px; margin-bottom:28px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  header h1 { font-size:22px; margin:0 0 6px; color:var(--main); }
+  header .meta { font-size:13px; color:#57606a; }
+  h2 { font-size:19px; color:var(--main); border-bottom:2px solid #d0d7de; padding-bottom:6px; margin-top:36px; }
+  code { background:#eff1f3; padding:2px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:14px; color:#cf222e; }
+  pre { background:#0d1117; color:#e6edf3; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:13.5px; line-height:1.6; }
+  pre code { background:none; color:inherit; padding:0; }
+  .comment { color:#8b949e; }
+  table { border-collapse:collapse; width:100%; background:#fff; margin:14px 0; font-size:14px; }
+  th,td { border:1px solid #d0d7de; padding:8px 12px; text-align:left; }
+  th { background:var(--main); color:#fff; }
+  tr:nth-child(even) { background:#f6f8fa; }
+  .ok { color:#1a7f37; font-weight:600; }
+  .bad { color:#cf222e; font-weight:600; }
+  .half { color:#9a6700; font-weight:600; }
+  .warn { background:#fff8c5; border-left:4px solid #d4a72c; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .hw { background:#eaf3ff; border-left:4px solid var(--main); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0; }
+  .hw .t { color:var(--main); }
+  details { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:10px 14px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; color:var(--main); }
+  footer { margin-top:40px; font-size:12px; color:#8b949e; text-align:center; border-top:1px solid #d0d7de; padding-top:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>第 5 周巩固课：字典快问快答 · 错题复盘 · 词频统计预热</h1>
+  <div class="meta">2026-11-12（周四）· 学生 19:04 提前到场，实际跨到 22:00 收尾 · 讲义归档 lessons/12</div>
+  <div class="meta">本课流程：① 练习 2 字典版 shizhan4 结案 → ② 字典快问快答 8 题（6/8）→ ③ 错题复盘 + 周日实战预热</div>
+</header>
+
+<h2>一、本课开场：练习 2 结案（字典版 shizhan4）</h2>
+<p>用 <code>avg = {}</code> 重做「找平均分最高的学生」，最终版验收通过：</p>
+<pre><code>张伟的平均分数为：85.33
+李娜的平均分数为：71.00
+王强的平均分数为：67.00
+平均分最高的学生：张伟, 平均分：85.33</code></pre>
+<p>过程中两个 bug 全部当堂破案，都属于旧知识走错层/掉符号：</p>
+<table>
+  <tr><th>bug</th><th>症状</th><th>根因</th></tr>
+  <tr><td><code>part[1:]</code> 写成 <code>part[1]</code></td><td>均分得 8.0 / 7.0 / 4.5</td><td>切片变取下标，成绩字符串 '88' 被<b>逐字符</b>遍历成 8 和 8。口诀：<b>取一个 vs 取一段</b></td></tr>
+  <tr><td>items 打印循环缩进在外层体内</td><td>输出 1+2+3 行，越印越多</td><td>「越印越多」= 住错层的指纹。打印全体名单要数据先齐 → 必须住循环<b>外</b></td></tr>
+</table>
+<p>新工具：<b>打擂台模式</b>（求最大/最小的通用套路，周日还会用）——</p>
+<pre><code>best_name, best_score = "", 0
+for name, score in avg.items():
+    if score &gt; best_score:      <span class="comment"># 挑战者比擂主强？</span>
+        best_score = score      <span class="comment"># 就地占座</span>
+        best_name = name
+print(f"平均分最高的学生：{best_name}, 平均分：{best_score:.2f}")</code></pre>
+
+<h2>二、字典快问快答 · 批改（6 / 8）</h2>
+<p>题目：<code>stu = {"name": "魏常泽", "age": 19, "hobby": "乒乓球"}</code>。以下答案均由老师在沙箱<b>实跑验证</b>。</p>
+<table>
+  <tr><th>#</th><th>你的答案</th><th>判定</th><th>正确答案 / 说明</th></tr>
+  <tr><td>1</td><td>19</td><td class="ok">✅</td><td><code>stu["age"]</code> → 19</td></tr>
+  <tr><td>2</td><td><code>stu["city"] = "石家庄"</code></td><td class="ok">✅</td><td>key 不存在 = 新增一对</td></tr>
+  <tr><td>3</td><td>报错不存在；<code>stu.get["height","没填"]</code></td><td class="half">⚠️ 半对</td><td>前半对（<code>KeyError</code>）；后半<b>括号用错</b>，见第三节</td></tr>
+  <tr><td>4</td><td>age / 19</td><td class="ok">✅</td><td>items 第 2 轮 = <code>('age', 19)</code>，字典按插入顺序</td></tr>
+  <tr><td>5</td><td>False</td><td class="bad">❌</td><td><b>True</b>，类型 <b>bool</b>。见第三节</td></tr>
+  <tr><td>6</td><td>3</td><td class="ok">✅</td><td><code>len(stu)</code> = 3 对</td></tr>
+  <tr><td>7</td><td>"a","b","c"</td><td class="ok">✅</td><td>值对；写法见第三节（集合用花括号且无序）</td></tr>
+  <tr><td>8</td><td>3 对，会覆盖第一对，<b>或者</b>出现新的一对</td><td class="half">⚠️ 半对</td><td>3 对 ✅；后半含糊，见第三节</td></tr>
+</table>
+<div class="warn"><b>成绩单</b>：5 题全对 + 2 题半对 + 1 题错 = <b>6/8</b>。对比历史：10-27 列表 0/8 → 11-1 列表重答 7.5/8 → 11-5 字符串 6.5/8 → 11-8 阶段测验 A 卷 6/8 → 今天 6/8。<b>基础区稳定在 6~7 分区间，失分全部集中在「函数/方法/下标三者别混」和「in 判什么」这两个点上</b>——不是新知识没学会，是老接口的手感还没统一。</div>
+
+<h2>三、三个考点，逐个焊死</h2>
+
+<h3>考点 1 · <code>get</code> 用圆括号，不用方括号（Q3）</h3>
+<pre><code>stu["height"]              <span class="comment"># ❌ KeyError：按 key 取值，没有这个钥匙就炸</span>
+stu.get("height", "没填")   <span class="comment"># ✅ "没填"：调方法，圆括号里放参数</span>
+stu.get["height", "没填"]   <span class="comment"># ❌ 你写的</span></code></pre>
+<p>你那行实跑报的是：</p>
+<pre><code>TypeError: 'builtin_function_or_method' object is not subscriptable</code></pre>
+<p>读一遍：<code>stu.get</code> 本身是「住在字典家里的方法」，<code>[]</code> 是「按钥匙取值」，<b>方法不是柜子，不能被下标</b>。而且 <code>["height", "没填"]</code> 里的逗号会拼成一个元组当钥匙——就算对象是字典也取不到。</p>
+<table>
+  <tr><th>符号</th><th>用途</th><th>例子</th></tr>
+  <tr><td><code>[]</code> 方括号</td><td>按位置/钥匙<b>取值</b></td><td><code>stu["age"]</code>、<code>scores[0]</code></td></tr>
+  <tr><td><code>()</code> 圆括号</td><td><b>调用</b>函数或方法，里面放参数</td><td><code>stu.get("height","没填")</code>、<code>len(scores)</code>、<code>print(...)</code></td></tr>
+</table>
+<p>一句话：<b>要「拿东西」用方括号，要「请它干活」用圆括号。</b> <code>get</code> 是请字典干活的，所以是圆括号。</p>
+
+<h3>考点 2 · 字典的 <code>in</code> 只认钥匙，不认值（Q5）</h3>
+<pre><code>"hobby" in stu           <span class="comment"># True  —— hobby 是 key ✅</span>
+"乒乓球" in stu          <span class="comment"># False —— 它躺在 value 里，in 不往下翻盒子</span>
+"乒乓球" in stu.values() <span class="comment"># True  —— 想判值，得先 .values()</span>
+type("hobby" in stu)     <span class="comment"># &lt;class 'bool'&gt;</span></code></pre>
+<p>记忆钩子：<b>字典的 <code>in</code> 是点名册点名——只喊名字（key），不检查你书包里装了什么（value）。</b>这和你第 8 题的 <code>avg[name] = average</code> 是同一个道理：字典的一切入口都是 <b>key</b>。</p>
+<div class="warn">Q5 还漏答了「类型」。<code>True</code>/<code>False</code> 的类型叫 <b>bool（布尔型）</b>——所有比较（<code>&gt;</code>、<code>==</code>、<code>in</code>）的结果都是它。这是 11-5 字符串快问快答 Q5 之后<b>第二次</b>问类型没答上来，列为固定考点：以后凡问「结果和类型」，答案一律写「True，bool」这种双件。</div>
+
+<h3>考点 3 · key 已存在 = 覆盖，绝不会新增（Q8）</h3>
+<pre><code>avg = {"张伟": 85.33, "李娜": 71.0, "王强": 67.0}
+avg["张伟"] = 90.0
+print(avg)      <span class="comment"># {'张伟': 90.0, '李娜': 71.0, '王强': 67.0}</span>
+print(len(avg)) <span class="comment"># 3 —— 还是 3 对，没有第 4 对</span></code></pre>
+<p>你答「会覆盖第一对，<b>或者</b>出现新的一对」——这个「或者」说明规则还没定死。既然题目明说「第 4 轮 name 和第 1 轮相同」，那 key 就是<b>已存在</b>，结果唯一：<b>覆盖旧值，字典仍然 3 对</b>。只有 name 是个从没见过的新名字时，才会新增第 4 对。</p>
+<table>
+  <tr><th>情况</th><th><code>d[key] = value</code> 的行为</th></tr>
+  <tr><td>key 不存在</td><td><b>新增</b>一对，len +1</td></tr>
+  <tr><td>key 已存在</td><td><b>覆盖</b>旧值，len 不变</td></tr>
+</table>
+
+<h3>顺带 · 集合长什么样（Q7）</h3>
+<p>你答的三个值是对的，写法补一下：集合的字面量是<b>花括号</b>，而且<b>无序</b>——沙箱实跑输出是 <code>{'c', 'b', 'a'}</code>，顺序和你写的 a、b、c 不一样，这很正常。<code>set(["a","b","a","c"])</code> 的天职就是去重，别指望它排队，也不能用下标取。</p>
+
+<h2>四、错题复盘 · 本周三个公式</h2>
+<table>
+  <tr><th>公式</th><th>本周案发</th><th>自查动作</th></tr>
+  <tr><td><b>每个 XX 都要处理 → 代码住进 XX 那层循环体</b></td><td>items 打印住错层（越印越多）</td><td>看输出形状：重复/越印越多 = 住错层</td></tr>
+  <tr><td><b>取一个 vs 取一段：<code>[1]</code> 是元素，<code>[1:]</code> 是列表</b></td><td>part[1] 掉冒号，成绩被逐字符拆</td><td>对字符串 for 循环 = 逐字符；先确认变量是列表还是字符串</td></tr>
+  <tr><td><b>函数只算、= 才存；想看要 print</b></td><td>快问快答 Q3 的 get 结果（历史上第 4 次）</td><td>写了 <code>xxx(...)</code> 就问：结果接住了吗？打印了吗？</td></tr>
+</table>
+<p>再加今天的新成员：<b>方括号取值 / 圆括号调用</b>。四个公式贴在显示器边上，写字典代码前扫一眼，能挡掉八成 bug。</p>
+
+<h2>五、周日实战课预热：词频统计器</h2>
+<p>11-15（周日）10:00 实战项目，把<b>字符串 + 字典 + 集合 + 循环</b>全家桶串起来。核心就是你已经写过的 <code>avg[name] = average</code> 的亲兄弟：</p>
+<pre><code>s = "abracadabra"
+count = {}
+for ch in s:
+    if ch in count:            <span class="comment"># 见过：+1</span>
+        count[ch] = count[ch] + 1
+    else:                      <span class="comment"># 没见过：立户，=1</span>
+        count[ch] = 1
+print(count)
+<span class="comment"># {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}</span></code></pre>
+<p>三个升级点，周日现场讲：</p>
+<ol>
+  <li><b>一行版</b>：<code>count[ch] = count.get(ch, 0) + 1</code>——今天 Q3 的 <code>get</code> 立刻派上用场（取不到就给 0，再加 1）；</li>
+  <li><b>打擂台找最高频字母</b>：把今天练习 2 的 best_name/best_score 原样搬过来；</li>
+  <li><b>集合看「出现过哪些」</b>：<code>set(s)</code> → 去重后的字母集；<code>len(set(s))</code> → 不同字母个数。</li>
+</ol>
+<div class="hw">
+  <b class="t">周末自主任务清单（不赶，白天做）</b>
+  <ol>
+    <li><b>重答本课 8 题</b>，尤其 Q3 / Q5 / Q8，答案写全（值 + 类型），合上讲义默答；</li>
+    <li><b>把 <code>shizhan4_zidian.py</code> 最终版存好</b>——周日的词频统计器就是它的模式换皮；</li>
+    <li><b>预习讲义第五节</b>，能读懂 <code>if ch in count</code> 那四行就够了，<b>别提前把周日项目写完</b>；</li>
+    <li>选做：把 <code>count[ch] = count.get(ch, 0) + 1</code> 自己跑一遍，看和四行版输出是否一致。</li>
+  </ol>
+</div>
+
+<h2>六、下课前的实话</h2>
+<p>今晚你 19:04 到场，一路到 22:00，中间还改了别的文件——<b>快问快答这 6/8 里，至少两题是疲劳分，不是能力分</b>（Q5 把 True 写成 False、Q8 那个含糊的「或者」，都是脑子转慢了的迹象）。这两题周日前重答一遍就能拿回来，不用重新学。</p>
+<p>字典这一周你其实走得很扎实：从「什么叫 items 遍历」「dict 能不能改名」「get 是不是添加」，一路问到能自己用 <code>avg[name] = average</code> 重写整个 shizhan4。<b>会追问「为什么」比一次答对更值钱</b>——这个习惯别丢。但 22 点以后学习是假学习，周日白天见。</p>
+
+<footer>第 5 周巩固课 · 2026-11-12 · 下一课：11-15（周日）10:00 实战课「词频统计器」</footer>
+</body>
+</html>

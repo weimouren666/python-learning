@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5周实战课·作业讲评：打擂台与集合回炉（2026-11-15）</title>
+<style>
+  :root { --main:#1a5fb4; --bg:#f8f9fb; }
+  * { box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; color:#24292f; background:var(--bg); max-width:860px; margin:0 auto; padding:24px 18px 60px; }
+  header { border-left:6px solid var(--main); padding:12px 18px; background:#fff; border-radius:8px; margin-bottom:28px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  header h1 { font-size:22px; margin:0 0 6px; color:var(--main); }
+  header .meta { font-size:13px; color:#57606a; }
+  h2 { font-size:19px; color:var(--main); border-bottom:2px solid #d0d7de; padding-bottom:6px; margin-top:36px; }
+  h3 { font-size:16px; margin-top:26px; }
+  code { background:#eff1f3; padding:2px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:14px; color:#cf222e; }
+  pre { background:#0d1117; color:#e6edf3; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:13.5px; line-height:1.6; }
+  pre code { background:none; color:inherit; padding:0; }
+  .comment { color:#8b949e; }
+  table { border-collapse:collapse; width:100%; background:#fff; margin:14px 0; font-size:14px; }
+  th,td { border:1px solid #d0d7de; padding:8px 12px; text-align:left; }
+  th { background:var(--main); color:#fff; }
+  tr:nth-child(even) { background:#f6f8fa; }
+  .warn { background:#fff8c5; border-left:4px solid #d4a72c; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .hw { background:#eaf3ff; border-left:4px solid var(--main); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0; }
+  .hw .t { color:var(--main); }
+  .bad { background:#ffebe9; border-left:4px solid #cf222e; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .ok { background:#dafbe1; border-left:4px solid #1a7f37; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  details { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:10px 14px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; color:var(--main); }
+  footer { margin-top:40px; font-size:12px; color:#8b949e; text-align:center; border-top:1px solid #d0d7de; padding-top:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>第 5 周实战课 · 作业讲评：打擂台与集合回炉</h1>
+  <div class="meta">2026-11-15（周日）晚自习收尾 · 配套讲义 lessons/13 · 归档 lessons/14</div>
+  <div class="meta">本课不推进新内容，只把两个概念钉死：<b>擂主初始化为什么必须住循环外</b> / <b>集合 set 到底怎么回事</b></div>
+</header>
+
+<h2>〇、批改结论</h2>
+<table>
+  <tr><th>提交</th><th>结果</th><th>点评</th></tr>
+  <tr><td><code>1115shengji1.py</code>（升级 1 打擂台）</td><td>✅ 通过</td><td>输出 <code>出现最多：a，5 次</code>。三件套位置全对，<code>items()</code> 解包、<code>n &gt; best_n</code> 判断、双变量占座都写对了，连注释都是自己的话——说明 11-12 那次「越印越多」的教训真焊住了</td></tr>
+  <tr><td><code>1115shengji2.py</code>（升级 1+2）</td><td>✅ 通过</td><td>输出 <code>出现最多：a，5 次</code> / <code>不同字母：5 个 → {...}</code>。<code>len(set(count))</code> 用对了；用 <code>set(count)</code> 而不是 <code>set(s)</code> 也可以，因为字典的 key 正好就是那些字母（见第三节）</td></tr>
+  <tr><td>升级 3 输出</td><td>✅ 通过</td><td><code>a: 5 / b: 2 / r: 2 / c: 1 / d: 1</code> 降序正确。<code>sorted(..., key=lambda x: x[1], reverse=True)</code> 按约定只要求<b>照抄级</b>，达标，不追问</td></tr>
+  <tr><td>思考题「<code>best_ch, best_n</code> 能否放循环内」</td><td>❌ <b>说法反了</b></td><td>你答「能放，且必须放」——但你自己交的代码里，那行明明顶格写在循环<b>外</b>。<b>手比嘴诚实</b>：代码对了，理解没跟上。下面是今天的正题</td></tr>
+</table>
+
+<h2>一、重点纠错：擂主初始化到底放哪</h2>
+
+<h3>先看你自己的代码（对的）</h3>
+<pre><code>count = {'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1}
+best_ch, best_n = "", 0          <span class="comment"># ← 第 2 行，顶格，循环外：只做一次</span>
+
+for ch, n in count.items():      <span class="comment"># ← 循环：做 5 次</span>
+    if n &gt; best_n:               <span class="comment"># ← 每轮都比一次</span>
+        best_ch = ch             <span class="comment"># ← 赢了才换人</span>
+        best_n = n
+
+print(f"出现最多：{best_ch}，{best_n} 次")</code></pre>
+
+<h3>把那一行挪进循环，会发生什么（现场实验）</h3>
+<pre><code>for ch, n in count.items():
+    best_ch, best_n = "", 0      <span class="comment"># 每轮进来先把擂主清空</span>
+    if n &gt; best_n:
+        best_ch, best_n = ch, n
+
+print(f"出现最多：{best_ch}，{best_n} 次")</code></pre>
+<div class="bad"><b>实测输出：<code>出现最多：d，1 次</code></b> —— 不是 a，5 次。<br>
+原因：每轮一进循环就把 <code>best_n</code> 抹回 <code>0</code>，于是 <code>n &gt; 0</code> 对每个人都成立，人人都「赢」。擂主被换掉 5 次，最后只剩<b>最后一个上台的</b> <code>d</code>，次数 <code>1</code>。擂台还在，记忆没了。</div>
+
+<h3>拆成两件事就不糊涂了</h3>
+<table>
+  <tr><th>动作</th><th>跑几次</th><th>该住哪</th></tr>
+  <tr><td><code>best_ch, best_n = "", 0</code> —— <b>立擂主</b>（开赛前把台子搭好、记分牌归零）</td><td><b>1 次</b></td><td>循环<b>外</b></td></tr>
+  <tr><td><code>if n &gt; best_n: ...</code> —— <b>逐个挑战</b>（比一次、赢了换人）</td><td><b>N 次</b></td><td>循环<b>内</b></td></tr>
+  <tr><td><code>print(...)</code> —— <b>宣布结果</b>（所有人比完才揭晓）</td><td><b>1 次</b></td><td>循环<b>外</b></td></tr>
+</table>
+<p>你那句「这样才能做到每次循环都比较一次」<b>本身没错</b>——但它说的是 <code>if</code> 那两行，不是初始化那行。你把「每轮比较」的理由，安到了「开局归零」头上。</p>
+
+<div class="warn"><b>把旧公式补完整</b>：第 4 周我们练的是「<b>每个 XX 都要处理 → 处理代码住循环体内</b>」（及格判断、收集器、打擂台的比较）。今天补上另一半：<b>只做一次的事 → 必须住循环外</b>。<br>
+判断口诀一句话：<b>这行代码要跑 1 次，还是跑 N 次？</b> 归零、建表、收尾打印都是 1 次 → 顶格；逐个判断、逐个累加、逐个存都是 N 次 → 缩进。同一个坑的正反两面，别只记一半。</div>
+
+<h3>打擂台模式 · 三步定式（背这个就够）</h3>
+<pre><code>① 立擂主    best_ch, best_n = "", 0        <span class="comment"># 循环外，一次</span>
+② 逐个挑战  for ch, n in count.items():    <span class="comment"># 循环内，N 次</span>
+               if n &gt; best_n:
+                   best_ch, best_n = ch, n <span class="comment"># 赢了才换，别忘一起换</span>
+③ 宣布结果  print(best_ch, best_n)         <span class="comment"># 循环外，一次</span></code></pre>
+<p>以后求最高分、最长名字、最小值、最早日期，全是这个模子，只换 <code>&gt;</code> 和数据来源。11-12 求「张伟 85.33」用的也是它。</p>
+
+<h2>二、集合 set 补讲（你说忘了，正好有现场素材）</h2>
+
+<h3>你两次输出顺序不一样，这不是 bug</h3>
+<pre><code>第一次：不同字母：5 个 → {'a', 'd', 'b', 'c', 'r'}
+第二次：不同字母：5 个 → {'c', 'b', 'r', 'd', 'a'}</code></pre>
+<p>同一个程序跑两遍，集合里 5 个字母一样，<b>打印顺序变了</b>。这就是「<b>无序</b>」最直观的证据——集合不记谁先来谁后到，它只记「有没有」。所以<b>永远别指望 set 的输出顺序</b>，也别拿它跟列表比顺序。</p>
+
+<h3>set 的四条规矩</h3>
+<table>
+  <tr><th>规矩</th><th>例子</th><th>说明</th></tr>
+  <tr><td><b>去重</b>（本职）</td><td><code>set("abracadabra")</code> → <code>{'a','b','r','c','d'}</code></td><td>11 个字符 → 5 个不同字母，重复的自动消失</td></tr>
+  <tr><td><b>数个数</b></td><td><code>len(set(s))</code> → <code>5</code></td><td>「有多少种不一样的」标准写法，你升级 2 用对了</td></tr>
+  <tr><td><b>对字典取 set 只拿 key</b></td><td><code>set(count)</code> → <code>{'a','b','r','c','d'}</code></td><td>和你焊过的「<code>in</code> 判 key 不判 value」是同一条规矩：字典被遍历时交出来的永远是钥匙。所以 <code>set(count)</code> 与 <code>set(s)</code> 在这题里结果相同</td></tr>
+  <tr><td><b>不能下标</b></td><td><code>set(s)[0]</code> → <code>TypeError: 'set' object is not subscriptable</code></td><td>没有顺序就没有「第 0 个」。列表能 <code>[0]</code>，集合不能</td></tr>
+</table>
+
+<div class="warn"><b>一个容易栽的假朋友</b>：<code>{}</code> 是<b>空字典</b>，不是空集合！空集合必须写 <code>set()</code>。<br>
+验证：<code>type({})</code> → <code>&lt;class 'dict'&gt;</code>，<code>type(set())</code> → <code>&lt;class 'set'&gt;</code>。花括号里塞了东西才是集合（<code>{1, 2, 3}</code>），塞成 <code>key: value</code> 就是字典。</div>
+
+<h3>set 和 dict 的分工（一句话记住）</h3>
+<table>
+  <tr><th></th><th>字典 dict</th><th>集合 set</th></tr>
+  <tr><td>记什么</td><td>key → value（<b>有几个</b>）</td><td>只有元素（<b>有没有</b>）</td></tr>
+  <tr><td>今天的角色</td><td><code>count</code>：字母 → 次数</td><td><code>set(s)</code>：出现过哪些字母</td></tr>
+  <tr><td>典型问题</td><td>「a 出现了几次？」</td><td>「一共出现过几种？」「z 出现过吗？」</td></tr>
+</table>
+<p>成员判断 <code>'z' in set(s)</code> 返回 <code>False</code>（类型 <code>bool</code>）——集合的 <code>in</code> 比列表快得多，第 6 周讲数据结构时会说原因。你 11-8 手写的 <code>if name not in failed</code> 判重，就是在手工模拟集合。</p>
+<p><b>和 pandas 的钩子</b>：今天这套「字典数次数 + 集合看去重」，就是以后 <code>value_counts()</code>（每个值几次）和 <code>unique()</code> / <code>nunique()</code>（有哪几种、几种）的手写原型。第 11 周正式见面。</p>
+
+<h2>三、升级 3 顺带确认</h2>
+<pre><code>for ch, n in sorted(count.items(), key=lambda x: x[1], reverse=True):
+    print(f"{ch}: {n}")</code></pre>
+<p>你的输出 <code>a: 5 / b: 2 / r: 2 / c: 1 / d: 1</code> 正确 ✅。<code>key=lambda x: x[1]</code> 现在只按约定照抄，意思是「排序时看每一对的第 2 项（次数）」；<code>reverse=True</code> 是从大到小。<b>照抄级达标即可</b>，<code>lambda</code> 周二函数课正式讲，别提前啃。</p>
+
+<h2>四、完整参考代码（正确版，留着对照）</h2>
+<pre><code>s = "abracadabra"
+count = {}
+
+for ch in s:
+    count[ch] = count.get(ch, 0) + 1      <span class="comment"># 字典：字母 → 次数</span>
+
+for ch, n in count.items():
+    print(f"{ch}: {n}")
+
+best_ch, best_n = "", 0                   <span class="comment"># ① 立擂主（循环外）</span>
+for ch, n in count.items():
+    if n &gt; best_n:                       <span class="comment"># ② 逐个挑战（循环内）</span>
+        best_ch, best_n = ch, n
+
+print(f"出现最多：{best_ch}，{best_n} 次")   <span class="comment"># ③ 宣布结果（循环外）</span>
+print(f"不同字母：{len(set(s))} 个 → {set(s)}")</code></pre>
+
+<h2>五、下课待办</h2>
+<div class="hw">
+  <b class="t">必做 · wf.py 单词版词频统计（周二 11-17 开场批改）</b>
+  <p><code>text = "python is great and data is great and python is fun"</code>：<code>split()</code> 切词 → <code>count.get(w,0)+1</code> 计数 → 打擂台找最多 → <code>len(set(words))</code> 数不同单词。预期 <code>python:2 / is:3 / great:2 / and:2 / data:1 / fun:1</code>，最多 <code>is</code>（3 次），共 6 种。<b>写之前先问自己：哪几行跑 1 次、哪几行跑 N 次。</b><br><span style="color:#cf222e">📌 勘误（11-17 修订）：初版误写为「四词各 2 次」，实测 <code>is</code> 是 3 次。</span></p>
+  <b class="t">📌 GitHub 三样（下课提醒，别忘）</b>
+  <p>① 仓库地址　② 默认分支名（main / master）　③ 目录约定（讲义、作业放根目录还是分子目录）；可选贴 <code>git remote -v</code> 输出。<b>token / 密码 / 私钥一律不发</b>。拿到后我把第 2—5 周档案打包 zip 存资料库、README 顶部补仓库链接。</p>
+</div>
+<ul>
+  <li><b>周二 11-17 20:15 新知课</b>：第 6 周「函数与递归」—— 今天照抄的 <code>lambda</code>、「函数只算、= 才存」、11-5 剧透的关键字参数都会在这里正式讲</li>
+  <li><b>阶段测验 2</b>（第 4—5 周）安排在第 6 周末，复习材料 = lessons/08—14 的快问快答与错题本</li>
+</ul>
+
+<footer>第 5 周实战课 · 讲评补遗 · 2026-11-15 · 下一课：11-17（周二）20:15「函数与递归」</footer>
+</body>
+</html>

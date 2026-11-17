@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《大数据导论》× Python 联动方案 —— 12 章逐章配实验</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--green:#0f7b4f;--green-soft:#e9f7f0;
+    --amber:#b45309;--amber-soft:#fff7ed;--red:#c0392b;--red-soft:#fdecea;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;padding:34px 18px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.78}
+  .wrap{max-width:860px;margin:0 auto}
+  header{background:linear-gradient(135deg,#14346e,#2f6feb);color:#fff;border-radius:16px;padding:28px 30px}
+  header h1{margin:0 0 6px;font-size:25px}
+  header p{margin:0;opacity:.9;font-size:14px}
+  h2{font-size:19px;margin:36px 0 14px;padding-left:11px;border-left:4px solid var(--blue)}
+  h3{font-size:16px;margin:22px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0}
+  .lead{background:var(--blue-soft);border:1px solid #cfe0ff;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .key{background:var(--green-soft);border-left:4px solid var(--green);padding:13px 17px;border-radius:0 8px 8px 0;margin:15px 0}
+  .warn{background:var(--amber-soft);border-left:4px solid var(--amber);padding:13px 17px;border-radius:0 8px 8px 0;margin:15px 0}
+  .tip{background:var(--red-soft);border-left:4px solid var(--red);padding:13px 17px;border-radius:0 8px 8px 0;margin:15px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  pre{background:#1e2229;color:#e6e8eb;padding:15px 17px;border-radius:10px;overflow-x:auto;
+    font-size:12.5px;line-height:1.65;font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre code{background:none;color:inherit;padding:0}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#eef1f5;font-weight:600}
+  tr:nth-child(even) td{background:#fafbfc}
+  .core{background:#fff8e1}
+  .core td{font-weight:600}
+  .tag{display:inline-block;border-radius:6px;padding:1px 8px;font-size:12px;margin-right:5px}
+  .t-blue{background:var(--blue-soft);color:var(--blue)}
+  .t-green{background:var(--green-soft);color:var(--green)}
+  .t-amber{background:var(--amber-soft);color:var(--amber)}
+  ul,ol{padding-left:22px;margin:10px 0}li{margin:6px 0}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--sub);margin-top:12px}
+  .meta span{background:rgba(255,255,255,.16);border-radius:6px;padding:2px 9px}
+  footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>《大数据导论》× Python 联动方案</h1>
+  <p>杨尊琦 主编 · 机械工业出版社 · 第 2 版 · 面向新工科高等院校大数据专业系列教材</p>
+  <div class="meta">
+    <span>ISBN 978-7-111-71483-5</span><span>2022-11 出版</span><span>248 页</span>
+    <span>共 12 章</span><span>每章附「习题与实践」</span>
+  </div>
+</header>
+
+<div class="lead">
+  <b>核心结论：这本书的第 3 章「大数据处理」，就是 pandas 的工作流。</b><br>
+  教材把「采集 → 清洗 → 变换 → 集成 → 归约」讲成五个概念步骤；pandas 用五个 API 干同样的活。<b>这不是巧合，是同一件事的两种表达</b> —— 学完第 11—12 周再回头看第 3 章，你会发现整章内容都能用五行代码跑通。
+</div>
+
+<h2>一、先说一个关于考试的判断</h2>
+<p>这本书是<strong>信息技术新工科产学研联盟「数据科学与大数据技术」工作委员会推荐教材</strong>，天津市高校课程思政优秀教材，而且<strong>每章都设有「习题与实践」</strong>。这三条加起来基本可以确定：</p>
+<div class="key">
+  <b>这门课的期末考纲轮廓，就是这 12 章。</b> 所以不要把它当"水课"划过去 —— 你现在的每一个 Python 实验，都同时在帮你（a) 学编程 （b) 拿下导论课的分数。这两件事的投入是共享的，划算度极高。
+</div>
+
+<h2>二、第 3 章 × pandas：全流程对照（本章最值钱）</h2>
+<p>我按教材 3.1—3.5 的顺序，用 pandas 完整实现了一遍。左边是<b>教材的原话</b>，右边是<b>对应的代码</b>：</p>
+<table>
+  <tr><th style="width:20%">教材小节</th><th style="width:34%">在讲什么</th><th style="width:46%">pandas 对应操作</th></tr>
+  <tr><td>3.1 数据采集</td><td>采集方法、数据质量评估、影响因素</td><td><code>pd.read_csv()</code> <code>requests</code>，<code>df.info()</code> <code>df.isnull().sum()</code> 评估质量</td></tr>
+  <tr><td>3.2 数据清洗</td><td>处理残缺、噪声、冗余数据</td><td><code>fillna()</code> / <code>dropna()</code> 治残缺<br><code>duplicated()</code> / <code>drop_duplicates()</code> 治冗余<br>逻辑判断治噪声</td></tr>
+  <tr class="core"><td>3.3 数据变换</td><td>属性类型变换、属性值变换</td><td><code>astype()</code> 类型转换<br><code>pd.cut()</code> / <code>apply()</code> / <code>np.where()</code> 值变换<br>Z-Score 标准化</td></tr>
+  <tr><td>3.4 数据集成</td><td>模式匹配、数据值冲突、数据冗余</td><td><code>merge()</code> / <code>concat()</code> / <code>join()</code></td></tr>
+  <tr><td>3.5 数据归约</td><td>维归约、数值归约</td><td><code>drop(columns=)</code> 维归约<br><code>groupby().agg()</code> 数值归约</td></tr>
+</table>
+<p>对应脚本已放在 <code>experiments/实验1_数据处理流水线_第3章.py</code>，可直接运行。<b>真实运行结果节选：</b></p>
+<pre>【1 数据采集】读入 8 行 × 9 列
+  残缺 → 钱七年龄缺失、孙八英语缺考
+  噪声 → 吴十年龄 250（录入错误）
+  冗余 → 张三被重复登记两次
+  格式 → 王五的专业字段是 "大数据 "（尾部有空格）
+
+【2 数据清洗】重复记录：8 行 → 7 行；缺失值 6 个
+【3 数据变换】高数 → 等级、Z-Score 标准化、派生总分
+【4 数据集成】按学号 left join 宿舍表 → 孙八/吴十宿舍为空
+【5 数据归约】8 行脏数据 → 1 行分析结论
+
+     人数  平均高数  平均英语  平均总分
+大数据   7    78.1    80.7   160.2</pre>
+<div class="tip"><b>注意教材 3.6 节的案例用的是 Tableau Prep</b> —— 一个商业拖拽工具。学校做实验大概率让你跟着做。<b>你用 pandas 做到了同一件事，而且是可复现、可编程、免费的那条路。</b>如果期末实验允许选工具，强烈建议用 pandas 做，在报告里写清"本流程使用 pandas 实现"，这句话本身就是加分项。</div>
+
+<h2>三、12 章逐章联动表</h2>
+<table>
+  <tr><th style="width:5%">章</th><th style="width:24%">教材内容</th><th style="width:47%">你配套做的 Python 实验</th><th style="width:12%">对应周次</th><th style="width:12%">价值</th></tr>
+  <tr><td><b>1</b></td><td>大数据时代、4V 特征、数据科学、大数据技术工具</td><td>生成 10 万行数据实测内存占用（体感 Volume）；故意制造脏数据（体感 Veracity）</td><td>第 1、11 周</td><td><span class="tag t-amber">基础</span></td></tr>
+  <tr><td><b>2</b></td><td>云计算、虚拟化、并行计算、海量数据存储</td><td>同一任务串行 vs 多进程耗时对比，亲身体会"为什么要分布式"</td><td>第 8 周后（选做）</td><td><span class="tag t-amber">选做</span></td></tr>
+  <tr class="core"><td><b>3</b></td><td><b>数据采集/清洗/变换/集成/归约</b></td><td><b>完整五步流水线（脚本已给）—— 全书最重要的一章</b></td><td>第 7、11、12 周</td><td><span class="tag t-blue">核心</span></td></tr>
+  <tr><td><b>4</b></td><td>回归分析、K-Means、KNN、随机森林、RNN</td><td><b>手写 K-Means（脚本已给，纯 NumPy）</b>；手写一元线性回归</td><td>第 6—7 周手写，14 周后进阶</td><td><span class="tag t-blue">重要</span></td></tr>
+  <tr><td><b>5</b></td><td>大数据安全、隐私泄露</td><td>数据脱敏实验：手机号/身份证中间打码、`hashlib` 哈希、密码加盐</td><td>第 7—8 周</td><td><span class="tag t-amber">实用</span></td></tr>
+  <tr class="core"><td><b>6</b></td><td><b>数据可视化</b></td><td><b>Matplotlib / Seaborn 出图（图表选择原则）</b></td><td>第 13 周</td><td><span class="tag t-blue">核心</span></td></tr>
+  <tr><td><b>7</b></td><td>大数据与社交媒体融合</td><td>豆瓣 Top250 抓取 → 词频、评分分布、年代趋势、导演维度分析</td><td>第 8 周后</td><td><span class="tag t-green">期末报告</span></td></tr>
+  <tr><td><b>8</b></td><td>健康大数据与公共卫生</td><td>公开健康/空气质量数据分析（<b>石家庄本地数据，地域相关性最强</b>）</td><td>第 11—13 周</td><td><span class="tag t-green">期末报告</span></td></tr>
+  <tr><td><b>9</b></td><td>大数据在碳减排中的应用（2 版新增）</td><td>Our World in Data 碳排放数据集：各国排放趋势、中国占比、相关性分析</td><td>第 12—13 周</td><td><span class="tag t-green">期末报告</span></td></tr>
+  <tr><td><b>10</b></td><td>大数据对金融业的挑战与机遇</td><td>股票数据分析（akshare）：价格区间、收益率、成交量与涨跌关系</td><td>第 12—13 周</td><td><span class="tag t-green">期末报告</span></td></tr>
+  <tr><td><b>11</b></td><td>大数据在制造业中的应用</td><td>工业数据集：设备稼动率、故障率分析</td><td>第 12 周后</td><td><span class="tag t-amber">拓展</span></td></tr>
+  <tr><td><b>12</b></td><td>大数据在旅游业中的应用</td><td>河北/石家庄旅游数据分析：淡旺季客流、景点热度</td><td>第 12 周后</td><td><span class="tag t-amber">拓展</span></td></tr>
+</table>
+
+<h2>四、两个已验证的实验（现在就能跑）</h2>
+
+<div class="card">
+  <h3 style="margin-top:0">实验 2：手写 K-Means（对应 4.4.1 节）</h3>
+  <p>这个实验的价值在于：<b>它只用到你第 6 周（函数）和第 10 周（NumPy）就能写出来</b>，而且不依赖 sklearn。核心逻辑只有两步，循环往复：</p>
+<pre><span class="c"># 1. 分配：每个点归到离它最近的簇心</span>
+labels = ((X[:, None, :] - centers[None, :, :])**2).sum(axis=2).argmin(axis=1)
+
+<span class="c"># 2. 重算：每个簇心 = 该簇所有点的平均值</span>
+new_centers = np.array([X[labels == i].mean(axis=0) for i in range(k)])
+
+<span class="c"># 3. 簇心不再移动 = 收敛</span>
+if np.allclose(new_centers, centers): break</pre>
+  <p>真实运行结果（120 名学生的身高体重，聚成 3 类）：</p>
+<pre>簇心（身高cm, 体重kg）：
+  簇1   身高 174.9   体重 54.8   ← 最接近：运动型
+  簇2   身高 165.3   体重 49.8   ← 最接近：学术型
+  簇3   身高 159.7   体重 79.5   ← 最接近：社交型
+
+混淆矩阵（行=真实身份，列=算法分簇）：
+             簇1   簇2   簇3
+真实运动型:   34    6    0
+真实学术型:   11   29    0
+真实社交型:    1    0   39
+
+聚类准确率 = 85.0%</pre>
+  <div class="warn"><b>我在写这个示例时踩了一个真实的坑，值得你注意：</b>第一版数据我只跑到 52.5% 准确率，因为随机初始化让算法掉进了局部最优。修正方法是<b>多次随机重启、取簇内平方和最小的那次</b> —— 这就是真实工程里的标准做法。<b>算法也有运气成分</b>，这个体感比背定义深刻得多。</div>
+</div>
+
+<h2>五、期末报告怎么拿高分</h2>
+<p>导论课期末若要交报告/论文，<b>别人交文字，你交一份带真实数据、真实图表、真实分析脚本的报告</b>。三个推荐选题：</p>
+<table>
+  <tr><th style="width:24%">选题</th><th style="width:38%">为什么好做</th><th style="width:38%">为什么出彩</th></tr>
+  <tr class="core"><td><b>空气质量数据分析</b>（第 8 章）</td><td>石家庄/河北的公开数据，数据干净，结论直观</td><td>地域贴近你的学校 → 老师更容易认可"这是自己做的"<br>可延伸到"石家庄冬夏空气质量的差异与原因"</td></tr>
+  <tr><td><b>豆瓣电影数据分析</b>（第 7 章）</td><td>数据现成，抓取简单，趣味性强</td><td>容易做出让人眼前一亮的图表（评分分布、年代趋势、类型占比）</td></tr>
+  <tr><td><b>碳排放数据分析</b>（第 9 章）</td><td>Our World in Data 免费提供高质量数据集</td><td>2 版新增章节 = 老师重点讲；有全球视野，适合放"中国责任"这类思政加分点</td></tr>
+</table>
+<div class="key"><b>报告的杀手锏结构（照抄这个）：</b>
+  1. 问题是什么（业务背景，别上来就贴代码）
+  2. 数据从哪来、<b>有多脏</b>（展示清洗过程，这是加分项）
+  3. 怎么处理的（贴你的五步流水线图）
+  4. 发现了什么（图表 + 一句结论）
+  5. <b>结论的局限性和你自己的思考</b>（老师最看重这个）
+  6. 附完整代码（GitHub 链接）</div>
+
+<h2>六、怎么和教材配合着走</h2>
+<div class="step-flow">
+  <ol>
+    <li><b>课上：</b>正常听课，记下老师强调的概念和考点（这门课概念多、计算少，重点是体系框架）。</li>
+    <li><b>课后 1 周内：</b>打开对应章节，配着上表的 Python 实验做一遍。<b>拖久了就忘了，成本最高。</b></li>
+    <li><b>每章结束：</b>把该章实验整理进你的 GitHub 仓库（按 `导论课/ch03_数据处理/` 这样组织）。</li>
+    <li><b>每章的「习题与实践」：</b>概念题按教材答；实践题尽量用 Python 重做一遍。</li>
+    <li><b>期末前：</b>12 章的实验合起来，就是你报告的素材库，从里面挑一个方向做深。</li>
+  </ol>
+</div>
+<div class="key"><b>最后一句实话：</b>这门课你完全可以"用 Python 打通"。概念你照教材理解，方法你用代码验证，报告你用真实数据做出来。到期末你会发现自己是班里少数几个**真的动手做过**的人 —— 而这正是这个专业最看重的区别。</div>
+
+<footer>石家庄学院 · 数据科学与大数据技术 · Python 学习配套讲义 &nbsp;|&nbsp; 实验脚本见 experiments/ 目录 &nbsp;|&nbsp; 由 WorkBuddy 生成</footer>
+
+</div>
+</body>
+</html>

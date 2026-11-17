@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2周 · 实战课（重讲版）循环三道题</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--green:#0f7b4f;--green-soft:#e9f7f0;
+    --amber:#b45309;--amber-soft:#fff7ed;--red:#c0392b;--red-soft:#fdecea;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;padding:30px 18px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.8}
+  .wrap{max-width:860px;margin:0 auto}
+  header{background:linear-gradient(135deg,#14346e,#2f6feb);color:#fff;border-radius:14px;padding:24px 28px}
+  header h1{margin:0 0 6px;font-size:23px}
+  header p{margin:0;opacity:.9;font-size:13.5px}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .meta span{background:rgba(255,255,255,.16);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  h2{font-size:19px;margin:34px 0 12px;padding-left:11px;border-left:4px solid var(--blue)}
+  h3{font-size:16px;margin:20px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0}
+  .goal{background:var(--blue-soft);border:1px solid #cfe0ff;border-radius:12px;padding:15px 20px;margin:16px 0}
+  .pit{background:var(--amber-soft);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .key{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  pre{background:#1e2229;color:#e6e8eb;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-size:13px;line-height:1.7;font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre .c{color:#8b95a1}
+  pre .k{color:#7ec4ff}
+  pre .s{color:#a5e19a}
+  pre .n{color:#ffcb6b}
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--blue);font-size:14.5px}
+  details[open] summary{margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:#eef1f5}
+  .hw{background:#fff8e6;border:1px solid #f0dcbc;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .hw b.t{color:var(--amber)}
+  ul,ol{padding-left:22px;margin:10px 0}li{margin:6px 0}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>第 2 周 · 实战课（重讲版）：循环三道题</h1>
+  <p>石家庄学院 · 数据科学与大数据技术 · Python 一对一课</p>
+  <div class="meta"><span>日期：2026-10-20</span><span>课型：周日实战课重讲（主对话长课）</span><span>阶段：语法地基</span></div>
+</header>
+
+<div class="goal">
+  <b>本课目标</b> —— 上完这节课，你应该能够：
+  <ul>
+    <li>独立写出<b>阶梯乘法表</b>，并说清 <code>range(1, i+1)</code>、<code>end="  "</code>、行尾空 <code>print()</code> 各自在干什么</li>
+    <li>独立写出<b>猜数字 random 版</b>：随机答案 + 计数器 + <code>while True + break</code></li>
+    <li>独立写出<b>菱形</b>（含用户输入高度的选做版），理解对称与倒序循环</li>
+    <li>掌握比三道题更值钱的方法：<b>先画表想清楚每一步，再把表格翻译成代码</b></li>
+  </ul>
+</div>
+
+<h2>零、先立一个总观念：嵌套循环到底在干嘛</h2>
+<div class="card">
+  <p><b>打个比方：</b>嵌套循环像一块钟表 —— <b>外层像分针，内层像秒针</b>。分针（外层 i）每走一格，秒针（内层 j）就整整跑完一圈。代码里就是：外层每取一个值，内层把自己的整个 <code>range</code> 从头到尾跑一遍。</p>
+  <p><b>写代码前先回答一个问题：</b>「第 i 行应该打几个式子？」99 乘法表第 1 行 1 个、第 2 行 2 个……第 i 行 <b>i 个</b>。所以内层要跑 i 次 → <code>range(1, i + 1)</code>。<b>想清楚数量关系，代码自然就出来了。</b></p>
+</div>
+
+<h2>一、阶梯乘法表</h2>
+<div class="card">
+  <p><b>需求：</b>第 i 行输出 i 个乘法式子，共 9 行，呈阶梯状：</p>
+<pre>1x1=1
+1x2=2 2x2=4
+1x3=3 2x3=6 3x3=9
+……</pre>
+  <p><b>参考代码：</b></p>
+<pre><span class="k">for</span> i <span class="k">in</span> range(1, 10):          <span class="c"># 外层：行号 i 从 1 到 9</span>
+    <span class="k">for</span> j <span class="k">in</span> range(1, i + 1):      <span class="c"># 内层：第 i 行打 i 个式子</span>
+        print(f<span class="s">"{j}x{i}={i*j}"</span>, end=<span class="s">"  "</span>)   <span class="c"># 打完不换行，用两个空格隔开</span>
+    print()                          <span class="c"># 一行结束，手动换行</span>
+</pre>
+  <p><b>三个必须想明白的点：</b></p>
+  <ol>
+    <li><b>为什么是 <code>range(1, i+1)</code> 而不是 <code>range(1, i)</code>？</b><br>因为 <code>range</code> <b>含头不含尾</b>。要打到 i，终点就必须写到 i+1。写成 i，每行会少最后一个式子（第 9 行只有 8 个）。</li>
+    <li><b><code>end="  "</code> 是干什么的？</b><br><code>print</code> 像一台<b>盖章机</b>：默认每盖一个章（输出一项），就自动换一行纸。<code>end="  "</code> 是把"换行"这个默认动作改成"盖两个空格"，于是同一行的式子们才能排在一排。</li>
+    <li><b>每行末尾的 <code>print()</code> 是干什么的？</b><br>内层结束后，这一行还缺一个换行。空 <code>print()</code> 就是<b>只盖一个"换行"章</b>，不盖别的。忘了它，45 个式子会全部糊在一行里。</li>
+  </ol>
+  <div class="key"><b>小实验（当场敲一遍）：</b>
+<pre><span class="k">print</span>(<span class="s">"A"</span>, end=<span class="s">""</span>)
+<span class="k">print</span>(<span class="s">"B"</span>)
+<span class="k">print</span>()
+<span class="k">print</span>(<span class="s">"C"</span>)</pre>
+  输出三行：第一行 <code>AB</code>（end 把换行吞了）、第二行空行（空 print 只换行）、第三行 <code>C</code>。</div>
+</div>
+<div class="pit"><b>坑：</b>内层 <code>print</code> 的 <code>end</code> 参数只在"不想换行"时才加；行尾的 <code>print()</code> 属于<b>外层循环体</b>（缩进 4 空格，和内层 print 对齐以外）—— 缩进错一层，程序就变样。</div>
+
+<h2>二、猜数字 random 版</h2>
+<div class="card">
+  <p><b>需求：</b>程序心里想一个 1~100 的随机数，你来猜，程序提示"大了/小了"，猜中时报告一共猜了几次。</p>
+  <p><b>参考代码：</b></p>
+<pre><span class="k">import</span> random                            <span class="c"># 请 random 工具箱入场</span>
+
+answer = random.randint(1, 100)          <span class="c"># 随机答案：1~100 之间（含 1 和 100）</span>
+count = 0                                <span class="c"># 计数器：猜了几次，初始必须是 0</span>
+
+<span class="k">while</span> <span class="k">True</span>:                             <span class="c"># 永远循环，靠 break 退出</span>
+    guess = int(input(<span class="s">"请输入你猜的数字(1-100): "</span>))
+    count = count + 1                    <span class="c"># 每猜一次，计数器 +1</span>
+    <span class="k">if</span> guess == answer:
+        print(f<span class="s">"猜对了！答案是 {answer}，你一共猜了 {count} 次"</span>)
+        <span class="k">break</span>                          <span class="c"># 先报告胜利，再跳出循环</span>
+    <span class="k">elif</span> guess &gt; answer:
+        print(<span class="s">"大了，往小猜"</span>)
+    <span class="k">else</span>:
+        print(<span class="s">"小了，往大猜"</span>)</pre>
+  <p><b>五个必须想明白的点：</b></p>
+  <ol>
+    <li><b><code>random.randint(1, 100)</code> 是什么？</b>从 <code>random</code> 模块请来的工具函数，每次调用返回 1~100 的一个随机整数（两头都包含）。<code>import random</code> = 把工具箱请进程序。原理第 8 周讲，现在当黑盒放心用。</li>
+    <li><b>为什么必须写 <code>answer =</code>？</b>这是你的老卡点：<b>函数只负责算，= 才负责存</b>。<code>random.randint(1,100)</code> 算出一个数，不存回变量，你就永远拿不到它。</li>
+    <li><b><code>count = count + 1</code> 累加器：</b>你算 5050 时已经用熟的模式 —— 每次循环给自己 +1。<b>初始值必须是 0</b>，放循环外面。</li>
+    <li><b>为什么用 <code>while True</code>？</b>猜几次才中，天知道。没有固定次数 → "永远循环 + 条件满足就 <code>break</code>"。</li>
+    <li><b><code>break</code> 的位置：</b>在 <code>if guess == answer</code> 里面、打印之后 —— <b>先报胜利再退场</b>。你之前把打印放到 break 后面（循环外），胜利消息就永远打不出来了。</li>
+  </ol>
+</div>
+<div class="pit"><b>坑：</b><code>int(input(...))</code> 别忘 <code>int</code> —— input 拿到的永远是字符串，字符串和整数比大小会直接报 TypeError。另外 <code>elif</code> 的顺序：先判相等，再判大小，逻辑别反。</div>
+
+<h2>三、打印菱形</h2>
+<div class="card">
+  <p><b>需求：</b>n=5 时输出 9 行菱形（上半 5 行 + 下半 4 行，中间行不重复）：</p>
+<pre>····*
+···***
+··*****
+·*******
+*********
+·*******
+··*****
+···***
+····*</pre>
+  <p style="font-size:13px;color:var(--sub)">（· 代表一个空格）</p>
+  <p><b>核心认知：</b>菱形 = 正金字塔 + 倒金字塔。<b>先画表，后写码</b> —— 第 i 行 = 空格 (n-i) 个 + 星 (2i-1) 颗：</p>
+  <table>
+    <tr><th>i</th><th>空格数 (n-i)</th><th>星数 (2i-1)</th><th>那一行长什么样</th></tr>
+    <tr><td>1</td><td>4</td><td>1</td><td>····*</td></tr>
+    <tr><td>2</td><td>3</td><td>3</td><td>···***</td></tr>
+    <tr><td>3</td><td>2</td><td>5</td><td>··*****</td></tr>
+    <tr><td>4</td><td>1</td><td>7</td><td>·*******</td></tr>
+    <tr><td>5</td><td>0</td><td>9</td><td>*********</td></tr>
+  </table>
+  <p><b>参考代码：</b></p>
+<pre>n = 5
+<span class="c"># 上半：i 从 1 长到 5，越往下空格越少、星越多</span>
+<span class="k">for</span> i <span class="k">in</span> range(1, n + 1):
+    print(<span class="s">" "</span> * (n - i) + <span class="s">"*"</span> * (2 * i - 1))
+<span class="c"># 下半：i 从 4 缩到 1 —— 从 n-1 开始，中间行不重复！</span>
+<span class="k">for</span> i <span class="k">in</span> range(n - 1, 0, -1):
+    print(<span class="s">" "</span> * (n - i) + <span class="s">"*"</span> * (2 * i - 1))</pre>
+  <p><b>四个必须想明白的点：</b></p>
+  <ol>
+    <li><b>星数为什么是 <code>2*i-1</code>？</b>菱形的每一行星数必须是<b>奇数</b>，且中间行（i=n）要 2n-1 颗。奇数序列 1、3、5、7、9 正好等于 2i-1。</li>
+    <li><b><code>" " * (n - i)</code> 字符串乘法：</b>" " 乘 4 = 4 个空格。<b>先生成缩进，再拼内容</b>，所以这一行是字符串相加。</li>
+    <li><b>下半为什么从 <code>n-1</code> 开始？</b>中间行（i=5，9 颗星）上半已经打过了。下半若从 n 开始，中间行打两遍，菱形中间鼓个包。从 n-1（4 颗星那行）开始缩，才对称。</li>
+    <li><b><code>range(4, 0, -1)</code> 三个参数：</b>起点 4、终点 0（不含）、步长 -1 —— 每步往后退 1，输出 4、3、2、1。<b>这就是倒序循环</b>，以后倒计时、倒序输出全靠它。</li>
+  </ol>
+  <div class="key"><b>选做挑战（高度由用户输入）：</b>只改第一行，程序立刻通用：
+<pre>n = int(input(<span class="s">"请输入菱形高度(奇数): "</span>))
+<span class="k">for</span> i <span class="k">in</span> range(1, n + 1):
+    print(<span class="s">" "</span> * (n - i) + <span class="s">"*"</span> * (2 * i - 1))
+<span class="k">for</span> i <span class="k">in</span> range(n - 1, 0, -1):
+    print(<span class="s">" "</span> * (n - i) + <span class="s">"*"</span> * (2 * i - 1))</pre>
+  输入 3，输出 5 行菱形。这就是<b>变量化</b>的威力：写死的数字换成变量，程序从"一次性"变"通用"。</div>
+</div>
+
+<h2>四、比三道题更值钱的东西</h2>
+<div class="key">
+  <b>三道题的共同主线：先画表，后写码。</b>
+  <ul>
+    <li>乘法表：先列出「第 i 行几个式子」→ 才有 <code>range(1, i+1)</code></li>
+    <li>菱形：先列出「每行几个空格、几颗星」→ 才有 <code>" "*(n-i) + "*"*(2i-1)</code></li>
+    <li>猜数字：先列出「程序有几种状态、每种状态怎么流转」→ 才有 while True + break 的结构</li>
+  </ul>
+  <b>代码只是表格的翻译。</b>以后写任何循环，都先问自己：能不能把它画成一张表？能，代码就是抄表格；不能，说明还没想清楚，别急着敲键盘。
+</div>
+
+<h2>五、课堂练习（含参考答案）</h2>
+<div class="card">
+  <h3 style="margin-top:0">练习 1：把乘法表改成「只显示偶数行」</h3>
+  <details><summary>👉 点开看参考答案</summary>
+<pre><span class="k">for</span> i <span class="k">in</span> range(1, 10):
+    <span class="k">if</span> i % 2 != 0:          <span class="c"># 奇数行跳过</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> j <span class="k">in</span> range(1, i + 1):
+        print(f<span class="s">"{j}x{i}={i*j}"</span>, end=<span class="s">"  "</span>)
+    print()</pre>
+    <p>解析：<code>%</code> 取余数判断奇偶；<code>continue</code> 跳过本轮直接进下一行 —— 巩固课刚讲过，这里直接用。注意 <code>continue</code> 写在外层循环里，跳过的是"整行"。</p>
+  </details>
+  <h3>练习 2：猜数字加「范围提示」</h3>
+  <details><summary>👉 点开看参考答案</summary>
+<pre>low, high = 1, 100               <span class="c"># 记录当前已知的答案范围</span>
+<span class="k">while</span> <span class="k">True</span>:
+    guess = int(input(f<span class="s">"猜 {low}~{high} 之间的数: "</span>))
+    <span class="k">if</span> guess == answer:
+        print(<span class="s">"猜对了！"</span>)
+        <span class="k">break</span>
+    <span class="k">elif</span> guess &gt; answer:
+        high = guess - 1          <span class="c"># 答案比猜的小，上限收紧</span>
+    <span class="k">else</span>:
+        low = guess + 1           <span class="c"># 下限收紧</span>
+    print(f<span class="s">"提示：答案在 {low}~{high} 之间"</span>)</pre>
+    <p>解析：用两个变量<b>追踪状态</b>，每次猜错就收紧范围。这是"程序有记忆"的雏形 —— 和第 3 周的列表是同一个思想。</p>
+  </details>
+  <h3>练习 3：实心三角形（菱形上半）</h3>
+  <details><summary>👉 点开看参考答案</summary>
+<pre>n = int(input(<span class="s">"三角形高度: "</span>))
+<span class="k">for</span> i <span class="k">in</span> range(1, n + 1):
+    print(<span class="s">" "</span> * (n - i) + <span class="s">"*"</span> * (2 * i - 1))</pre>
+    <p>解析：菱形的一半。能写出这个，菱形就只剩"再抄一遍倒序"。</p>
+  </details>
+</div>
+
+<h2>六、常见坑汇总（本课专属）</h2>
+<div class="pit"><b>坑 1：range 终点忘 +1</b> —— 含头不含尾，要打到 i 就得写 i+1。这是你上周错过的点（range(1,100,7)），乘法表里又用上了。</div>
+<div class="pit"><b>坑 2：忘记行尾空 print()</b> —— 45 个式子糊一行。症状好认，治法简单。</div>
+<div class="pit"><b>坑 3：random 的结果不存变量</b> —— <code>random.randint(1,100)</code> 算完就扔，后面永远拿不到。老规矩：函数只算，= 才存。</div>
+<div class="pit"><b>坑 4：菱形下半从 n 开始</b> —— 中间行打两遍，菱形变沙漏鼓包。记住：上半已经打过的行，下半不重复。</div>
+<div class="pit"><b>坑 5：break 写在打印后面</b> —— 先 break 后打印，胜利消息在循环外，永远不执行。先报胜利，再退场。</div>
+
+<h2>七、作业批改记录（2026-10-20 晚实测）</h2>
+<div class="hw">
+  <table>
+    <tr><th>作业</th><th>结果</th><th>实测结论</th></tr>
+    <tr><td>猜数字 random 版</td><td>✅ 通过</td><td>两个老卡点零复发：<code>answer = random.randint(...)</code> 存回变量 ✅、<code>break</code> 在打印之后 ✅；两次运行答案不同，random 真随机验证通过</td></tr>
+    <tr><td>菱形 + 选做 n 版</td><td>✅ 满分</td><td>选做完成（高度变量化）；n=5 完美；额外验证 n=4 偶数输入也对称</td></tr>
+    <tr><td>阶梯乘法表</td><td>⚠️ 两处待修</td><td>① 内循环写死 <code>range(1,10)</code>，输出的是 9×9 <b>方阵</b>不是阶梯 —— 应改为 <code>range(1, i+1)</code>；② <code>end=""</code> 未设分隔，45 个式子糊在一行 —— 应改为 <code>end="  "</code></td></tr>
+  </table>
+  <p><b>修正版（只改两行）：</b></p>
+<pre><span class="k">for</span> i <span class="k">in</span> range(1, 10):
+    <span class="k">for</span> j <span class="k">in</span> range(1, i + 1):      <span class="c"># 改动1：终点由外层 i 决定</span>
+        print(f<span class="s">"{j}*{i}={i*j}"</span>, end=<span class="s">"  "</span>)  <span class="c"># 改动2：两个空格隔开</span>
+    print()</pre>
+</div>
+
+<h2>八、下节课预告</h2>
+<div class="key">第二部分（今晚继续）：<b>列表与元组</b> —— 变量存一个值，列表存一堆值。猜数字里你已经开始用「两个变量追踪范围」，列表就是把这种思想武装到牙齿。可以先用手机想想：一个班 40 个人的成绩，用今天的知识怎么存？</div>
+
+<footer>第 2 周实战课（重讲版）讲义 · 生成于 2026-10-20 20:30 · 石家庄学院 Python 学习计划 &nbsp;|&nbsp; 温馨提示：讲义里的代码请至少亲手敲一遍</footer>
+
+</div>
+</body>
+</html>

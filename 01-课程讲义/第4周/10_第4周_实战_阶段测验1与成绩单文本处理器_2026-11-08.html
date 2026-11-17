@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阶段测验1 + 第4周实战：成绩单文本处理器（2026-11-08）</title>
+<style>
+  :root { --main:#1a5fb4; --bg:#f8f9fb; }
+  * { box-sizing:border-box; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; color:#24292f; background:var(--bg); max-width:860px; margin:0 auto; padding:24px 18px 60px; }
+  header { border-left:6px solid var(--main); padding:12px 18px; background:#fff; border-radius:8px; margin-bottom:28px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  header h1 { font-size:22px; margin:0 0 6px; color:var(--main); }
+  header .meta { font-size:13px; color:#57606a; }
+  h2 { font-size:19px; color:var(--main); border-bottom:2px solid #d0d7de; padding-bottom:6px; margin-top:36px; }
+  code { background:#eff1f3; padding:2px 6px; border-radius:4px; font-family:Consolas,Menlo,monospace; font-size:14px; color:#cf222e; }
+  pre { background:#0d1117; color:#e6edf3; padding:14px 16px; border-radius:8px; overflow-x:auto; font-size:13.5px; line-height:1.6; }
+  pre code { background:none; color:inherit; padding:0; }
+  .comment { color:#8b949e; }
+  table { border-collapse:collapse; width:100%; background:#fff; margin:14px 0; font-size:14px; }
+  th,td { border:1px solid #d0d7de; padding:8px 12px; text-align:left; }
+  th { background:var(--main); color:#fff; }
+  tr:nth-child(even) { background:#f6f8fa; }
+  .warn { background:#fff8c5; border-left:4px solid #d4a72c; padding:10px 14px; border-radius:0 8px 8px 0; margin:14px 0; }
+  .hw { background:#eaf3ff; border-left:4px solid var(--main); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0; }
+  .hw .t { color:var(--main); }
+  details { background:#fff; border:1px solid #d0d7de; border-radius:8px; padding:10px 14px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; color:var(--main); }
+  footer { margin-top:40px; font-size:12px; color:#8b949e; text-align:center; border-top:1px solid #d0d7de; padding-top:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>阶段测验 1 + 第 4 周实战：成绩单文本处理器</h1>
+  <div class="meta">2026-11-08（周日）下午 · 主对话授课 · 讲义已归档 lessons/10</div>
+</header>
+
+<h2>一、测验结果</h2>
+<table>
+  <tr><th>部分</th><th>结果</th><th>说明</th></tr>
+  <tr><td>A 卷快问快答</td><td>6 / 8</td><td>失分：range 三参数当输出（2,5,8 才是答案）；sorted 不改原件（二次失分）；end=""（是"什么都不接"不是空格）</td></tr>
+  <tr><td>B 卷偶数求和</td><td>成绩无效</td><td>VSCcode AI 代笔；学生主动坦白</td></tr>
+  <tr><td>B 卷重做（3 的倍数之和）</td><td>✅ 1683</td><td>range(3,101,3) 独立完成，起手三问生效</td></tr>
+</table>
+
+<h2>二、起手三问（写小程序的万能起手式）</h2>
+<ol>
+  <li><b>结果存哪？</b>求和/计数 → 累加器 <code>total = 0</code>；收集一批 → 收集器 <code>lst = []</code></li>
+  <li><b>循环谁？</b>固定次数/等差 → <code>for i in range(a, b, s)</code>；遍历现成一堆 → <code>for x in 列表</code>；不知道几轮 → <code>while True + break</code></li>
+  <li><b>每轮干什么？</b>累加/收集/判断（if 在循环体内）</li>
+</ol>
+
+<h2>三、错题监控名单（下次测验重点）</h2>
+<ul>
+  <li><code>range(a, b, s)</code> = 从 a 数到 b <b>前一个</b>，每次跳 s（口诀背死）</li>
+  <li><code>sorted(x)</code> 返回新列表原列表不动；<code>x.sort()</code> 才改原件</li>
+  <li><code>end=""</code> = 后面什么都不接（不是空格）</li>
+</ul>
+
+<h2>四、实战项目：成绩单文本处理器（shizhan4.py）</h2>
+<p><b>这是你手写的第一个"数据处理流水线"，也是 pandas 的原始形态。</b></p>
+<h3>数据</h3>
+<pre><code>data = "张伟,88,92,76\n李娜,59,73,81\n王强,45,66,90"</code></pre>
+<p>注意 <code>\n</code>：这是一个字符——<b>换行符</b>。三行文本挤在一个字符串里，靠它分行。</p>
+<h3>需求</h3>
+<ol>
+  <li>把 data 按换行符切开，得到每个学生一行的<b>列表</b></li>
+  <li>遍历每一行：用今天的 CSV 套路（split → 切片取成绩 → int 转换收集）算出<b>每个学生的平均分</b>并输出（round 两位）</li>
+  <li>算<b>全班总平均分</b>（所有成绩一起算）</li>
+  <li>选做 ①：输出<b>谁的</b>平均分最高；选做 ②：列出有不及格科目的学生</li>
+</ol>
+<h3>起手三问提示</h3>
+<ul>
+  <li>外层循环谁？→ 按行切开后的列表</li>
+  <li>每行干什么？→ 复用 CSV.py 的四步（split/切片/int/收集）</li>
+  <li>全班总平均需要什么？→ 再造一个收集器，把<b>所有人的成绩</b>都收进来</li>
+</ul>
+<div class="hw"><b class="t">时间</b>：今天下午完成，代码+输出发我；卡住超过 15 分钟就带着"三问的答案"来问，不要空手问"不会做"。</div>
+
+<footer>石家庄学院 · Python 学习档案 · lessons/10 · 由课程 AI 生成于 2026-11-08</footer>
+</body>
+</html>

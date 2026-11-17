@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{课程标题}}</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--green:#0f7b4f;--green-soft:#e9f7f0;
+    --amber:#b45309;--amber-soft:#fff7ed;--red:#c0392b;--red-soft:#fdecea;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;padding:30px 18px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.8}
+  .wrap{max-width:860px;margin:0 auto}
+  header{background:linear-gradient(135deg,#14346e,#2f6feb);color:#fff;border-radius:14px;padding:24px 28px}
+  header h1{margin:0 0 6px;font-size:23px}
+  header p{margin:0;opacity:.9;font-size:13.5px}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .meta span{background:rgba(255,255,255,.16);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  h2{font-size:19px;margin:34px 0 12px;padding-left:11px;border-left:4px solid var(--blue)}
+  h3{font-size:16px;margin:20px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0}
+  .goal{background:var(--blue-soft);border:1px solid #cfe0ff;border-radius:12px;padding:15px 20px;margin:16px 0}
+  .pit{background:var(--amber-soft);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .key{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  pre{background:#1e2229;color:#e6e8eb;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-size:13px;line-height:1.7;font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre .c{color:#8b95a1}
+  pre .k{color:#7ec4ff}
+  pre .s{color:#a5e19a}
+  pre .n{color:#ffcb6b}
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--blue);font-size:14.5px}
+  details[open] summary{margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:#eef1f5}
+  .hw{background:#fff8e6;border:1px solid #f0dcbc;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .hw b.t{color:var(--amber)}
+  ul,ol{padding-left:22px;margin:10px 0}li{margin:6px 0}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>{{第 N 周 · 课程标题}}</h1>
+  <p>石家庄学院 · 数据科学与大数据技术 · Python 一对一课</p>
+  <div class="meta"><span>日期：{{YYYY-MM-DD}}</span><span>时长：{{45/60/90}} 分钟</span><span>阶段：{{语法地基/工程能力/对接专业课}}</span></div>
+</header>
+
+<div class="goal">
+  <b>本课目标</b> —— 上完这节课，你应该能够：
+  <ul>
+    <li>{{目标 1：能独立写出 XXX}}</li>
+    <li>{{目标 2：能解释 YYY 是什么、为什么}}</li>
+    <li>{{目标 3：完成课后作业 ZZZ}}</li>
+  </ul>
+</div>
+
+<h2>一、{{知识点 1 标题}}</h2>
+<div class="card">
+  <p><b>它是什么：</b>{{一句话定义，说人话}}</p>
+  <p><b>打个比方：</b>{{生活类比}}</p>
+<pre><span class="c"># 中文注释：说明这段代码干什么</span>
+<span class="k">print</span>(<span class="s">"你好，石家庄学院"</span>)</pre>
+  <p><b>运行结果：</b></p>
+<pre>你好，石家庄学院</pre>
+</div>
+
+<h2>二、{{知识点 2 标题}}</h2>
+<!-- 按同样的卡片结构继续写。每个知识点都要有：定义 + 类比 + 可运行代码 + 运行结果 -->
+
+<h2>三、课堂练习（含参考答案）</h2>
+<div class="card">
+  <h3 style="margin-top:0">练习 1：{{题目描述}}</h3>
+  <details><summary>👉 点开看参考答案</summary>
+<pre><span class="c"># 参考答案，带注释</span>
+<span class="k">print</span>(<span class="s">"..."</span>)</pre>
+    <p>{{答案解析：为什么这么写，哪里容易错}}</p>
+  </details>
+</div>
+
+<h2>四、常见坑（本课专属）</h2>
+<div class="pit"><b>坑 1：{{坑的描述}}</b> —— {{为什么会踩 + 怎么避免}}</div>
+
+<h2>五、课后作业</h2>
+<div class="hw">
+  <b class="t">作业：{{作业题目}}</b>
+  <p>{{要求，写清楚输入输出}}</p>
+  <p>完成后把代码发给老师批改，下次巩固课（周五 20:15）讲评。</p>
+</div>
+
+<h2>六、下节课预告</h2>
+<div class="key">{{下节课讲什么，可以先想什么}}</div>
+
+<footer>{{第 N 周}} 讲义 · 生成于 {{YYYY-MM-DD HH:MM}} · 石家庄学院 Python 学习计划 &nbsp;|&nbsp; 温馨提示：讲义里的代码请至少亲手敲一遍</footer>
+
+</div>
+</body>
+</html>

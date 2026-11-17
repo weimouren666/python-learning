@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3周 · 新知课：列表与元组</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--green:#0f7b4f;--green-soft:#e9f7f0;
+    --amber:#b45309;--amber-soft:#fff7ed;--red:#c0392b;--red-soft:#fdecea;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;padding:30px 18px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.8}
+  .wrap{max-width:860px;margin:0 auto}
+  header{background:linear-gradient(135deg,#14346e,#2f6feb);color:#fff;border-radius:14px;padding:24px 28px}
+  header h1{margin:0 0 6px;font-size:23px}
+  header p{margin:0;opacity:.9;font-size:13.5px}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .meta span{background:rgba(255,255,255,.16);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  h2{font-size:19px;margin:34px 0 12px;padding-left:11px;border-left:4px solid var(--blue)}
+  h3{font-size:16px;margin:20px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0}
+  .goal{background:var(--blue-soft);border:1px solid #cfe0ff;border-radius:12px;padding:15px 20px;margin:16px 0}
+  .pit{background:var(--amber-soft);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .key{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  pre{background:#1e2229;color:#e6e8eb;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-size:13px;line-height:1.7;font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre .c{color:#8b95a1}
+  pre .k{color:#7ec4ff}
+  pre .s{color:#a5e19a}
+  pre .n{color:#ffcb6b}
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--blue);font-size:14.5px}
+  details[open] summary{margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:#eef1f5}
+  .hw{background:#fff8e6;border:1px solid #f0dcbc;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .hw b.t{color:var(--amber)}
+  ul,ol{padding-left:22px;margin:10px 0}li{margin:6px 0}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>第 3 周 · 新知课：列表与元组</h1>
+  <p>石家庄学院 · 数据科学与大数据技术 · Python 一对一课</p>
+  <div class="meta"><span>日期：2026-10-20</span><span>课型：新知课（主对话长课第二部分）</span><span>阶段：语法地基</span></div>
+</header>
+
+<div class="goal">
+  <b>本课目标</b> —— 上完这节课，你应该能够：
+  <ul>
+    <li>说清<b>为什么需要列表</b>（变量存一个值，列表存一堆值）</li>
+    <li>熟练创建列表，理解<b>索引从 0 开始</b>、负索引、切片</li>
+    <li>完成列表的<b>增删改查</b>（append/insert/pop/remove/下标赋值）</li>
+    <li>用两种姿势<b>遍历</b>列表，会用 <code>len/sum/max/min/sorted</code></li>
+    <li>知道<b>元组</b>是什么、什么时候用它而不是列表</li>
+    <li>完成课后作业 chengji.py（周日实战课项目的前半部分）</li>
+  </ul>
+</div>
+
+<h2>一、为什么需要列表</h2>
+<div class="card">
+  <p><b>痛点：</b>一个班 40 个学生的成绩，用现在的知识怎么存？</p>
+<pre>s1 = 88
+s2 = 92
+s3 = 76
+……写到第 40 个，你想死</pre>
+  <p>更致命的是：<b>没法批量处理</b>。想求平均分，你得写 40 遍加法；想排序，无从下手。</p>
+  <p><b>打个比方：</b>变量是散落一地的东西，列表是<b>一行带编号的储物柜</b>——一个名字（列表名），一整排格子（元素），每格有编号（下标）。想拿第 3 格的东西，报编号就行。</p>
+  <p><b>它是什么：</b>列表（list）是 Python 最常用的容器，用一个变量名存下<b>任意多个</b>值，值之间用逗号隔开，整体用方括号 <code>[]</code> 包起来。</p>
+<pre><span class="k">scores</span> = [88, 92, 76, 59, 100]   <span class="c"># 一个列表，5 个成绩</span>
+names = [<span class="s">"魏常泽"</span>, <span class="s">"张三"</span>, <span class="s">"李四"</span>]  <span class="c"># 字符串也能存</span>
+mixed = [1, <span class="s">"abc"</span>, 3.5, <span class="k">True</span>]        <span class="c"># 什么都能存（但不建议混用）</span></pre>
+</div>
+
+<h2>二、索引：从 0 开始，不是从 1</h2>
+<div class="card">
+  <p><b>索引从 0 开始</b>是新人踩坑率 No.1 的设计。记住这个类比：<b>下标 = 偏移量</b>。第 1 个元素距离列表开头 0 格，所以它的下标是 0。</p>
+  <table>
+    <tr><th>写法</th><th>含义</th><th>例子（scores = [88, 92, 76, 59, 100]）</th></tr>
+    <tr><td><code>scores[0]</code></td><td>第 1 个元素</td><td>88</td></tr>
+    <tr><td><code>scores[2]</code></td><td>第 3 个元素</td><td>76</td></tr>
+    <tr><td><code>scores[-1]</code></td><td>最后一个元素</td><td>100</td></tr>
+    <tr><td><code>scores[-2]</code></td><td>倒数第二个</td><td>59</td></tr>
+    <tr><td><code>len(scores)</code></td><td>元素个数</td><td>5</td></tr>
+  </table>
+  <p><b>切片</b>（取一段）：<code>scores[1:3]</code> 取下标 1 到 3 之间 —— <b>含头不含尾</b>，跟 <code>range</code> 同一个设计哲学，你早就认识它了。</p>
+<pre><span class="k">scores</span>[1:3]      <span class="c"># [92, 76] —— 从下标1到下标3（不含3）</span>
+<span class="k">scores</span>[:2]       <span class="c"># [88, 92] —— 开头到下标2（不含）</span>
+<span class="k">scores</span>[2:]       <span class="c"># [76, 59, 100] —— 下标2到结尾</span>
+<span class="k">scores</span>[::2]      <span class="c"># [88, 76, 100] —— 每隔一个取一个</span>
+<span class="k">scores</span>[-1]       <span class="c"># 100 —— 最后一个</span></pre>
+  <div class="key"><b>记忆钩子：</b><code>range</code> 含头不含尾 → <code>切片</code> 含头不含尾 → 下周字符串切片还是这一套。Python 的"不含尾"哲学，一次学会，三处受益。</div>
+</div>
+
+<h2>三、增删改查（一张表够用）</h2>
+<div class="card">
+  <table>
+    <tr><th>操作</th><th>代码</th><th>效果</th></tr>
+    <tr><td>查</td><td><code>scores[0]</code> / <code>scores[-1]</code> / 切片</td><td>按编号取</td></tr>
+    <tr><td>改</td><td><code>scores[3] = 60</code></td><td>59 → 60，直接覆盖那一格</td></tr>
+    <tr><td>增（末尾）</td><td><code>scores.append(95)</code></td><td>95 加到列表最后</td></tr>
+    <tr><td>增（指定位置）</td><td><code>scores.insert(1, 70)</code></td><td>70 插到下标 1 处，后面的往后让</td></tr>
+    <tr><td>删（按位置）</td><td><code>x = scores.pop(0)</code></td><td>移除下标 0 的元素，<b>并把它返回给你</b></td></tr>
+    <tr><td>删（按值）</td><td><code>scores.remove(76)</code></td><td>移除第一个等于 76 的元素</td></tr>
+  </table>
+<pre><span class="k">scores</span> = [88, 92, 76, 59, 100]
+<span class="k">scores</span>[3] = 60            <span class="c"># 改：59 不及格 → 60 及格</span>
+<span class="k">scores</span>.append(95)         <span class="c"># 增：末尾加一个 95</span>
+<span class="k">scores</span>.insert(1, 70)      <span class="c"># 增：70 插到下标 1</span>
+<span class="k">scores</span>.pop(0)             <span class="c"># 删：移除第一个（88）</span>
+<span class="k">scores</span>.remove(76)         <span class="c"># 删：移除值为 76 的那个</span>
+<span class="k">print</span>(<span class="k">scores</span>)              <span class="c"># [70, 92, 59, 100, 95]</span></pre>
+  <div class="pit"><b>坑：append 不返回新列表！</b><code>scores = scores.append(95)</code> 是经典错误 —— append 就地修改列表，返回 <code>None</code>，这样写会让 scores 变成 None。正确写法就是直接 <code>scores.append(95)</code>，别赋值。</div>
+  <div class="pit"><b>坑：remove 删不存在的值会报错。</b><code>scores.remove(999)</code> → <code>ValueError: list.remove(x): x not in list</code>。删之前可以先 <code>if 999 in scores:</code> 判断一下（见第六节 in）。</div>
+</div>
+
+<h2>四、遍历：两种姿势，各管各的场合</h2>
+<div class="card">
+  <p><b>姿势 1：只要值，不要编号</b>——逐个取出元素（九九乘法表的内层循环就是这么用 for 的，你早会了）：</p>
+<pre><span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span>:
+    <span class="k">print</span>(s)</pre>
+  <p><b>姿势 2：既要值又要编号</b>——配合 <code>range(len(scores))</code> 生成所有合法下标：</p>
+<pre><span class="k">for</span> i <span class="k">in</span> range(len(<span class="k">scores</span>)):
+    <span class="k">print</span>(f<span class="s">"第{i+1}个同学：{scores[i]}分"</span>)   <span class="c"># 注意 +1：编号从0，人称从1</span></pre>
+  <div class="key"><b>怎么选：</b>只处理每个元素 → 姿势 1；需要知道"这是第几个"（比如打印名次）→ 姿势 2。<code>range(len(scores))</code> 这个组合以后每周都会出现，眼熟它。</div>
+</div>
+
+<h2>五、常用函数与排序</h2>
+<div class="card">
+  <table>
+    <tr><th>函数</th><th>作用</th><th>例子</th></tr>
+    <tr><td><code>len(scores)</code></td><td>个数</td><td>5</td></tr>
+    <tr><td><code>sum(scores)</code></td><td>总和</td><td>415</td></tr>
+    <tr><td><code>max(scores)</code></td><td>最大值</td><td>100</td></tr>
+    <tr><td><code>min(scores)</code></td><td>最小值</td><td>59</td></tr>
+    <tr><td><code>sorted(scores)</code></td><td>返回<b>排好序的新列表</b>，原列表不动</td><td>[59, 60, 92, 95, 100]</td></tr>
+    <tr><td><code>sorted(scores, reverse=True)</code></td><td>降序（从高到低）</td><td>[100, 95, 92, 60, 59]</td></tr>
+  </table>
+  <p><b>平均分</b>一行搞定：<code>sum(scores) / len(scores)</code> —— 想保留两位小数？<code>round(sum(scores)/len(scores), 2)</code>，你的老朋友 round 又上场了。</p>
+  <div class="pit"><b>坑：sorted(列表) vs 列表.sort()</b><br>· <code>sorted(scores)</code> 是函数，<b>返回新列表</b>，原列表不变；<br>· <code>scores.sort()</code> 是列表自带的方法，<b>直接改原列表</b>，不返回新列表。<br>入门阶段统一用 <code>sorted()</code>，不容易闯祸；两者的区别第 6 周讲函数时还会细说。</div>
+</div>
+
+<h2>六、in：成员判断</h2>
+<div class="card">
+<pre>85 <span class="k">in</span> <span class="k">scores</span>        <span class="c"># True/False —— 85 在不在名单里</span>
+<span class="s">"魏常泽"</span> <span class="k">in</span> names     <span class="c"># True —— 字符串列表照样好用</span>
+999 <span class="k">in</span> <span class="k">scores</span>       <span class="c"># False</span></pre>
+  <p><code>in</code> 就是逻辑判断里的"在不在"，返回 True/False，直接配 <code>if</code> 使用：<code>if 85 in scores: print("有这号人")</code>。上周学的 and/or/not 和它配合无间。</p>
+</div>
+
+<h2>七、元组：不许变的列表</h2>
+<div class="card">
+  <p><b>它是什么：</b>元组（tuple）和列表几乎一样，但<b>创建之后不能增删改</b>。语法上用圆括号 <code>()</code>：</p>
+<pre><span class="k">point</span> = (3, 5)              <span class="c"># 平面上的一个点：x=3, y=5</span>
+<span class="k">print</span>(<span class="k">point</span>[0], <span class="k">point</span>[1])    <span class="c"># 3 5 —— 读取和列表一样</span>
+<span class="k">point</span>[0] = 9               <span class="c"># TypeError! 元组不支持修改</span></pre>
+  <p><b>打个比方：</b>列表是白板，随写随擦；元组是<b>刻在石头上的字</b>。一个点的坐标、一次考试的级别、RGB 颜色值 (255, 0, 0) —— 这些"本来就不该被改"的数据，用元组更安全（防止手滑改错），程序也跑得稍微快一点。</p>
+  <table>
+    <tr><th></th><th>列表 list</th><th>元组 tuple</th></tr>
+    <tr><td>符号</td><td><code>[]</code></td><td><code>()</code></td></tr>
+    <tr><td>能否增删改</td><td>能</td><td><b>不能</b></td></tr>
+    <tr><td>典型用途</td><td>一堆会变的数据（成绩、购物车）</td><td>一组固定的数据（坐标、颜色、日期）</td></tr>
+  </table>
+  <div class="key">元组支持的操作就三样：<b>读取</b>（下标、切片、遍历）、<b>len</b>、<b>in</b>。记不住用哪个的时候，选列表 —— 90% 的场景列表都够用。</div>
+</div>
+
+<h2>八、课堂练习（含参考答案）</h2>
+<div class="card">
+  <h3 style="margin-top:0">练习 1：切片预测（不动手，先想，再敲出来对答案）</h3>
+  <p>已知 <code>scores = [88, 92, 76, 59, 100]</code>，心算下面每个式子的结果：</p>
+<pre>scores[1]        → ?
+scores[-1]       → ?
+scores[1:3]      → ?
+scores[:2]       → ?
+scores[3:]       → ?
+len(scores)      → ?
+max(scores)      → ?</pre>
+  <details><summary>👉 点开看参考答案</summary>
+<pre>scores[1]     → 92      （下标1是第2个）
+scores[-1]    → 100     （最后一个）
+scores[1:3]   → [92, 76]（含头不含尾：下标1、2）
+scores[:2]    → [88, 92]（开头到下标2）
+scores[3:]    → [59, 100]
+len(scores)   → 5
+max(scores)   → 100</pre>
+    <p>解析：错哪个补哪个。下标从 0 和"不含尾"是本课两大坑，全对才算过关。</p>
+  </details>
+  <h3>练习 2：不用 sum，用老办法算总分</h3>
+  <p>用 <code>for</code> 循环 + 累加器（你算 5050 那招）把 scores 的总分算出来，再用 <code>sum(scores)</code> 对比，验证两个结果一样。</p>
+  <details><summary>👉 点开看参考答案</summary>
+<pre><span class="k">scores</span> = [88, 92, 76, 59, 100]
+total = 0                    <span class="c"># 累加器，初始 0</span>
+<span class="k">for</span> s <span class="k">in</span> <span class="k">scores</span>:
+    total = total + s        <span class="c"># 每个成绩往上加</span>
+<span class="k">print</span>(<span class="k">total</span>)               <span class="c"># 415</span>
+<span class="k">print</span>(<span class="k">sum</span>(<span class="k">scores</span>))          <span class="c"># 415 —— 一模一样</span></pre>
+    <p>解析：这个练习是让你看穿 <code>sum()</code> 的本质 —— <b>所谓标准库函数，就是前人替你写好的循环</b>。你手写的 4 行代码，Python 一个词就等价。会手写，才敢用函数；敢用函数，才走得快。</p>
+  </details>
+</div>
+
+<h2>九、常见坑汇总（本课专属）</h2>
+<div class="pit"><b>坑 1：下标从 1 开始数</b> —— <code>scores[1]</code> 是第 2 个元素，不是第 1 个。下标 = 偏移量，第一个元素偏移 0 格。</div>
+<div class="pit"><b>坑 2：切片右边界当 inclusive</b> —— <code>scores[1:3]</code> 只有下标 1、2 两个元素，不含 3。range 的老规矩。</div>
+<div class="pit"><b>坑 3：scores = scores.append(x)</b> —— append 返回 None，这样写列表直接没了。增删改都是"打电话"式的就地操作，不要接返回值。</div>
+<div class="pit"><b>坑 4：sorted() 和 .sort() 分不清</b> —— 一个返回新列表不动原件，一个直接改原件不返回。入门先用 sorted()。</div>
+<div class="pit"><b>坑 5：越界访问</b> —— <code>scores[10]</code>（只有 5 个元素）→ <code>IndexError: list index out of range</code>。看到 IndexError 就知道：编号超范围了。用 <code>len(scores)</code> 先量一下长度最稳。</div>
+
+<h2>十、课后作业</h2>
+<div class="hw">
+  <b class="t">作业：成绩统计小助手（chengji.py）—— 周日实战课项目的前半部分</b>
+  <p><b>要求：</b></p>
+  <ol>
+    <li>用 <code>input()</code> 依次输入 5 门课的成绩，<b>每输一个就用 int() 转成整数存进列表</b>（老规矩：函数只算、= 才存）</li>
+    <li>全部存完后，输出：平均分（<code>sum/len</code>，可用 <code>round(x, 2)</code> 留两位小数）、最高分、最低分</li>
+    <li>再从高到低排序输出（<code>sorted(..., reverse=True)</code>）</li>
+  </ol>
+  <p><b>参考骨架：</b></p>
+<pre>scores = []                      <span class="c"># 空列表：先造一个空储物柜排</span>
+<span class="k">for</span> i <span class="k">in</span> range(5):
+    s = int(input(f<span class="s">"请输入第{i+1}门课的成绩: "</span>))
+    scores.append(s)             <span class="c"># 存进列表</span>
+<span class="c"># ……接下来自己算：平均分、最高分、最低分、降序输出</span></pre>
+  <p>完成后把代码发给老师，周四 20:15 巩固课批改讲评。周日的实战课，我们要把这个小助手升级成完整的成绩统计工具（加课程名、加排名、加判断几人及格）。</p>
+</div>
+
+<h2>十一、下节课预告</h2>
+<div class="key">
+  <b>周四 20:15 巩固课：</b>批改 chengji.py + 本课错题复盘（重点：下标从 0、含头不含尾、append 不返回值）。<br>
+  <b>周日 10:00 实战课：</b>「学生成绩统计小工具」完整版 —— 列表 + 循环 + 分支全家桶，第一个像样的数据分析小工具。<br>
+  <b>可以先想的：</b>40 个学生的 5 门课成绩，用今天的一个列表存 40 个成绩，那 5 门课 × 40 个人，该用几个列表？（答案周日揭晓——提示：想想你书包里的课程表）
+</div>
+
+<footer>第 3 周新知课讲义 · 生成于 2026-10-20 23:40 · 石家庄学院 Python 学习计划 &nbsp;|&nbsp; 温馨提示：讲义里的代码请至少亲手敲一遍</footer>
+
+</div>
+</body>
+</html>

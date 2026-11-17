@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 周 · 实战：个人信息卡片生成器</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--green:#0f7b4f;--green-soft:#e9f7f0;
+    --amber:#b45309;--amber-soft:#fff7ed;--red:#c0392b;--red-soft:#fdecea;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;padding:30px 18px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.8}
+  .wrap{max-width:860px;margin:0 auto}
+  header{background:linear-gradient(135deg,#14346e,#2f6feb);color:#fff;border-radius:14px;padding:24px 28px}
+  header h1{margin:0 0 6px;font-size:23px}
+  header p{margin:0;opacity:.9;font-size:13.5px}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .meta span{background:rgba(255,255,255,.16);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  h2{font-size:19px;margin:34px 0 12px;padding-left:11px;border-left:4px solid var(--blue)}
+  h3{font-size:16px;margin:20px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0}
+  .goal{background:var(--blue-soft);border:1px solid #cfe0ff;border-radius:12px;padding:15px 20px;margin:16px 0}
+  .pit{background:var(--amber-soft);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .key{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  pre{background:#1e2229;color:#e6e8eb;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-size:13px;line-height:1.7;font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre .c{color:#8b95a1}
+  pre .k{color:#7ec4ff}
+  pre .s{color:#a5e19a}
+  pre .n{color:#ffcb6b}
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--blue);font-size:14.5px}
+  details[open] summary{margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:#eef1f5}
+  .hw{background:#fff8e6;border:1px solid #f0dcbc;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .hw b.t{color:var(--amber)}
+  ul,ol{padding-left:22px;margin:10px 0}li{margin:6px 0}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>第 1 周 · 实战：个人信息卡片生成器</h1>
+  <p>石家庄学院 · 数据科学与大数据技术 · Python 一对一课</p>
+  <div class="meta"><span>日期：2026-10-11（周日）</span><span>时长：90 分钟</span><span>阶段：语法地基</span><span>通道：定时任务实战课 + 主对话批改</span></div>
+</header>
+
+<div class="goal">
+  <b>实战目标</b> —— 综合运用第 1 周全部知识，完成第一个真正的程序：
+  <ul>
+    <li><code>input</code> 接收姓名、身高、体重 → 类型转换 → BMI 计算 → 分支判断体型 → 输出格式化健康卡片</li>
+    <li>新知识：<code>and</code> 逻辑判断（课前已补讲）、<code>round()</code> 控制小数位</li>
+    <li>提前接触：<code>if</code> 分支（第 2 周正式讲）</li>
+  </ul>
+</div>
+
+<h2>一、需求拆解</h2>
+<div class="card">
+<ol>
+  <li><b>输入层</b>：<code>input</code> 问姓名（str）、身高（float）、体重（float）</li>
+  <li><b>计算层</b>：BMI = 体重 ÷ 身高的平方，即 <code>weight / (height ** 2)</code></li>
+  <li><b>判断层</b>：四个区间 → 偏瘦 &lt;18.5 / 正常 18.5~24 / 超重 24~28 / 肥胖 ≥28（中国标准），每个区间给出对应健康建议</li>
+  <li><b>输出层</b>：等号线包住的"个人健康卡片"，字段对齐</li>
+</ol>
+</div>
+
+<h2>二、核心代码讲解</h2>
+<div class="card">
+<pre><span class="c"># 输入层：float(input(...)) 从里往外读 —— 先拿到字符串，立刻转数字</span>
+name = <span class="k">input</span>(<span class="s">"请输入你的姓名："</span>)
+height = <span class="k">float</span>(<span class="k">input</span>(<span class="s">"请输入你的身高（米）："</span>))
+weight = <span class="k">float</span>(<span class="k">input</span>(<span class="s">"请输入你的体重（公斤）："</span>))
+
+<span class="c"># 计算层：** 是乘方，height ** 2 就是身高平方</span>
+bmi = weight / (height ** <span class="n">2</span>)
+
+<span class="c"># 判断层：四个 if 用 and 卡住边界，无缝覆盖所有情况</span>
+<span class="k">if</span> bmi &lt; <span class="n">18.5</span>:
+    tixing = <span class="s">"偏瘦"</span>
+<span class="k">if</span> bmi &gt;= <span class="n">18.5</span> <span class="k">and</span> bmi &lt; <span class="n">24</span>:
+    tixing = <span class="s">"正常"</span>
+<span class="c"># ... 24~28 超重、≥28 肥胖同理</span>
+
+<span class="c"># 输出层：round(bmi, 2) 把长小数收成两位</span>
+<span class="k">print</span>(<span class="s">f"BMI: {round(bmi, 2)}"</span>)
+<span class="k">print</span>(<span class="s">f"体型: {tixing}"</span>)</pre>
+  <p><b><code>round()</code> 30 秒：</b><code>round(数值, 位数)</code> 四舍五入到指定位数：<code>round(20.7475..., 2)</code> → <code>20.75</code>。塞进 f-string 的 <code>{}</code> 里也合法 —— 窗口里可以放任何表达式。</p>
+</div>
+
+<h2>三、学生作品点评（魏常泽 · shizhan1.py）</h2>
+<div class="key">
+  <b>运行验证通过（输入 1.77m / 65kg → BMI 20.75，体型正常）。</b>
+  <ul>
+    <li>✅ 四个 BMI 区间<b>无缝覆盖</b>，边界没有重复没有遗漏，<code>and</code> 卡边界完全正确</li>
+    <li>✅ <code>float(input())</code> 一步到位（上次还分两步，这次内化了"从里往外读"）</li>
+    <li>✅ <code>height ** 2</code> 用乘方替代了上次的 <code>h * h</code></li>
+    <li>✅ f-string 大量熟练使用（自学习得，已成主力输出）</li>
+    <li>✅ <code>tixing</code> 变量在判断处存一次、卡片处复用</li>
+  </ul>
+</div>
+<div class="pit"><b>打磨点 1（重要）：缩进不统一</b> —— 部分行 3 空格、部分行 4 空格。当前恰好能跑，但风格混用是定时炸弹。<b>规矩：Python 缩进永远 4 空格</b>，VS Code 里按 Tab 就是 4 空格。</div>
+<div class="pit"><b>打磨点 2：长小数</b> —— <code>BMI:20.747550193111813</code> → 用 <code>round(bmi, 2)</code> 收拾，改成 <code>print(f"BMI: {round(bmi, 2)}")</code>。</div>
+<div class="pit"><b>打磨点 3（小）：中英文混杂</b> —— 提示语英文、卡片中文。统一成中文，程序给谁用，提示语就说什么话。</div>
+<div class="pit"><b>预告：四个 if 有点"笨"</b> —— BMI=20 时判完"正常"还会继续白跑两个判断。Python 有 <code>elif</code>（else if）：命中一个分支后其余全跳过。<b>第 2 周二课正式讲，可先自行查资料试着改写。</b></div>
+
+<h2>四、周末自主任务（本周没有鞏固课障碍，量大管饱）</h2>
+<div class="hw">
+  <b class="t">任务清单（周五、六、日白天完成，周二巩固课/新知课对答案）</b>
+  <ol>
+    <li><b>必做</b>：给你的 shizhan1.py 做三个手术 —— ① 全部缩进统一成 4 空格；② BMI 用 <code>round(bmi, 2)</code> 收拾；③ 提示语统一中文</li>
+    <li><b>必做</b>：卡片增加两个字段：<b>年龄</b>（int）和<b>性别</b>（str），依然一条卡片输出</li>
+    <li><b>必做</b>：交互模式敲一遍真值表验证：<code>True and False</code>、<code>True or False</code>、<code>not True</code>、<code>False or not True</code>（最后一题先想再敲）</li>
+    <li><b>选做（提高题）</b>：查资料学 <code>elif</code>，把四个 if 改写成 <code>if / elif / elif / else</code> 结构，想清楚最后一个区间为什么可以用 <code>else</code></li>
+    <li><b>选做</b>：第一课讲义里的代码全部重敲一遍（变量、类型转换、运算符），不敲等于没学</li>
+  </ol>
+  <p><b>自查标准</b>：程序运行三次，分别输入 17 / 21 / 30 的 BMI 场景，三个区间 + 边界值 18.5 各测一次，输出全部正确、缩进全绿、BMI 只显示两位小数。</p>
+</div>
+
+<h2>五、下节课预告</h2>
+<div class="key">
+  <b>周二 10-13 · 19:45 预热 → 20:15 新知课（45 分钟，晚自习内）</b>：分支与循环 —— <code>if / elif / else</code> 正式讲（你在实战里已经偷跑了）、比较与逻辑运算收官、<code>while</code> 循环入门。<br><br>
+  <b>周一晚乒乓球后</b>：只看讲义不开新坑；<b>周五六日白天</b>：完成上面的自主任务清单。
+</div>
+
+<footer>第 1 周 实战讲义 · 生成于 2026-10-11 · 石家庄学院 Python 学习计划 &nbsp;|&nbsp; 温馨提示：讲义里的代码请至少亲手敲一遍</footer>
+
+</div>
+</body>
+</html>

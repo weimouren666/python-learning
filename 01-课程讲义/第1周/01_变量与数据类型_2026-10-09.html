@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 周 · 开学第一课：变量与数据类型</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1f2328;--sub:#5b6570;--line:#e3e6ea;
+    --blue:#2f6feb;--blue-soft:#eaf1ff;--green:#0f7b4f;--green-soft:#e9f7f0;
+    --amber:#b45309;--amber-soft:#fff7ed;--red:#c0392b;--red-soft:#fdecea;--code:#f4f5f7}
+  *{box-sizing:border-box}
+  body{margin:0;padding:30px 18px;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    font-size:15px;line-height:1.8}
+  .wrap{max-width:860px;margin:0 auto}
+  header{background:linear-gradient(135deg,#14346e,#2f6feb);color:#fff;border-radius:14px;padding:24px 28px}
+  header h1{margin:0 0 6px;font-size:23px}
+  header p{margin:0;opacity:.9;font-size:13.5px}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .meta span{background:rgba(255,255,255,.16);border-radius:6px;padding:2px 10px;font-size:12.5px}
+  h2{font-size:19px;margin:34px 0 12px;padding-left:11px;border-left:4px solid var(--blue)}
+  h3{font-size:16px;margin:20px 0 8px}
+  p{margin:10px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin:14px 0}
+  .goal{background:var(--blue-soft);border:1px solid #cfe0ff;border-radius:12px;padding:15px 20px;margin:16px 0}
+  .pit{background:var(--amber-soft);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .key{background:var(--green-soft);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",Menlo,Consolas,monospace;color:#c7254e}
+  pre{background:#1e2229;color:#e6e8eb;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-size:13px;line-height:1.7;font-family:"SF Mono",Menlo,Consolas,monospace}
+  pre .c{color:#8b95a1}
+  pre .k{color:#7ec4ff}
+  pre .s{color:#a5e19a}
+  pre .n{color:#ffcb6b}
+  pre .err{color:#ff8a80}
+  details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin:12px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--blue);font-size:14.5px}
+  details[open] summary{margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:#eef1f5}
+  .hw{background:#fff8e6;border:1px solid #f0dcbc;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .hw b.t{color:var(--amber)}
+  ul,ol{padding-left:22px;margin:10px 0}li{margin:6px 0}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>第 1 周 · 开学第一课：变量与数据类型</h1>
+  <p>石家庄学院 · 数据科学与大数据技术 · Python 一对一课</p>
+  <div class="meta"><span>日期：2026-10-09（周五晚 · 补的晚自习）</span><span>时长：约 45 分钟</span><span>阶段：语法地基</span><span>环境：Python 3.14.7 验收通过 ✅</span></div>
+</header>
+
+<div class="goal">
+  <b>本课目标</b> —— 上完这节课，你应该能够：
+  <ul>
+    <li>独立定义变量并遵守命名规则，用 <code>print</code> 拼接输出</li>
+    <li>分清 int / float / str / bool 四种类型，会用 <code>type()</code> 查验</li>
+    <li>说清 <code>input()</code> 的坑并熟练使用 <code>int() / float()</code> 转换</li>
+    <li><b>独立读懂一条 Traceback 报错</b>（今晚你已实战两次）</li>
+    <li>完成课后作业：BMI 计算器（VS Code 文件版）</li>
+  </ul>
+</div>
+
+<h2>一、变量：给数据贴标签</h2>
+<div class="card">
+  <p><b>它是什么：</b>给一个值起个名字，方便以后反复使用。</p>
+  <p><b>打个比方：</b>宿舍床位贴上名字 —— 找人喊名字就行，不用描述"靠窗第三张床"。</p>
+<pre><span class="c"># = 的意思是"把右边的值存进左边的名字"，不是数学的等于</span>
+name = <span class="s">"魏常泽"</span>
+age = <span class="n">18</span>
+height = <span class="n">1.77</span>
+is_student = <span class="k">True</span>
+
+<span class="k">print</span>(<span class="s">"我叫"</span>, name, <span class="s">"今年"</span>, age, <span class="s">"岁"</span>)   <span class="c"># 逗号拼接，自动加空格</span></pre>
+  <p><b>运行结果：</b></p>
+<pre>我叫 魏常泽 今年 18 岁</pre>
+  <p><b>命名三条规矩：</b>① 只能字母/数字/下划线，且不能数字开头（<code>score2</code> ✓，<code>2score</code> ✗）；② 区分大小写，<code>Age</code> 和 <code>age</code> 是两个变量；③ 不能用关键字（<code>class</code>、<code>if</code> 等）。</p>
+  <p><b>风格惯例：</b>多个单词用下划线：<code>student_name</code>（蛇形命名，Python 社区标准）。<code>#</code> 后面是注释，给人看的，Python 跳过。</p>
+</div>
+
+<h2>二、四种数据类型 + type()</h2>
+<div class="card">
+<table>
+  <tr><th>类型</th><th>全名</th><th>例子</th><th>什么时候用</th></tr>
+  <tr><td><code>int</code></td><td>整数</td><td><code>18</code>、<code>-5</code>、<code>0</code></td><td>年龄、人数、学号</td></tr>
+  <tr><td><code>float</code></td><td>浮点数（小数）</td><td><code>1.75</code>、<code>3.14</code></td><td>身高、体重、价格</td></tr>
+  <tr><td><code>str</code></td><td>字符串（文本）</td><td><code>"魏常泽"</code></td><td>名字、地址、一切文字</td></tr>
+  <tr><td><code>bool</code></td><td>布尔值</td><td><code>True</code>、<code>False</code></td><td>是/否判断</td></tr>
+</table>
+<pre><span class="k">print</span>(<span class="k">type</span>(<span class="n">18</span>))      <span class="c"># &lt;class 'int'&gt;</span>
+<span class="k">print</span>(<span class="k">type</span>(<span class="s">"18"</span>))    <span class="c"># &lt;class 'str'&gt;  ← 判断标准：有没有引号！</span>
+<span class="k">print</span>(<span class="k">type</span>(<span class="k">True</span>))    <span class="c"># &lt;class 'bool'&gt;</span></pre>
+</div>
+
+<h2>三、交互模式 vs 文件模式</h2>
+<div class="card">
+<table>
+  <tr><th></th><th>交互模式（<code>&gt;&gt;&gt;</code>）</th><th>VS Code 写 .py 文件</th></tr>
+  <tr><td>适合</td><td>一行一行试验、做课上练习</td><td>写完整程序、做作业</td></tr>
+  <tr><td>不写 print</td><td>✅ 自动回显结果</td><td>❌ 什么都看不到，必须 print</td></tr>
+</table>
+<p><b>今晚作业开始用文件模式</b> —— 新建 <code>bmi.py</code>，写完点右上角 ▶ 运行（前提：装好 Python 扩展）。</p>
+</div>
+
+<h2>四、input() 的坑 与 类型转换</h2>
+<div class="card">
+  <p><b>最大的坑：</b><code>input()</code> 交给你的<b>永远是字符串</b>，哪怕你输入的是数字。因为键盘敲出来的本来就是字符。</p>
+<pre>age = <span class="k">input</span>(<span class="s">"请输入你的年龄："</span>)
+<span class="k">print</span>(<span class="k">type</span>(age))   <span class="c"># &lt;class 'str'&gt; ！</span></pre>
+  <p><b>类型转换三兄弟：</b></p>
+<pre><span class="k">int</span>(<span class="s">"18"</span>)      <span class="c"># → 18     字符串转整数</span>
+<span class="k">float</span>(<span class="s">"1.77"</span>)  <span class="c"># → 1.77   字符串转小数</span>
+<span class="k">str</span>(<span class="n">18</span>)        <span class="c"># → "18"   数字转字符串</span></pre>
+  <p><b>标准用法</b>（从里往外读：先 input 拿字符串，再转数字）：</p>
+<pre>age = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"请输入你的年龄："</span>))
+<span class="k">print</span>(age + <span class="n">1</span>)   <span class="c"># 现在能做数学加法了</span></pre>
+  <div class="pit"><b>今晚最重要的心智模型：函数只负责"算"，<code>=</code> 才负责"存"。</b><br>
+  <code>float(high)</code> 只是照体重秤看了一眼数字，<b>变量纹丝不动</b>；<code>high = float(high)</code> 才把新值登记回变量，完成"换血"。任何东西不经过 <code>=</code> 存回变量，就永远只是"看了一眼"。</div>
+</div>
+
+<h2>五、学会读 Traceback（今晚实战两次）</h2>
+<div class="card">
+<pre><span class="err">TypeError: can only concatenate str (not "float") to str</span></pre>
+  <p><b>三步读法：</b>① 看最后一行 = 错误类型 + 人话原因；② 波浪线 <code>~~~^~~~</code> 标出出错的确切位置（Python 3.11+ 新功能）；③ 回到那行代码检查类型。</p>
+  <p>这句报错的意思：<code>+</code> 左边是字符串时，Python 以为你要<b>拼接</b>，但拼接只允许两边都是字符串，混拼它拒绝猜 —— <b>Python 3 特意不帮你自动转类型，因为它猜不起</b>。</p>
+</div>
+
+<h2>六、算术运算符全家福 与 比较运算符</h2>
+<div class="card">
+<pre><span class="k">print</span>(<span class="n">5</span> / <span class="n">2</span>)    <span class="c"># 2.5   真除法，永远给小数（Python 2 时代 5/2=2 坑过全世界）</span>
+<span class="k">print</span>(<span class="n">5</span> // <span class="n">2</span>)   <span class="c"># 2     地板除，砍掉小数</span>
+<span class="k">print</span>(<span class="n">5</span> % <span class="n">2</span>)    <span class="c"># 1     取余数 —— 和 // 是一对好搭档</span>
+<span class="k">print</span>(<span class="n">5</span> ** <span class="n">2</span>)   <span class="c"># 25    乘方（5 的平方）</span>
+
+<span class="k">print</span>(age == <span class="n">18</span>)     <span class="c"># True  → 结果是 bool！</span>
+<span class="k">print</span>(age != <span class="n">18</span>)     <span class="c"># False（!= 是"不等于"）</span></pre>
+  <p><code>and / or / not</code> 逻辑运算下次课开场补讲。</p>
+</div>
+
+<h2>七、课堂练习（含参考答案）</h2>
+<div class="card">
+  <h3 style="margin-top:0">练习 1：变量与类型自查</h3>
+  <p>定义真实姓名/年龄/身高三个变量，一条 print 全部输出；type() 查类型；判断 <code>type(18)</code> 与 <code>type("18")</code> 是否一样。</p>
+  <details><summary>👉 点开看参考答案</summary>
+<pre>name = <span class="s">"魏常泽"</span>
+age = <span class="n">18</span>
+height = <span class="n">1.77</span>
+<span class="k">print</span>(<span class="s">"我叫"</span>, name, <span class="s">"今年"</span>, age, <span class="s">"岁，身高"</span>, height)  <span class="c"># 一条 print 打全</span>
+<span class="k">print</span>(<span class="k">type</span>(name), <span class="k">type</span>(age), <span class="k">type</span>(height))  <span class="c"># str int float</span></pre>
+    <p>注意：交互模式里直接敲 <code>type(name)</code> 也会显示结果（自动回显），但文件模式必须 print。</p>
+  </details>
+  <h3>练习 2：input 的坑现场体验</h3>
+  <p>input 问身高 → 直接 print → type() 查类型 → 转成 float 后计算 30 天后的身高（每天长高 1 厘米）。</p>
+  <details><summary>👉 点开看参考答案</summary>
+<pre>high = <span class="k">input</span>(<span class="s">"你的身高是多少："</span>)
+<span class="k">print</span>(<span class="k">type</span>(high))          <span class="c"># &lt;class 'str'&gt; 亲眼确认坑</span>
+high = <span class="k">float</span>(high)          <span class="c"># 关键：必须用 = 存回去！</span>
+<span class="k">print</span>(<span class="k">type</span>(high))          <span class="c"># &lt;class 'float'&gt; 换血成功</span>
+x = high + <span class="n">0.3</span>
+<span class="k">print</span>(<span class="s">"30天后你的身高是"</span>, x, <span class="s">"米"</span>)   <span class="c"># 2.07（今天的课堂实录）</span></pre>
+    <p>课堂实录：第一次写 <code>float(1.77)</code>（转的是字面量，不是变量）→ 第二次 <code>float(high)</code> 忘了 <code>=</code> 存回 → 两次 <code>TypeError</code> → 第三次成功。<b>报错 → 读 Traceback → 修复 → 验证，这个闭环你已练熟。</b></p>
+  </details>
+</div>
+
+<h2>八、常见坑（本课专属汇总）</h2>
+<div class="pit"><b>坑 1：True/False 首字母必须大写</b> —— 写 <code>true</code> 直接报错，无数新手的第一次报错。</div>
+<div class="pit"><b>坑 2：input() 永远返回字符串</b> —— 要做计算必须先 int()/float() 转换。</div>
+<div class="pit"><b>坑 3：转换结果必须用 = 存回变量</b> —— <code>float(high)</code> 不写 <code>high =</code> 等于白转，变量原地不动。</div>
+<div class="pit"><b>坑 4：int("3.14") 会报 ValueError</b> —— 整数容不下小数点，转小数用 float()。</div>
+<div class="pit"><b>坑 5：= 是赋值，== 才是比较</b> —— <code>age = 18</code> 是存值，<code>age == 18</code> 才是提问。</div>
+<div class="pit"><b>坑 6：文件模式不写 print 就没有输出</b> —— 交互模式的自动回显是特权，文件里没有。</div>
+<div class="pit"><b>小知识：Ctrl+C = KeyboardInterrupt</b> —— 终端里的"急停按钮"，无害，变量不丢。将来跑死循环就靠它救命。</div>
+
+<h2>九、课后作业</h2>
+<div class="hw">
+  <b class="t">作业：BMI 计算器（你的第一个真正的程序，用 VS Code 写文件 bmi.py）</b>
+  <ol>
+    <li>用 <code>input</code> 问用户身高（米）和体重（公斤）</li>
+    <li>转成数字类型（想想今晚的坑，转换结果要存回变量！）</li>
+    <li>计算 BMI = 体重 ÷ 身高的平方：<code>bmi = weight / (height * height)</code></li>
+    <li>一条 <code>print</code> 输出："你的 BMI 是 X"</li>
+  </ol>
+  <p><b>规矩：先自己写，卡住了再回来看第四节的思路。</b>写完把代码 + 运行结果发给老师批改，<b>周日 10:00 实战课检查</b>（实战项目"个人信息卡片生成器"正是它的升级版）。</p>
+  <p>预告：运行后 BMI 大概率带着一长串小数位 —— 不是 bug，周日课教你用 <code>round()</code> 收拾它。</p>
+</div>
+
+<h2>十、下节课预告</h2>
+<div class="key">
+  <b>周日 10-11 · 9:30 预热 → 10:00 实战课（90 分钟）</b>：个人信息卡片生成器 —— 综合运用今晚全部知识（input、类型转换、print、变量），输出一张格式漂亮的个人信息卡。作业 BMI 是它的前哨战。另外开场 3 分钟补讲 <code>and / or / not</code> 逻辑运算。<br><br>
+  <b>下周节奏</b>：周二 20:15 新知课（分支与循环）→ 周四 20:15 巩固课（作业讲评 + 答疑，50 分钟）。周一三晚乒乓球，周五六日白天做周末自主任务。
+</div>
+
+<footer>第 1 周 讲义 · 生成于 2026-10-09 21:00 · 石家庄学院 Python 学习计划 &nbsp;|&nbsp; 温馨提示：讲义里的代码请至少亲手敲一遍</footer>
+
+</div>
+</body>
+</html>
