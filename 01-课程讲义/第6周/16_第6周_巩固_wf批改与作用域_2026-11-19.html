@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第6周巩固课 · wf.py 批改与作用域 · 2026-11-19</title>
+<style>
+  body{font-family:"Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:24px;line-height:1.75;color:#222;background:#fdfdfb}
+  h1{border-bottom:3px solid #2b6cb0;padding-bottom:8px;color:#1a365d}
+  h2{color:#2b6cb0;margin-top:34px;border-left:5px solid #2b6cb0;padding-left:10px}
+  pre{background:#1e1e2e;color:#e8e8f0;padding:14px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.6}
+  code{background:#eef2f7;padding:1px 5px;border-radius:3px;font-family:Consolas,monospace}
+  pre code{background:none;padding:0}
+  .comment{color:#7f8ea3}
+  table{border-collapse:collapse;width:100%;margin:14px 0}
+  th,td{border:1px solid #cbd5e0;padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:#ebf4ff}
+  .ok{background:#f0fff4;border-left:5px solid #38a169;padding:10px 14px;margin:12px 0}
+  .warn{background:#fffaf0;border-left:5px solid #dd6b20;padding:10px 14px;margin:12px 0}
+  .bad{background:#fff5f5;border-left:5px solid #c53030;padding:10px 14px;margin:12px 0}
+  .quiz{background:#f7f5ff;border:2px dashed #805ad5;padding:14px 18px;margin:16px 0;border-radius:8px}
+  .tag{display:inline-block;background:#2b6cb0;color:#fff;font-size:12px;padding:1px 8px;border-radius:10px;margin-right:6px}
+  footer{margin-top:40px;color:#718096;font-size:13px;border-top:1px solid #e2e8f0;padding-top:10px}
+</style>
+</head>
+<body>
+
+<h1>第 6 周巩固课：wf.py 批改 + 作用域（你的代码里就藏着一发）</h1>
+<p><b>日期</b>：2026-11-19（周四）20:15 · <b>讲义编号</b>：16 · <b>性质</b>：巩固课（批改 + 函数二 + 新教学约定）</p>
+
+<h2>第〇节 · 一条重要的教学反馈（已生效）</h2>
+<p>你今晚提的：<b>讲新课/讲程序时要细致，把知识点标出来，讲底层逻辑和运行方式，加强记忆；未来 AI coding 更多，人类更要读懂程序；要增加"读程序"的测验。</b></p>
+<div class="ok"><b>新教学约定（即刻生效）</b>：①今后讲解一律<b>逐段标注知识点</b>（像本讲义代码里的 <span class="tag">知识点</span> 标签）+ 讲<b>执行流程</b>（Python 从上到下怎么走、内存里发生什么）；②新增固定环节<b>「代码侦查」</b>：给一段代码，你答输出/报错/为什么——练的是读懂，不是写出；③周日阶段测验 2 加读代码题。</div>
+
+<h2>第一节 · wf.py 批改：✅ 通过，三台机器都转起来了</h2>
+<pre><code>text = "python is great and data is great and python is fun"   <span class="comment">← 原料放全局</span>
+
+def count_words(text):          <span class="comment">← 机器一：def 造机器，参数 text 是投料口【知识点：def/参数】</span>
+    count = {}                  <span class="comment">【知识点：空字典】跑 1 次，循环外</span>
+    for w in text.split():      <span class="comment">【知识点：split() 无参=按空白切】切 11 个词，N 次</span>
+        count[w] = count.get(w,0) + 1   <span class="comment">【知识点：get 默认值吞掉 if/else】</span>
+    return count                <span class="comment">【知识点：return 递成品，没接=白算】</span>
+
+def most_frequent(count):       <span class="comment">← 机器二：打擂台【知识点：打擂台三步定式】</span>
+    best_w, best_n = "",0       <span class="comment">立擂主——循环外，1 次【你 11-15 说反过、11-17 复述对了】</span>
+    for w, n in count.items():  <span class="comment">【知识点：items 解包】逐个挑战，N 次</span>
+        if n &gt; best_n:
+            best_w, best_n = w, n
+    return best_w, best_n       <span class="comment">【知识点：多返回值=打包成元组】宣布结果，1 次</span>
+
+def distinct(word):             <span class="comment">← 机器三：⚠️ 这里埋着今晚的炸弹，第二节拆</span>
+    return len(set(words))      <span class="comment">【知识点：set 去重 + len 计数】</span>
+
+words = text.split()
+count = count_words(text)       <span class="comment">【知识点：= 接住返回值——你练习 C 撞过 None 坑】</span>
+word, n = most_frequent(count)  <span class="comment">【知识点：元组解包，两个盒子接两个值】</span>
+print("词频：", count)
+print(f"出现最多：{word}，{n} 次")        <span class="comment">【知识点：f-string 填变量】</span>
+print(f"不同单词：{distinct(words)} 个")</pre>
+
+<p>实测输出（与勘误后的预期一字不差）：</p>
+<pre><code>词频： {'python': 2, 'is': 3, 'great': 2, 'and': 2, 'data': 1, 'fun': 1}
+出现最多：is，3 次
+不同单词：6 个</code></pre>
+<div class="ok">三台机器、def 四件套、get、items 解包、多返回值解包、set——全对。两天的债一次还清。</div>
+
+<h2>第二节 · 代码侦查①：你代码里的隐形炸弹</h2>
+<div class="bad"><b>再看一眼你的机器三</b>：<code>def distinct(word):</code> —— 投料口叫 <code>word</code>，可机器内部用的却是 <code>words</code>（带 s）！参数根本没用上。</div>
+<p>为什么还能跑出正确的 6？因为 <code>words</code> 在主程序里定义过，Python 在函数内部找不到 <code>words</code>，就跑到<b>函数外面</b>找到了全局的它。我做个实验证明它有多危险：</p>
+<pre><code>def distinct(word):
+    return len(set(words))   <span class="comment"># 用的是外面的全局 words，不是参数 word</span>
+
+words = [1,2,3]
+print(distinct("随便传什么都行"))   <span class="comment">→ 3（跟传进去的东西毫无关系！）</span></code></pre>
+<div class="warn"><b>结论</b>：这程序是"歪打正着"——全局恰好有个对的 <code>words</code> 才没炸。换一个没有 <code>words</code> 的程序，直接 <code>NameError</code>。正确写法：函数体内只用参数 <code>return len(set(word))</code>。这暴露的知识点叫<b>作用域</b>，下一节正式讲。</div>
+
+<h2>第三节 · 函数（二）之一：作用域——Python 怎么找变量</h2>
+<p><span class="tag">知识点：作用域</span> <b>作用域 = 一个变量名有效的范围</b>。Python 找一个名字时按固定顺序：</p>
+<table>
+<tr><th>顺序</th><th>范围</th><th>例子</th></tr>
+<tr><td>1</td><td><b>局部</b>（函数内部）</td><td>函数里定义的 <code>count</code>、<code>best_w</code>、参数 <code>text</code></td></tr>
+<tr><td>2</td><td><b>全局</b>（整个文件）</td><td>顶格写的 <code>text</code>、<code>words</code></td></tr>
+<tr><td>3</td><td>再找不到 → <code>NameError</code></td><td>哪里都没定义过</td></tr>
+</table>
+<pre><code>x = 10            <span class="comment"># 全局 x</span>
+
+def f(x):         <span class="comment"># 局部 x（参数也是局部变量！）</span>
+    x = x + 1     <span class="comment"># 改的是局部那份，全局的 10 一动不动</span>
+    return x
+
+print(f(x))       <span class="comment">→ 11</span>
+print(x)          <span class="comment">→ 10（全局没被改）</span></code></pre>
+<div class="ok"><b>三条铁律</b>：①参数和函数体内定义的都是<b>局部</b>，函数一结束就销毁；②函数内找不到才出门找全局；③函数内部改局部变量，<b>永远不影响</b>外面的同名变量。你的 <code>distinct</code> 就是违反了"该用局部却用全局"——现在你知道那发子弹为什么没响。</div>
+
+<h2>第四节 · 函数（二）之二：多返回值——你已经在用了</h2>
+<p><span class="tag">知识点：多返回值/元组打包解包</span> <code>return best_w, best_n</code> 其实是把两个值<b>打包成一个元组</b>递出来，外面 <code>word, n = ...</code> 再拆包。三步理解：</p>
+<pre><code>return best_w, best_n     <span class="comment"># 等价于 return (best_w, best_n) —— 打包成元组</span>
+word, n = most_frequent(count)   <span class="comment"># 元组解包：左边盒子数量 = 元组元素个数</span>
+# 也可以整个接住：
+pair = most_frequent(count)      <span class="comment"># pair = ('is', 3)，一个盒子装整个元组</span></code></pre>
+<div class="warn">数量必须对齐：<code>a, b = (1, 2, 3)</code> → <code>ValueError: too many values to unpack</code>。第 3 周学的元组，今天正式派上用场。</div>
+
+<h2>第五节 · 函数（二）之三：可变默认参数的世纪大坑</h2>
+<p><span class="tag">知识点：可变默认参数</span> 默认值只在<b>造机器时算一次</b>，不是每次调用都重新造：</p>
+<pre><code>def add(x, box=[]):        <span class="comment"># 坑！默认的 box 只造一次，每次调用共用同一个</span>
+    box.append(x)
+    return box
+
+print(add(1))    <span class="comment">→ [1]</span>
+print(add(2))    <span class="comment">→ [1, 2]   ← 不是 [2]！上次的 1 还躺在里面</span>
+print(add(3))    <span class="comment">→ [1, 2, 3]</span></code></pre>
+<div class="bad">原因：默认值 <code>[]</code> 在 <code>def</code> 那一刻创建一次，之后所有调用共享这个列表（可变对象会累积）。<b>正确写法</b>：默认值用 <code>None</code>，函数体内再新建：</div>
+<pre><code>def add(x, box=None):
+    if box is None:      <span class="comment">#【知识点：None——你练习 C 的老朋友】</span>
+        box = []
+    box.append(x)
+    return box</code></pre>
+
+<h2>第六节 · 递归入门：函数喊自己</h2>
+<p><span class="tag">知识点：递归</span> <b>函数在自己的内部调用自己</b>。核心是两件事：<b>递归出口</b>（什么时候停）+ <b>递归公式</b>（大问题怎么拆成小问题）：</p>
+<pre><code>def factorial(n):
+    if n == 1:               <span class="comment"># 出口：1! = 1，不再喊自己</span>
+        return 1
+    return n * factorial(n-1) <span class="comment"># 公式：n! = n × (n-1)!</span>
+
+print(factorial(5))    <span class="comment">→ 120</span>
+# 脑内展开：5! = 5×4! = 5×4×3! = 5×4×3×2! = 5×4×3×2×1! = 5×4×3×2×1 = 120</code></pre>
+<div class="warn">没出口 = 无限喊自己 → <code>RecursionError: maximum recursion depth exceeded</code>。今天理解即可，不死磕。递归的"调用栈"下周有空再用图画给你。</div>
+
+<h2>第七节 · 代码侦查②（课后作业，读懂程序第一课）</h2>
+<div class="quiz">
+<p><b>不运行代码，只靠读，回答三问（输出是什么？为什么？）</b></p>
+<pre><code>total = 0
+
+def collect(n):
+    total = total + n      <span class="comment"># 注意这行</span>
+    return total
+
+print(collect(5))
+print(collect(5))
+print(total)</code></pre>
+<p>①三个 print 分别输出什么？②如果报错，抄下报错原文并说出哪一类；③用"作用域三条铁律"解释。提示：这题和你的 <code>distinct</code> 炸弹是同一族，但表现不同——值得慢慢读。</p>
+</div>
+
+<h2>第八节 · 作业与预告</h2>
+<table>
+<tr><th>事项</th><th>内容</th></tr>
+<tr><td>必做</td><td>代码侦查②（第七节）+ 把 <code>distinct</code> 的参数隐患修掉（<code>return len(set(word))</code>）</td></tr>
+<tr><td>周日 11-22 实战课</td><td><b>阶段测验 2</b>（第 4—5 周）+ 前 5 周实战改写成多函数版；测验新增<b>读代码题</b>（你今晚的提议已采纳）</td></tr>
+<tr><td>GitHub</td><td>本讲义与作业已自动推送仓库，本地 <code>git pull</code> 可取</td></tr>
+</table>
+
+<footer>第 6 周巩固课 · 2026-11-19 · 下一课：11-22（周日）10:00 实战课「阶段测验 2 + 多函数改写」</footer>
+</body>
+</html>
