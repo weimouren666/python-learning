@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>阶段测验2 讲评 · 2026-11-22</title>
+<style>
+  body{font-family:"Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:24px;line-height:1.75;color:#222;background:#fdfdfb}
+  h1{border-bottom:3px solid #c53030;padding-bottom:8px;color:#1a365d}
+  h2{color:#2b6cb0;margin-top:34px;border-left:5px solid #2b6cb0;padding-left:10px}
+  pre{background:#1e1e2e;color:#e8e8f0;padding:14px;border-radius:8px;overflow-x:auto;font-size:14px;line-height:1.6}
+  code{background:#eef2f7;padding:1px 5px;border-radius:3px;font-family:Consolas,monospace}
+  pre code{background:none;padding:0}
+  .comment{color:#7f8ea3}
+  table{border-collapse:collapse;width:100%;margin:14px 0}
+  th,td{border:1px solid #cbd5e0;padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:#ebf4ff}
+  .ok{background:#f0fff4;border-left:5px solid #38a169;padding:10px 14px;margin:12px 0}
+  .warn{background:#fffaf0;border-left:5px solid #dd6b20;padding:10px 14px;margin:12px 0}
+  .bad{background:#fff5f5;border-left:5px solid #c53030;padding:10px 14px;margin:12px 0}
+  .tag{display:inline-block;background:#2b6cb0;color:#fff;font-size:12px;padding:1px 8px;border-radius:10px;margin-right:6px}
+  .score{font-size:15px}
+  footer{margin-top:40px;color:#718096;font-size:13px;border-top:1px solid #e2e8f0;padding-top:10px}
+</style>
+</head>
+<body>
+
+<h1>阶段测验 2 讲评：27/100，低分但价值极高</h1>
+<p><b>日期</b>：2026-11-22（周日）· <b>讲义编号</b>：17 · <b>性质</b>：实战课测验讲评</p>
+
+<div class="warn"><b>先说总分怎么看待</b>：27/100，比测验 1（6/8≈75%）低很多。但这次不是退步——题型变了：<b>8 题里 6 题是"不许运行、只靠读"</b>，这正是你 11-19 自己提议的方向。结果第一次大规模暴露：<b>动手跟敲的能力在，独立读码、独立写码的底子还没有</b>。这份卷子把你脑子里"以为懂了"的部分全部照了出来——这是 27 分买到的最值钱的东西。另一个好消息：你全程诚实（"没做出来""不太理解""不知道"都直说），这是学编程最好的品质。</div>
+
+<h2>成绩单</h2>
+<table class="score">
+<tr><th>题</th><th>考点</th><th>你的答案</th><th>实际</th><th>得分</th></tr>
+<tr><td>1</td><td>作用域：函数内赋值</td><td>5、10、报错 total未定义</td><td>第一行就炸 <code>UnboundLocalError</code></td><td>3/12</td></tr>
+<tr><td>2</td><td>字符串不可变</td><td>false / python / s.uper()</td><td><code>TypeError</code>；正确 <code>s = "P" + s[1:]</code></td><td>2/10</td></tr>
+<tr><td>3</td><td>切片取一个vs一段</td><td>值全对，type 答"元组"</td><td><code>['92','88','95']</code> 是 <b>list</b></td><td>8/14</td></tr>
+<tr><td>4</td><td>字典三件套</td><td><code>"age" in stu</code> 答 18</td><td>True/bool；<code>KeyError: 'gender'</code></td><td>5/14</td></tr>
+<tr><td>5</td><td>set 四条规矩</td><td>type({}) 答"空集合"、空集合写 num={}</td><td><code>{}</code> 是 dict；空集合必须 <code>set()</code></td><td>2/12</td></tr>
+<tr><td>6</td><td>手写默认参数函数</td><td>没做出来</td><td>见第八节参考</td><td>0/16</td></tr>
+<tr><td>7</td><td>打擂台推演</td><td>92（位置和理由说对了）</td><td><b>76</b>（最后上台的）</td><td>6/10</td></tr>
+<tr><td>8</td><td>可变默认参数</td><td>(1)、(1,2)，承认不理解</td><td><code>[1]</code>、<code>[1, 2]</code>（是列表）</td><td>1/12</td></tr>
+</table>
+
+<h2>第一节 · 第 1 题深挖：<span class="tag">知识点：赋值使变量变局部</span></h2>
+<p>你以为：collect(5) 输出 5、再输出 10、最后 print(total) 报"未定义"。<b>实际第一行 print 就炸了</b>，后面两行根本没执行到。Python 的规矩是：</p>
+<div class="bad"><b>函数体内只要出现 <code>total = ...</code>（给它赋值），total 就被宣布为局部变量——哪怕全局有个 total 也不看。</b>于是执行 <code>total = total + n</code> 时，右边的 total 是"还没赋值的局部变量"→ 读一个不存在的东西 → <code>UnboundLocalError: cannot access local variable 'total' where it is not associated with a value</code>。</div>
+<p>执行流程逐行走：</p>
+<pre><code>total = 0                    <span class="comment"># 全局 total = 0</span>
+def collect(n):              # 造机器（不执行）
+    total = total + n        # ① Python 看到"函数内有 total=..." → 宣布 total 是局部的
+                             # ② 执行时先算右边：读局部 total → 它还没被赋过值 → 炸
+    return total
+print(collect(5))            # UnboundLocalError ← 死在这里
+print(collect(5))            # （没执行到）
+print(total)                 # （没执行到。如果执行了，会输出 0，不是报错）</code></pre>
+<div class="ok"><b>跟你的 distinct 炸弹对照</b>：那是"该用参数却用了全局"（歪打正着能跑），这题是"想用全局却因为赋值变成了局部"（必炸）。两个方向合起来才是作用域全图：<b>读</b>：函数内没有才出门找全局；<b>写</b>：函数内赋值 = 造一个新的局部变量，和全局同名也无关。想让函数改全局 total？以后会学 <code>global</code> 关键字，但现在最好的做法是<b>用参数传进去、用 return 拿出来</b>——这正是函数存在的意义。</div>
+
+<h2>第二节 · 第 4 题深挖：in 的本质（第三次错，必须焊死）</h2>
+<p>你答 <code>"age" in stu</code> → 18。你把 <b>in</b> 当成了"把 age 的值拿出来"。<b>in 是疑问句，不是取值动作</b>：</p>
+<table>
+<tr><th>写法</th><th>读法</th><th>返回</th></tr>
+<tr><td><code>"age" in stu</code></td><td>"字典里<b>有没有</b>叫 age 的钥匙？"——只回答有/没有</td><td><code>True</code>，类型 <b>bool</b></td></tr>
+<tr><td><code>stu["age"]</code></td><td>"拿 age 这把钥匙对应的值"</td><td><code>18</code></td></tr>
+<tr><td><code>stu.get("age")</code></td><td>同上，但钥匙不存在不炸，返回默认值</td><td><code>18</code> / 默认值</td></tr>
+</table>
+<p><span class="tag">知识点：in 判 key</span> 记住：<b>in 只认钥匙（key），不碰保险柜里的东西（value）</b>。所以 <code>"男" in stu</code> 是 False——"男"是 value，不是 key。这题 11-12 答过 False（实为 True），11-22 答成 18——两次方向相反的错，说明不是笔误，是 <b>in 的语义从来没立起来</b>。一句话钉死：<b>in 返回的永远是 True/False，回答"有没有"，回答不了"是多少"。</b></p>
+<p>第四行 <code>stu["gender"]</code>：<code>KeyError: 'gender'</code>——方括号取值，钥匙不存在直接炸（get 才有"不存在给默认值"的温柔）。追加问的 <code>len(stu)</code> 答对了：key 不存在时赋值 = <b>新增</b>，2 个变 3 个。</p>
+
+<h2>第三节 · 第 5 题深挖：{} 的第三次错案</h2>
+<p><code>type({})</code> 你答"空集合"。这是讲过两遍（11-15 词频课、讲义 14）的知识：<b><code>{}</code> 是空字典，空集合必须写 <code>set()</code></b>。历史永远偏向字典——因为 Python 设计时字典（花括号+冒号）先出现，集合只能用 <code>set()</code>。三条对照：</p>
+<table>
+<tr><th>写法</th><th>是什么</th></tr>
+<tr><td><code>{}</code></td><td>空<b>字典</b>（dict）</td></tr>
+<tr><td><code>{1, 2, 3}</code></td><td>集合（花括号里塞散值）</td></tr>
+<tr><td><code>{"a": 1}</code></td><td>字典（花括号里有冒号）</td></tr>
+<tr><td><code>set()</code></td><td>空集合（唯一正确写法）</td></tr>
+</table>
+<p><code>set(nums)[0]</code> → <code>TypeError: 'set' object is not subscriptable</code>——set 无序，没有"第 0 个"，四条规矩里的老规矩。</p>
+
+<h2>第四节 · 第 7 题深挖：你说对了位置，却推不出输出</h2>
+<p>位置（循环外）、理由（每轮被替换成 0）都说对了——但输出你答 92，实际是 <b>76</b>。逐轮推演：</p>
+<pre><code>轮1: s=88 → best=0（归零）→ 88&gt;0 ✓ → best=88
+轮2: s=92 → best=0（又归零！）→ 92&gt;0 ✓ → best=92
+轮3: s=76 → best=0（再归零！）→ 76&gt;0 ✓ → best=76
+return best → 76   <span class="comment"># 只记得最后上台的，跟 11-15 的 d,1 一模一样</span></code></pre>
+<p>这就是 11-15 词频课你亲手撞过的反例（擂主放循环内 → <code>出现最多：d，1 次</code>）——同一个病换了件衣服你就没认出来。所以读代码题的训练点：**别背结论，学会逐轮推演**——拿张纸写"轮1/轮2/轮3 变量怎么变"，推完答案自动出来。这也是 AI 时代读程序的核心功夫。</p>
+
+<h2>第五节 · 第 8 题深挖：可变默认参数</h2>
+<p>你答 (1)、(1,2)——值的方向对了但写成圆括号（那是元组），实际是列表 <code>[1]</code>、<code>[1, 2]</code>。你说不理解，讲透它只需一句话：<b>默认值 [] 只在 def 造机器那一刻创建一次，之后每次调用用的都是同一个列表</b>：</p>
+<pre><code>def add(x, box=[]):     <span class="comment"># 造机器时创建了一个列表，假设给它起名叫 box_0 号</span>
+    box.append(x)
+    return box
+add(1)   <span class="comment"># 往 box_0 号里放 1 → [1]</span>
+add(2)   <span class="comment"># 还是往 box_0 号里放 2 → [1, 2]（不是新列表！）</span></code></pre>
+<p>数字默认值（<code>digits=2</code>）没事，因为数字<b>不可变</b>、没法"攒"；列表 dict 这类<b>可变</b>默认值才会攒出事故。安全写法：默认值用 None 哨兵。</p>
+
+<h2>第六节 · 第 6 题补讲：手写 average（你没做出来的那台机器）</h2>
+<pre><code>def average(scores, digits=2):                       <span class="comment">【def 四件套 + 默认参数】</span>
+    return round(sum(scores) / len(scores), digits)  <span class="comment">【return 递成品；round 第二个参数就是位数】</span>
+
+print(average([88, 92, 76]))      <span class="comment">→ 85.33（digits 用默认值 2）</span>
+print(average([88, 92, 76], 1))   <span class="comment">→ 85.3（位置参数把 digits 覆盖成 1）</span></code></pre>
+<p>起手三问：结果是什么（平均分数字）→ 加工用什么（<code>sum/len/round</code>）→ 递出去（<code>return</code>）。你 11-17 练习 A 已经写过 <code>average(scores)</code>，这题只是多了个默认参数 digits——把 2 换成 digits 而已。<b>卡住你的不是新知识，是"从零组装"。</b>作业里再练一次。</p>
+
+<h2>第七节 · 失分模式汇总（贴墙上的三张纸条）</h2>
+<table>
+<tr><th>模式</th><th>病历</th><th>药方</th></tr>
+<tr><td><b>in 当取值</b></td><td>11-12 False → 11-22 True→18，三次三样</td><td>in 只回答"有没有"，永远 True/False；"是多少"用 [] 或 get</td></tr>
+<tr><td><b>{} 与 set()</b></td><td>讲过两遍，第三次答错</td><td>空字典 {}，空集合 set()；花括号有冒号=字典，散值=集合</td></tr>
+<tr><td><b>会说不会计</b></td><td>第 7 题位置理由全对，输出推成 92</td><td>读代码必须逐轮推演（拿纸写变量变化），不靠背结论</td></tr>
+<tr><td><b>type 盲区</b></td><td>切片结果是 list 答 tuple；in 的结果漏答 bool</td><td>答案双件制：值+类型，切片永远返回列表（含头不含尾）</td></tr>
+</table>
+
+<h2>第八节 · 作业</h2>
+<table>
+<tr><th>事项</th><th>内容</th></tr>
+<tr><td>必做 ①</td><td>重做第 6 题：手写 <code>average(scores, digits=2)</code>，贴代码 + 两次调用输出（可运行验证）</td></tr>
+<tr><td>必做 ②</td><td>把 wf.py 的 <code>distinct(word)</code> 参数隐患修掉（<code>return len(set(word))</code>），讲清为什么原来"歪打正着"</td></tr>
+<tr><td>必做 ③</td><td>用纸笔逐轮推演第 7 题的循环，拍照/抄写推演过程给我（训练"读代码推演"）</td></tr>
+<tr><td>选做</td><td>把词频统计器的打擂台部分改成"最小值版"（找出现最少的字母）——只换 &gt; 和擂主初值</td></tr>
+<tr><td>下一课</td><td>周二 11-24 20:15 第 7 周新知课「文件读写」；作用域/in/set 三张纸条在周二开场重考</td></tr>
+</table>
+
+<footer>阶段测验 2 讲评 · 2026-11-22 · 第 6 周（函数与递归）收官 · 下一课：11-24（周二）20:15「文件读写」</footer>
+</body>
+</html>
