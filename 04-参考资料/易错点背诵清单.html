@@ -18,45 +18,61 @@
 </head>
 <body>
 
-<h1>易错点背诵清单（错题本全部沉淀，按踩坑次数排序）</h1>
-<p>2026-11-24 整理 · 使用方法：<b>先背「口诀」，再看「为什么」</b>。每周课上随机抽查；全对的条目会标注"已焊死"。</p>
+<h1>易错点背诵清单（错题本全部沉淀 · 主排序：教学周次）</h1>
+<p>2026-11-24 整理 · <b>排序规则：第一按知识点首次教学的周次（第 1 周 → 第 6 周，跟课程进度同步），第二按踩坑次数（同周内 ⭐⭐⭐ 靠前）</b>。<br>
+⭐ 数量仍代表踩坑严重度：⭐⭐⭐ = 3 次以上（每天背）· ⭐⭐ = 2 次（隔天背）· ⭐ = 1 次防复发（每周扫）。使用方法：<b>先背「口诀」，再看「为什么」</b>。课上随机抽查，全对的条目标注"已焊死"。</p>
 
-<h2>⭐⭐⭐ 三次以上踩坑（最高优先级）</h2>
+<h2>第 1 周 · 变量与输入输出（2026-10-08 起教）</h2>
 <table>
-<tr><th>#</th><th>口诀</th><th>为什么</th></tr>
-<tr><td>1</td><td><b>in 是疑问句：只答"有没有"，永远 True/False</b>（2026-11-24 ✅ 已焊死）</td><td>"是多少"用 <code>stu["age"]</code> 或 <code>stu.get("age")</code>。in 只认 key，不认 value（<code>"男" in stu</code> 是 False——男是值不是钥匙）</td></tr>
-<tr><td>2</td><td><b>{} 是空字典，set() 才是空集合</b>（学生自报不牢固，下次抽查）</td><td>花括号里有冒号 = 字典；塞散值 = 集合；空的偏向字典（历史原因）。<code>type({})</code> → dict</td></tr>
-<tr><td>3</td><td><b>[1] 取一个，[1:] 取一段；切片永远返回列表</b></td><td><code>part[1]</code> → '92'（str）；<code>part[1:]</code> → ['92','88','95']（<b>list</b>，不是元组）。含头不含尾。栽过 5 次，值已稳、type 盲区刚破</td></tr>
-<tr><td>4</td><td><b>只做 1 次住循环外，跑 N 次住循环内</b></td><td>归零/建表/收尾打印 = 1 次（外）；逐个判断/累加/存 = N 次（内）。擂主放循环内 → 每轮清空 → 只记得最后上台的（词频 d,1 / find_max 76 两次实证）</td></tr>
-<tr><td>5</td><td><b>读代码要逐轮推演，不背结论</b></td><td>拿纸写"轮1/轮2/轮3 变量怎么变"。测验 2 第 7 题：位置理由全对、输出推错 92（实为 76）——会说不会计的证据</td></tr>
+<tr><th>#</th><th>级别</th><th>口诀</th><th>为什么</th></tr>
+<tr><td>1</td><td class="star">⭐⭐</td><td><b>函数只算，= 才存</b></td><td>第 1 周第一次踩坑（<code>float(high)</code> 没存回），第 6 周函数课正式命名。<code>sorted(...)</code>、<code>get(...)</code>、<code>round(x,2)</code> 不接返回值 = 白算</td></tr>
+<tr><td>2</td><td class="star">⭐</td><td><b>input 恒为 str，转换必须存回</b></td><td><code>h = float(input(...))</code>——float() 算完不存 = 白算（联动第 1 条）</td></tr>
+<tr><td>3</td><td class="star">⭐</td><td><b>== 比较，= 赋值</b></td><td><code>if x = 5</code> 是语法错误；<code>if x == 5</code> 才是比较</td></tr>
 </table>
 
-<h2>⭐⭐ 两次踩坑</h2>
+<h2>第 2 周 · 判断与循环（2026-10-15 起教）</h2>
 <table>
-<tr><th>#</th><th>口诀</th><th>为什么</th></tr>
-<tr><td>6</td><td><b>函数只算，= 才存</b></td><td><code>float(high)</code>、<code>sorted(...)</code>、<code>get(...)</code> 不接返回值 = 白算。<code>round(x,2)</code> 同理</td></tr>
-<tr><td>7</td><td><b>return 递成品，print 贴屏幕</b></td><td>函数没 return，调用处接到 <code>None</code>；<code>None + 1</code> 炸 <code>TypeError: NoneType + int</code>（11-17 亲测）。结果还要用 → return；只想看 → print</td></tr>
-<tr><td>8</td><td><b>括号内 name=value 是贴标签，不是赋值</b></td><td><code>print(s = "H"+s[1:])</code> 报 invalid keyword argument——print 没有叫 s 的参数。<b>赋值永远独占一行</b>；<code>end=""</code> 合法是因为 print 真有 end 参数</td></tr>
-<tr><td>9</td><td><b>range(a, b, s)：从 a 数到 b 前一个，每次跳 s</b></td><td>含头不含尾。<code>range(2,10,3)</code> → 2,5,8。参数不是输出（测验1栽过）</td></tr>
-<tr><td>10</td><td><b>sorted 不改原列表，返回新列表</b></td><td>要原地改用 <code>scores.sort()</code>。<code>sorted(scores)</code> 不接 = 白算（联动第 6 条）</td></tr>
-<tr><td>11</td><td><b>字典 key 不存在 = 新增；已存在 = 覆盖</b></td><td><code>stu["gender"]="男"</code> 后 len 从 2 变 3。不存在+覆盖必是唯一结果，len 变或不变要能推</td></tr>
-<tr><td>12</td><td><b>方法用圆括号，取值用方括号</b></td><td><code>stu.get("height", 0)</code> ✓；<code>stu.get["height"]</code> → TypeError（方法不能下标）。<code>[]</code> 取值 key 不存在炸 <code>KeyError</code>，get 有默认值不炸</td></tr>
+<tr><th>#</th><th>级别</th><th>口诀</th><th>为什么</th></tr>
+<tr><td>4</td><td class="star">⭐⭐</td><td><b>range(a, b, s)：从 a 数到 b 前一个，每次跳 s</b></td><td>含头不含尾。<code>range(2,10,3)</code> → 2,5,8。参数不是输出（测验 1 栽过）</td></tr>
+<tr><td>5</td><td class="star">⭐</td><td><b>end="" 什么都不接，不是空格</b></td><td><code>print("a", end="")</code> + <code>print("b")</code> → ab。空 print() 才换行</td></tr>
+<tr><td>6</td><td class="star">⭐</td><td><b>代码里只用半角符号</b></td><td>中文括号 <code>）</code> → SyntaxError: invalid character</td></tr>
 </table>
 
-<h2>⭐ 一次踩坑（防复发）</h2>
+<h2>第 3 周 · 列表与元组（2026-10-22 起教）</h2>
 <table>
-<tr><th>#</th><th>口诀</th><th>为什么</th></tr>
-<tr><td>13</td><td><b>字符串不可变</b></td><td><code>s[0]="P"</code> → TypeError。改法：重建 <code>s = "P" + s[1:]</code>；<code>s.upper()</code> 是<b>全</b>大写，不是首字母</td></tr>
-<tr><td>14</td><td><b>函数内赋值 → 变量变局部</b></td><td><code>total = total + n</code> 在函数内 = total 是局部的，读它炸 <code>UnboundLocalError</code>（哪怕全局有同名）。读：先局部后全局；写：函数内想改全局用参数传 + return 拿</td></tr>
-<tr><td>15</td><td><b>可变默认参数会攒</b></td><td><code>def f(x, box=[])</code> 的 [] 只在造机器时创建一次，每次调用共用 → [1] → [1,2]。数字默认值没事。安全：<code>box=None</code> + 函数体内 if box is None: box=[]</td></tr>
-<tr><td>16</td><td><b>多返回值 = 打包元组递出，外面解包</b></td><td><code>return a, b</code> ↔ <code>x, y = f()</code>；左边盒子数 = 元组元素数，否则 ValueError。整个接住也行：<code>pair = f()</code></td></tr>
-<tr><td>17</td><td><b>input 恒为 str，转换必须存回</b></td><td><code>h = float(input(...))</code>——float() 算完不存 = 白算（联动第 6 条）</td></tr>
-<tr><td>18</td><td><b>== 比较，= 赋值</b></td><td><code>if x = 5</code> 是语法错误；<code>if x == 5</code> 才是比较</td></tr>
-<tr><td>19</td><td><b>别拿 max/min/sum 当变量名</b></td><td>遮蔽内置函数，后面 <code>max(...)</code> 直接炸 TypeError</td></tr>
-<tr><td>20</td><td><b>end="" 什么都不接，不是空格</b></td><td><code>print("a", end="")</code> + <code>print("b")</code> → ab。空 print() 才换行</td></tr>
-<tr><td>21</td><td><b>代码里只用半角符号</b></td><td>中文括号 <code>）</code> → SyntaxError: invalid character</td></tr>
-<tr><td>22</td><td><b>答案双件制：值 + 类型</b></td><td>bool 已漏答两次后焊死。凡问"输出什么"，必须带 type</td></tr>
-<tr><td>23</td><td><b>set 无序：不能下标、别信打印顺序</b></td><td><code>set(x)[0]</code> → TypeError。set 四条规矩：去重 / len 数个数 / 对字典只取 key / 不能下标</td></tr>
+<tr><th>#</th><th>级别</th><th>口诀</th><th>为什么</th></tr>
+<tr><td>7</td><td class="star">⭐⭐⭐</td><td><b>[1] 取一个，[1:] 取一段；切片永远返回列表</b></td><td><code>part[1]</code> → '92'（str）；<code>part[1:]</code> → ['92','88','95']（<b>list</b>，不是元组）。含头不含尾。栽过 5 次，值已稳、type 盲区刚破</td></tr>
+<tr><td>8</td><td class="star">⭐⭐</td><td><b>sorted 不改原列表，返回新列表</b></td><td>要原地改用 <code>scores.sort()</code>。<code>sorted(scores)</code> 不接 = 白算（联动第 1 条）</td></tr>
+<tr><td>9</td><td class="star">⭐</td><td><b>别拿 max/min/sum 当变量名</b></td><td>遮蔽内置函数，后面 <code>max(...)</code> 直接炸 TypeError</td></tr>
+</table>
+
+<h2>第 4 周 · 字符串（2026-11-02 起教）</h2>
+<table>
+<tr><th>#</th><th>级别</th><th>口诀</th><th>为什么</th></tr>
+<tr><td>10</td><td class="star">⭐</td><td><b>字符串不可变</b></td><td><code>s[0]="P"</code> → TypeError。改法：重建 <code>s = "P" + s[1:]</code>；<code>s.upper()</code> 是<b>全</b>大写，不是首字母</td></tr>
+</table>
+
+<h2>第 5 周 · 字典与集合（2026-11-09 起教）</h2>
+<table>
+<tr><th>#</th><th>级别</th><th>口诀</th><th>为什么</th></tr>
+<tr><td>11</td><td class="star">⭐⭐⭐</td><td><b>in 是疑问句：只答"有没有"，永远 True/False</b>（2026-11-24 ✅ 已焊死）</td><td>"是多少"用 <code>stu["age"]</code> 或 <code>stu.get("age")</code>。in 只认 key，不认 value（<code>"男" in stu</code> 是 False——男是值不是钥匙）</td></tr>
+<tr><td>12</td><td class="star">⭐⭐⭐</td><td><b>{} 是空字典，set() 才是空集合</b>（学生自报不牢固，下次抽查）</td><td>花括号里有冒号 = 字典；塞散值 = 集合；空的偏向字典（历史原因）。<code>type({})</code> → dict</td></tr>
+<tr><td>13</td><td class="star">⭐⭐⭐</td><td><b>只做 1 次住循环外，跑 N 次住循环内</b></td><td>11-15 打擂台实战诞生口诀。归零/建表/收尾打印 = 1 次（外）；逐个判断/累加/存 = N 次（内）。擂主放循环内 → 每轮清空 → 只记得最后上台的（词频 d,1 / find_max 76 两次实证）</td></tr>
+<tr><td>14</td><td class="star">⭐⭐</td><td><b>字典 key 不存在 = 新增；已存在 = 覆盖</b></td><td><code>stu["gender"]="男"</code> 后 len 从 2 变 3。不存在+覆盖必是唯一结果，len 变或不变要能推</td></tr>
+<tr><td>15</td><td class="star">⭐⭐</td><td><b>方法用圆括号，取值用方括号</b></td><td><code>stu.get("height", 0)</code> ✓；<code>stu.get["height"]</code> → TypeError（方法不能下标）。<code>[]</code> 取值 key 不存在炸 <code>KeyError</code>，get 有默认值不炸</td></tr>
+<tr><td>16</td><td class="star">⭐</td><td><b>答案双件制：值 + 类型</b></td><td>bool 已漏答两次后焊死。凡问"输出什么"，必须带 type</td></tr>
+<tr><td>17</td><td class="star">⭐</td><td><b>set 无序：不能下标、别信打印顺序</b></td><td><code>set(x)[0]</code> → TypeError。set 四条规矩：去重 / len 数个数 / 对字典只取 key / 不能下标</td></tr>
+</table>
+
+<h2>第 6 周 · 函数（2026-11-16 起教）</h2>
+<table>
+<tr><th>#</th><th>级别</th><th>口诀</th><th>为什么</th></tr>
+<tr><td>18</td><td class="star">⭐⭐⭐</td><td><b>读代码要逐轮推演，不背结论</b></td><td>拿纸写"轮1/轮2/轮3 变量怎么变"。测验 2 第 7 题：位置理由全对、输出推错 92（实为 76）——会说不会计的证据</td></tr>
+<tr><td>19</td><td class="star">⭐⭐</td><td><b>return 递成品，print 贴屏幕</b></td><td>函数没 return，调用处接到 <code>None</code>；<code>None + 1</code> 炸 <code>TypeError: NoneType + int</code>（11-17 亲测）。结果还要用 → return；只想看 → print</td></tr>
+<tr><td>20</td><td class="star">⭐⭐</td><td><b>括号内 name=value 是贴标签，不是赋值</b></td><td><code>print(s = "H"+s[1:])</code> 报 invalid keyword argument——print 没有叫 s 的参数。<b>赋值永远独占一行</b>；<code>end=""</code> 合法是因为 print 真有 end 参数</td></tr>
+<tr><td>21</td><td class="star">⭐</td><td><b>函数内赋值 → 变量变局部</b></td><td><code>total = total + n</code> 在函数内 = total 是局部的，读它炸 <code>UnboundLocalError</code>（哪怕全局有同名）。读：先局部后全局；写：函数内想改全局用参数传 + return 拿</td></tr>
+<tr><td>22</td><td class="star">⭐</td><td><b>可变默认参数会攒</b></td><td><code>def f(x, box=[])</code> 的 [] 只在造机器时创建一次，每次调用共用 → [1] → [1,2]。数字默认值没事。安全：<code>box=None</code> + 函数体内 if box is None: box=[]</td></tr>
+<tr><td>23</td><td class="star">⭐</td><td><b>多返回值 = 打包元组递出，外面解包</b></td><td><code>return a, b</code> ↔ <code>x, y = f()</code>；左边盒子数 = 元组元素数，否则 ValueError。整个接住也行：<code>pair = f()</code></td></tr>
 </table>
 
 <h2>方法论（不是知识点，是起手式）</h2>
@@ -69,8 +85,8 @@
 <tr><td>设计函数</td><td><b>机器三件</b>：投原料（参数）→ 加工（函数体）→ 吐成品（return）</td></tr>
 </table>
 
-<div class="ok"><b>背诵节奏建议</b>：⭐⭐⭐ 五条每天默背一遍（1 分钟）；⭐⭐ 六条隔天过一遍；⭐ 部分每周日实战课前扫一遍。课上抽查答错不扣分——但同一个坑第三次掉进去，我会把它升级成"每周必考"。</div>
+<div class="ok"><b>背诵节奏建议</b>：按周次从上往下背——本周课学到哪，就重点背那一段；前面周的 ⭐⭐⭐ 条目每天默背一遍（1 分钟）；⭐ 部分每周日实战课前扫一遍。课上抽查答错不扣分——但同一个坑第三次掉进去，我会把它升级成"每周必考"。</div>
 
-<footer>易错点背诵清单 · 2026-11-24 整理自错题本 2026-10-09 至 2026-11-22 · 随课程持续追加</footer>
+<footer>易错点背诵清单 · 2026-11-24 整理自错题本 2026-10-09 至 2026-11-22 · 主排序：教学周次（次排序：踩坑次数）· 随课程持续追加</footer>
 </body>
 </html>
