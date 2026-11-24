@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第7周 · 新知 · 文件读写 —— 2026-11-24</title>
+<style>
+  body{font-family:"Microsoft YaHei",sans-serif;max-width:880px;margin:0 auto;padding:24px;line-height:1.85;color:#222;background:#fdfdfb}
+  h1{border-bottom:3px solid #dd6b20;padding-bottom:8px;color:#1a365d}
+  h2{color:#2b6cb0;margin-top:30px;border-left:5px solid #2b6cb0;padding-left:10px}
+  h3{color:#2c7a7b;margin-top:20px}
+  table{border-collapse:collapse;width:100%;margin:14px 0}
+  th,td{border:1px solid #cbd5e0;padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#ebf4ff}
+  code{background:#eef2f7;padding:1px 5px;border-radius:3px;font-family:Consolas,monospace}
+  pre{background:#1a202c;color:#e2e8f0;padding:14px;border-radius:8px;overflow-x:auto;line-height:1.6}
+  pre code{background:none;color:inherit;padding:0}
+  .tag{display:inline-block;background:#fbbf24;color:#78350f;font-size:12px;font-weight:bold;padding:1px 8px;border-radius:10px;margin-right:6px}
+  .warn{background:#fff5f5;border-left:5px solid #c53030;padding:10px 14px;margin:12px 0}
+  .ok{background:#f0fff4;border-left:5px solid #38a169;padding:10px 14px;margin:12px 0}
+  .note{background:#ebf8ff;border-left:5px solid #3182ce;padding:10px 14px;margin:12px 0}
+  footer{margin-top:40px;color:#718096;font-size:13px;border-top:1px solid #e2e8f0;padding-top:10px}
+</style>
+</head>
+<body>
+
+<h1>第 7 周 · 新知 · 文件读写（2026-11-24 周二）</h1>
+<p><b>主线</b>：变量活在内存里，程序一关就没了 → 把数据写到<b>硬盘上的文件</b>里才持久。这是 pandas <code>read_csv()</code> 的地基（第 11 周）。<br>
+<b>约定</b>：每段代码都标注【知识点】；学完要能<b>读懂</b>每行在干嘛、<b>说得出</b>为什么这么写。</p>
+
+<h2>第〇节 · 开场收账（3 项作业全过 ✅）</h2>
+<table>
+<tr><th>作业</th><th>判定</th><th>点评</th></tr>
+<tr><td>average 默认参数重做</td><td>✅</td><td><code>85.33</code> / <code>85.3</code> 两发全中。测验 2 里 0 分的题，重做满血——return、round、默认参数三件都对了</td></tr>
+<tr><td>wf.py 修 distinct 隐患</td><td>✅</td><td><code>return len(set(word))</code> —— 参数名对齐形参 <code>word</code>，实测 <code>distinct('aabb') → 2</code>，全局劫持解除。歪打正着 → 正打正着</td></tr>
+<tr><td>第 7 题推演</td><td>✅（结论）</td><td>「第四行让每次比较过后被替换的 best 又换回了 0」——<b>机制说对了</b>。推演表下次自己写（见第一节示范）</td></tr>
+</table>
+
+<h2>第一节 · 逐轮推演示范（第 7 题你欠的那张表）</h2>
+<p>结论你已经说对了，这里把「纸笔推演」的样子示范一遍——<b>以后交的就是这种表</b>：</p>
+<pre><code>s 轮次:        轮1(88)   轮2(92)   轮3(76)
+best=0 执行后:  0         0         0        ← 每轮开头都被清零
+if s&gt;best:     88&gt;0 ✓    92&gt;0 ✓    76&gt;0 ✓
+best=s:        88        92        76       ← 谁最后上台谁留下
+返回 76（不是 92！92 当过擂主但被第四行擦掉了）</code></pre>
+<div class="note"><span class="tag">方法论</span>推演表三要素：<b>轮次</b>（循环转了几圈）、<b>每轮变量怎么变</b>（一行一格）、<b>最终值从哪来</b>。这就是"读懂程序"的核心功夫——AI 写码时代，读比写更值钱。</div>
+
+<h2>第二节 · 为什么需要文件</h2>
+<p>到今天为止，你所有的数据都活在一个地方——<b>内存</b>：</p>
+<table>
+<tr><th></th><th>变量（内存）</th><th>文件（硬盘）</th></tr>
+<tr><td>程序关掉后</td><td>❌ 全部消失</td><td>✅ 还在</td></tr>
+<tr><td>下次开机能用吗</td><td>❌</td><td>✅ 重新读进来</td></tr>
+<tr><td>典型代表</td><td><code>count = {}</code></td><td>csv / txt / json</td></tr>
+</table>
+<p>你的词频统计器每次运行都要重新数一遍 <code>text</code>；成绩册 <code>stu</code> 关掉 VSCode 就没了。<b>文件 = 给数据一个能活过"关机"的家</b>。第 11 周 pandas 的 <code>read_csv()</code> 做的就是"把文件读成表格"——今天手写它的原型。</p>
+
+<h2>第三节 · open()：开门三件套</h2>
+<p>读写文件的第一步永远是 <code>open()</code>——把它想成<b>开一扇门</b>，门后是硬盘上的文件：</p>
+<pre><code>f = open("scores.txt", "r", encoding="utf-8")
+#   └文件路径     └模式     └编码
+</code></pre>
+<table>
+<tr><th>零件</th><th>【知识点】</th></tr>
+<tr><td><code>"scores.txt"</code></td><td>文件路径。和 .py 文件在同一文件夹 → 只写文件名；不在 → 写相对/绝对路径。<b>本质是个字符串</b></td></tr>
+<tr><td><code>"r"</code> / <code>"w"</code> / <code>"a"</code></td><td><b>模式</b>：r = 读（read）、w = 写（write，<b>覆盖</b>）、a = 追加（append）。默认就是 r</td></tr>
+<tr><td><code>encoding="utf-8"</code></td><td>字符→字节的翻译规则。Windows 默认 GBK，Mac/Linux 默认 UTF-8——<b>不写 encoding，中文容易变乱码</b>。以后永远带上，肌肉记忆</td></tr>
+</table>
+<div class="warn"><span class="tag">⚠️ 坑①</span><b>"w" 一开门就清空</b>。对已有文件用 "w" 写入，旧内容瞬间蒸发，覆盖不商量。想保留旧内容追加，用 "a"。</div>
+<div class="warn"><span class="tag">⚠️ 坑②</span>文件不存在时 <code>open(..., "r")</code> 报 <code>FileNotFoundError</code>——先检查文件名拼没拼对、在不在同一目录。</div>
+
+<h2>第四节 · 读文件：三种姿势</h2>
+<pre><code>【知识点】读法一：read() 一口吞
+f = open("scores.txt", "r", encoding="utf-8")
+content = f.read()          # 整个文件读成一个【大字符串】
+print(content)
+f.close()                   # 用完关门（后面有更好的写法）
+
+【知识点】读法二：逐行读（最常用！）
+f = open("scores.txt", "r", encoding="utf-8")
+for line in f:              # 文件对象天生可迭代，一次吐一行
+    print(line.strip())     # strip() 掐掉行尾的换行符 \n
+f.close()
+</code></pre>
+<div class="note"><span class="tag">【知识点】\n 是什么</span>文件里每一行结尾都有一个看不见的字符 <code>\n</code>（换行符）。读出来的每行都带着它：<code>"张伟,88\n"</code>。<code>strip()</code> 把两头的空白（含 \n）掐掉。不带 strip 直接 <code>int(line)</code> 就会炸 <code>ValueError</code>——这是今天第一大坑。</div>
+<p>【联动】<code>strip()</code> 是第 4 周字符串方法，今天终于见到它的本职工作。<code>for line in f</code> 和你写过的 <code>for w in text.split()</code> 是同一家族：<b>可迭代对象 → for 逐个处理</b>，只是"逐个"的单位从"单词"变成了"行"。</p>
+
+<h2>第五节 · 写文件：w 覆盖、a 追加</h2>
+<pre><code>【知识点】w 模式：覆盖写
+f = open("result.txt", "w", encoding="utf-8")
+f.write("第一行\n")          # write() 不会自动换行！\n 要自己写
+f.write("第二行\n")
+f.close()
+
+【知识点】a 模式：追加写（旧内容保留）
+f = open("log.txt", "a", encoding="utf-8")
+f.write("又来一条记录\n")
+f.close()
+</code></pre>
+<div class="warn"><span class="tag">⚠️ 坑③</span><code>write()</code> 参数<b>只能是字符串</b>。<code>f.write(88)</code> 炸 TypeError，要写 <code>f.write(str(88))</code>——和 <code>print</code> 不一样，print 会自动帮你转。</div>
+<div class="warn"><span class="tag">⚠️ 坑④</span>写完不 <code>close()</code>，内容可能还堵在缓冲区没落到硬盘上。所以——下一节的 <code>with</code> 才是正解。</div>
+
+<h2>第六节 · with 语句：自动关门</h2>
+<pre><code>【知识点】with = 开门→办事→自动关门，一气呵成
+with open("scores.txt", "r", encoding="utf-8") as f:
+    for line in f:
+        print(line.strip())
+# 缩进结束后 f 自动关闭，不用手写 close()
+</code></pre>
+<p><b>为什么必须用它</b>：文件是"系统资源"，开门要占系统的名额。忘了关门 → 文件被锁、数据丢失。<code>with</code> 把"关门"焊死在语法里，<b>以后读写文件 100% 用 with，不用裸 open</b>。</p>
+<div class="note"><span class="tag">【知识点】as f</span>和 <code>for w in text</code> 里的 <code>w</code> 一个道理：给开门拿到的"文件对象"起个变量名叫 f。文件对象支持：逐行 for、<code>f.read()</code>、<code>f.readlines()</code>（全部行装成列表）。</div>
+
+<h2>第七节 · 串联全课：读 CSV 成绩文件 → 函数统计</h2>
+<p>假设 <code>scores.txt</code> 内容（三行，CSV 格式，第 4 周你处理过一模一样的逻辑）：</p>
+<pre><code>张伟,88,92,76
+李娜,92,95,88
+王强,76,84,90</code></pre>
+<p>现在用<b>文件 + 你第 6 周的函数</b>，把整条流水线跑通：</p>
+<pre><code>def average(scores, digits=2):
+    return round(sum(scores) / len(scores), digits)
+
+def parse_line(line):
+    【知识点】一行文本 → (名字, 分数列表)
+    parts = line.strip().split(",")     # 先掐\n再切：顺序不能反
+    name = parts[0]
+    scores = [int(x) for x in parts[1:]]   # 列表推导式，第3周学的
+    return name, scores
+
+【知识点】主程序只负责"读文件、喊机器、打印"
+with open("scores.txt", "r", encoding="utf-8") as f:
+    for line in f:                      # 逐行：单位是"行"
+        name, scores = parse_line(line) # 多返回值解包，第6周学的
+        print(f"{name} 平均分：{average(scores)}")
+</code></pre>
+<p>看这条流水线的家族 resemblance：<b>词频统计器</b>是"逐字符/逐词处理字符串"，<b>今天</b>是"逐行处理文件"——<code>for 循环 + 处理 + 收集</code>的骨架从来没变过，变的只是数据从哪来。</p>
+
+<h2>第八节 · 代码侦查③（读代码，不许运行）</h2>
+<pre><code>with open("nums.txt", "w", encoding="utf-8") as f:
+    f.write(100)
+
+with open("nums.txt", "r", encoding="utf-8") as f:
+    data = f.read().strip()
+
+print(data + 1)
+</code></pre>
+<p>三问：①哪一行先炸？报错类型名是什么？②怎么改一行代码修好它？③修好后 <code>print(data + 1)</code> 输出什么？<b>值和类型都要说</b>（双件制）。周日开场对答案。</p>
+
+<h2>第九节 · 本课作业（周日 11-29 开场批改）</h2>
+<p><b>必做 · 成绩文件统计器 <code>read_scores.py</code></b>：</p>
+<ol>
+<li>先写数据文件：用 <code>with open("scores.txt","w")</code> + <code>write()</code> 把三行成绩写进文件（程序写文件，别手动建）</li>
+<li>再读文件：逐行读 → <code>parse_line</code> 拆名字和分数 → <code>average</code> 算平均分</li>
+<li>打印每人平均分 + <b>打擂台找全班平均分最高的同学</b>（best 初始化放哪？口诀答）</li>
+</ol>
+<p>选做：统计结果 <code>with open("report.txt","w")</code> 写回一个新文件——读写全套闭环。</p>
+<div class="ok"><b>起手三问照旧</b>：结果存哪（results 列表 / best 变量）？循环谁（<code>for line in f</code>）？每轮干啥（拆行→算→存）？</div>
+
+<h2>第十节 · 今日知识点清单（背诵清单将追加）</h2>
+<table>
+<tr><th>条目</th><th>口诀</th></tr>
+<tr><td>读文件</td><td>with open 三件套：路径 + 模式 + encoding，缺中文就乱码</td></tr>
+<tr><td>读的姿势</td><td>逐行 <code>for line in f</code>，strip() 掐 \n</td></tr>
+<tr><td>写的姿势</td><td>w 覆盖 a 追加，write 只吃字符串，\n 自己写</td></tr>
+<tr><td>关文件</td><td>永远用 with，自动关门</td></tr>
+<tr><td>新报错</td><td>FileNotFoundError（路径错）/ ValueError（int("88\n") 没掐 \n）/ TypeError（write(100)）</td></tr>
+</table>
+
+<footer>第7周 · 新知 · 文件读写 · 2026-11-24 · 主讲：AI 老师 · 讲义随课后推送 GitHub</footer>
+</body>
+</html>
