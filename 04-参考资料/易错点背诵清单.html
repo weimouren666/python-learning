@@ -73,6 +73,7 @@
 <tr><td>21</td><td class="star">⭐</td><td><b>函数内赋值 → 变量变局部</b></td><td><code>total = total + n</code> 在函数内 = total 是局部的，读它炸 <code>UnboundLocalError</code>（哪怕全局有同名）。读：先局部后全局；写：函数内想改全局用参数传 + return 拿</td></tr>
 <tr><td>22</td><td class="star">⭐</td><td><b>可变默认参数会攒</b></td><td><code>def f(x, box=[])</code> 的 [] 只在造机器时创建一次，每次调用共用 → [1] → [1,2]。数字默认值没事。安全：<code>box=None</code> + 函数体内 if box is None: box=[]</td></tr>
 <tr><td>23</td><td class="star">⭐</td><td><b>多返回值 = 打包元组递出，外面解包</b></td><td><code>return a, b</code> ↔ <code>x, y = f()</code>；左边盒子数 = 元组元素数，否则 ValueError。整个接住也行：<code>pair = f()</code></td></tr>
+<tr><td>24</td><td class="star">⭐</td><td><b>TypeError 类型不对，ValueError 内容不行</b>（11-26 连错两轮，重点盯防）</td><td>判法先问"这操作本来就收这种类型吗"：<code>write(100)</code> → TypeError（write 只收 str，100 是 int，类型不对）；<code>int("abc")</code> → ValueError（int 本来就收字符串，类型对，但内容不是数字）；<code>None + 1</code> → TypeError。读 Traceback：谈 "must be str" / 类型的是 TypeError，谈 "invalid literal" / 内容的是 ValueError</td></tr>
 </table>
 
 <h2>方法论（不是知识点，是起手式）</h2>
